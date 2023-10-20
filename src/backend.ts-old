@@ -1,0 +1,677 @@
+import { CHANNELS } from './constants'
+import { Diff, differ } from './differ'
+import { Block, BuildPayload } from './frontend'
+import { GenInfo } from './gen-runtime'
+import { instantiate } from './instantiate'
+import { Compile, Module } from './lang/compiler'
+import { Runner, initRunner } from './runner'
+import { Vm, initVm } from './vm'
+
+const nonCopyable = ['daverb', 'delay', 'tap', 'sample', 'freesound', 'say']
+
+export class BuildCtrl {
+  static async create(backend: Backend, payload: BuildPayload, noLiterals = false) {
+    const instance = await instantiate<Module.Instance>(payload.binary, backend.env)
+    if (!noLiterals) {
+      instance.exports.write_literals()
+    }
+    return new this(backend, payload, instance)
+  }
+
+  nextLiterals?: Block
+  runnerCtrl = 0
+
+  constructor(public backend: Backend, public payload: BuildPayload, public instance: Module.Instance) { }
+
+  reset() {
+    this.payload.gens.forEach((gen) => {
+      gen.mem.set(gen.initial)
+    })
+    this.instance.exports.update_gens()
+    this.instance.exports.reset()
+  }
+}
+
+export interface Buffers {
+  ringPosBuffer: Uint32Array
+  mainOuts: [Block, Block]
+  engine: number
+}
+
+export enum BackendState {
+  Idle,
+  Starting,
+  Started,
+  Stopping,
+  Resetting,
+}
+
+export interface BackendInit {
+  vmInit: {
+    binary: Uint8Array
+    memory: WebAssembly.Memory
+  }
+  runnerInit: {
+    binary: Uint8Array
+    memory: WebAssembly.Memory
+  }
+  buffers: Buffers
+  runner?: Runner
+  vm?: Vm
+}
+
+class BackendBar {
+  ptr: number
+  constructor(
+    public backend: Backend,
+    public ctrls: BuildCtrl[]
+  ) {
+    this.ptr = this.backend.runner.exports.createBar()
+  }
+  reset() {
+    this.ctrls.forEach((ctrl) => {
+      ctrl.reset()
+    })
+  }
+}
+
+export class Backend {
+  static async instantiate(init: BackendInit) {
+    const vm = init.vm ?? await initVm(init.vmInit.binary, init.vmInit.memory)
+    const clock: number = vm.exports.engine_get_clock(init.buffers.engine)
+    const runner = init.runner ?? await initRunner(
+      init.runnerInit.binary,
+      init.runnerInit.memory,
+      {
+        copy_copyMem: vm.exports.copy_copyMem,
+        fade_fadeIn: vm.exports.fade_fadeIn,
+        fade_fadeOut: vm.exports.fade_fadeOut,
+        join_join21: vm.exports.join_join21,
+        setClockTime: (time: number) => vm.exports.engine_Clock_set_time(clock, time),
+      }
+    )
+    return new this(
+      vm,
+      runner,
+      init.buffers,
+    )
+  }
+
+  state: BackendState = BackendState.Idle
+  env: Compile.Env
+  mainOuts: [Ring, Ring]
+
+  clock: number
+  currBarTime = -1
+
+  ctrls: Map<number, BuildCtrl> = new Map()
+  ctrlsIndex = 0
+
+  maxBar = 0
+  bars: Map<number, BackendBar> = new Map()
+  bar: BackendBar | undefined
+
+  constructor(
+    public vm: Vm,
+    public runner: Runner,
+    public buffers: Buffers,
+  ) {
+    this.mainOuts = [
+      toRing(buffers.mainOuts[0]),
+      toRing(buffers.mainOuts[1])
+    ]
+
+    this.env = {
+      memory: vm.view.memory,
+      log(x: number) {
+        console.log('[ctrl]', x)
+      },
+      ...this.vm.exports
+    }
+
+    this.clock = this.vm.exports.engine_get_clock(this.buffers!.engine)
+  }
+
+  // TODO: consolidate ringPos clock time frame sampleRate in one struct
+  get ringPos() {
+    return this.buffers!.ringPosBuffer[0]
+  }
+
+  set ringPos(value: number) {
+    this.buffers!.ringPosBuffer[0] = value
+  }
+
+  async start() {
+    this.state = BackendState.Starting
+  }
+
+  async stop() {
+    this.state = BackendState.Stopping
+  }
+
+  async reset() {
+    this.state = BackendState.Resetting
+  }
+
+  private memsArrayFrom(mems: [Float32Array, Float32Array][]) {
+    const ctrlMemsPtr = this.runner.exports.createMemsArray(mems.length)
+    const ctrlMems = this.runner.view.getU32(ctrlMemsPtr, mems.length * 3)
+    for (let i = 0, c = 0; i < (mems.length * 3); i += 3, c++) {
+      ctrlMems[i] = mems[c][0].byteOffset
+      ctrlMems[i + 1] = mems[c][1].byteOffset
+      ctrlMems[i + 2] = mems[c][1].length
+    }
+    // console.log(ctrlMems, ctrlMemsPtr)
+    return ctrlMemsPtr
+  }
+
+  createCtrl(
+    currPtr: number,
+    next: BuildCtrl,
+    memsPtr: number = 0,
+    memsAfterPtr: number = 0,
+  ) {
+    const index = this.ctrlsIndex
+
+    const memsReset: [Float32Array, Float32Array][] = []
+
+    next.payload.gens.forEach((g) => {
+      // if (!nonCopyable.includes(g.kind)) {
+      memsReset.push([
+        g.initial,
+        g.mem
+      ])
+      // }
+    })
+
+    this.runner.table.set(index, next.instance.exports.run)
+    this.runner.table.set(index + 1, next.instance.exports.reset)
+    this.runner.table.set(index + 2, next.instance.exports.update_gens)
+    this.runner.table.set(index + 3, next.instance.exports.write_literals)
+
+    const ctrlPtr = this.runner.exports.createCtrl(
+      currPtr,
+      memsPtr,
+      memsAfterPtr,
+      memsReset.length && this.memsArrayFrom(memsReset),
+      index,
+      index + 1,
+      index + 2,
+      index + 3,
+      next.payload.outs[0].byteOffset,
+      next.payload.outs[1].byteOffset,
+    )
+
+    this.ctrlsIndex = (index + 4) % 128
+
+    return ctrlPtr
+  }
+
+  private mixCtrls(curr: BuildCtrl, next: BuildCtrl, gensDiff?: Diff<GenInfo>) {
+    gensDiff ??= differ(
+      new Set(curr.payload.gens),
+      new Set(next.payload.gens),
+      false,
+      (gen) => `${gen.kind}`
+    )
+
+    const mems: [Float32Array, Float32Array][] = []
+    const memsAfter: [Float32Array, Float32Array][] = []
+
+    gensDiff.equal
+      .concat(gensDiff.moved)
+      .forEach(([p, n]) => {
+        if (!nonCopyable.includes(p.kind)) {
+          mems.push([
+            p.mem,
+            n.mem
+          ])
+        }
+        if (p.out && n.out) mems.push([
+          p.out,
+          n.out
+        ])
+      })
+
+
+    gensDiff.removed
+      .forEach((g) => {
+        memsAfter.push([
+          g.initial,
+          g.mem
+        ])
+      })
+
+    return this.createCtrl(
+      curr.runnerCtrl,
+      next,
+      mems.length && this.memsArrayFrom(mems),
+      memsAfter.length && this.memsArrayFrom(memsAfter),
+    )
+  }
+
+  async createBar(barTime: number, buildPayloads: BuildPayload[]) {
+    let ctrls: BuildCtrl[] = []
+
+    for (const buildPayload of buildPayloads) {
+      let ctrl = this.ctrls.get(buildPayload.id)
+
+      if (!ctrl) {
+        this.ctrls.set(
+          buildPayload.id,
+          ctrl = await BuildCtrl.create(this, buildPayload)
+        )
+      }
+      else {
+        ctrl.nextLiterals = buildPayload.literals
+      }
+
+      ctrls.push(ctrl)
+    }
+
+    const bar = new BackendBar(this, ctrls)
+    this.bars.set(barTime, bar)
+
+    let maxBar = 0
+
+    for (const time of this.bars.keys()) {
+      const endTime = time + 1
+      if (endTime > maxBar) maxBar = endTime
+    }
+
+    this.maxBar = maxBar
+  }
+
+  async fill(outs: [Block, Block]) {
+    const currBar = this.bars.get(0)
+    if (!currBar) {
+      throw new Error('No bar to fill!')
+    }
+    this.setClockTime(0)
+    // console.log('fill', currBar.ptr)
+    this.mainOuts[0].full.fill(0)
+    this.mainOuts[1].full.fill(0)
+    this.runner.exports.run(
+      0,
+      0,
+      outs[0].length,
+      currBar.ptr,
+      currBar.ptr,
+      this.mainOuts[0].ptr,
+      this.mainOuts[1].ptr,
+    )
+    outs[0].set(this.mainOuts[0].full)
+    outs[1].set(this.mainOuts[1].full)
+    // currBar.reset()
+  }
+
+  setClockTime(time: number) {
+    this.runner.env.setClockTime(time)
+  }
+
+  process = (inputs: Float32Array[], outputs: Float32Array[]) => {
+    const state = this.state
+    if (state === BackendState.Idle) return true
+
+    const chunkAheadTime = 129 / (globalThis.sampleRate ?? 44100)
+    // console.log(chunkAheadTime)
+    // TODO: read from memory directly
+    const actualTime = this.vm!.exports.engine_Clock_get_time(this.clock)
+    const time = actualTime * 0.5
+
+    // we want to trigger the next update transition crossfade on the last chunk right
+    // before the 1 drops, so that the new loop starts with maximum(perceived) impact.
+    const barTime = (time % this.maxBar) | 0 //(time + this.chunkAheadTime) | 0
+    const nextBarTime = ((time + chunkAheadTime) % this.maxBar) | 0 //(time + this.chunkAheadTime) | 0
+    // const barSync = barTime !== this.currBarTime
+
+    let ringPos = this.ringPos
+    const begin = ringPos << 7 // * 128
+    const end = (ringPos + 1) << 7 // * 128
+
+    for (let i = 0; i < CHANNELS; i++) {
+      this.mainOuts![i][ringPos].fill(0)
+    }
+
+    let lastBar: BackendBar | undefined = this.bar
+    let lastBarPtr = lastBar?.ptr ?? 0
+
+    let currBar: BackendBar | undefined = this.bars.get(barTime)
+    let currBarPtr = currBar?.ptr ?? 0
+
+    let nextBar: BackendBar | undefined = this.bars.get(nextBarTime)
+    let nextBarPtr = nextBar?.ptr ?? 0
+
+    // console.log(this.maxBar, barTime, nextBarTime, time, time + chunkAheadTime, lastBarPtr, currBarPtr, nextBarPtr)
+
+    switch (state) {
+      case BackendState.Starting: {
+        this.state = BackendState.Started
+        break
+      }
+
+      case BackendState.Stopping: {
+        currBarPtr = 0
+        break
+      }
+
+      case BackendState.Resetting:
+        currBarPtr = 0
+        break
+    }
+
+    if (!lastBar) {
+      if (currBar) {
+        console.log('- x x') // TODO: - x y
+        this.runner.exports.clearBar(currBar.ptr)
+        for (const curr of currBar.ctrls) {
+          const ctrlPtr = this.createCtrl(
+            0,
+            curr
+          )
+          curr.runnerCtrl = ctrlPtr
+          this.runner.exports.pushBarCtrl(currBar.ptr, ctrlPtr)
+        }
+
+        // if (nextBar && nextBar !== currBar) {
+        //   for (const curr of nextBar.ctrls) {
+
+        //     const ctrlPtr = this.createCtrl(
+        //       0,
+        //       curr
+        //     )
+        //     curr.runnerCtrl = ctrlPtr
+
+        //     this.runner.exports.pushBarCtrl(currBar.ptr, ctrlPtr)
+        //   }
+        // }
+      }
+    }
+    else {
+      if (lastBar === currBar && nextBar && currBar !== nextBar) {
+        this.runner.exports.clearBar(nextBar.ptr)
+        console.log('x x ?')
+
+        const nextCtrls = new Set(nextBar.ctrls)
+        const currCtrls = new Set(currBar.ctrls)
+
+        // find and create mix transitions
+        next: for (const next of nextCtrls) {
+          for (const curr of currCtrls) {
+            if (next.payload.id !== curr.payload.id) continue
+
+            const gensDiff = differ(
+              new Set(curr.payload.gens),
+              new Set(next.payload.gens),
+              false,
+              (gen) => `${gen.kind}`
+            )
+
+            const noGensChanged =
+              gensDiff.added.length
+              + gensDiff.changed.length
+              + gensDiff.removed.length
+              === 0
+
+            if (noGensChanged) {
+              console.log('x x x\'')
+              // mix
+
+              // const ctrlPtr = this.mixCtrls(curr, next, gensDiff)
+
+              // const ctrlPtr = this.createCtrl(
+              //   curr.runnerCtrl,
+              //   next
+              // )
+              const ctrlPtr = curr.runnerCtrl
+              next.runnerCtrl = ctrlPtr
+              this.runner.exports.pushBarCtrl(nextBar.ptr, ctrlPtr)
+              // nextBarPtr = currBarPtr
+
+              nextCtrls.delete(next)
+              currCtrls.delete(curr)
+              continue next
+            }
+          }
+        }
+
+        if (nextCtrls.size) console.log('x x x2')
+        // start new ctrls
+        // const currCtrlsArray = Array.from(currCtrls)
+
+        for (const next of nextCtrls) {
+          // if (currCtrlsArray.length) {
+          //   const curr = currCtrlsArray.shift()!
+          //   const ctrlPtr = this.mixCtrls(curr, next)
+          //   next.runnerCtrl = ctrlPtr
+          //   this.runner.exports.pushBarCtrl(nextBar.ptr, ctrlPtr)
+          // }
+          // else {
+          let ctrlPtr: number
+          if (!next.runnerCtrl) {
+            ctrlPtr = this.createCtrl(
+              0,
+              next
+            )
+            next.runnerCtrl = ctrlPtr
+          }
+          else {
+            ctrlPtr = next.runnerCtrl
+          }
+          this.runner.exports.pushBarCtrl(nextBar.ptr, ctrlPtr)
+          // }
+        }
+      }
+      else if (currBar && lastBar !== currBar) {
+        this.runner.exports.clearBar(currBar.ptr)
+
+        console.log('x x\'/x2 ?')
+
+        const lastCtrls = new Set(lastBar.ctrls)
+        const currCtrls = new Set(currBar.ctrls)
+
+        // find and create mix transitions
+        curr: for (const curr of currCtrls) {
+          for (const last of lastCtrls) {
+            if (curr.payload.id !== last.payload.id) continue
+
+            const gensDiff = differ(
+              new Set(last.payload.gens),
+              new Set(curr.payload.gens),
+              false,
+              (gen) => `${gen.kind}`
+            )
+
+            const noGensChanged =
+              gensDiff.added.length
+              + gensDiff.changed.length
+              + gensDiff.removed.length
+              === 0
+
+            if (noGensChanged) {
+              console.log('x x\' x\'')
+              // mix
+
+              // const ctrlPtr = this.mixCtrls(curr, next, gensDiff)
+
+              // const ctrlPtr = this.createCtrl(
+              //   0,
+              //   curr
+              // )
+              // const ctrlPtr = last.runnerCtrl
+              if (curr.nextLiterals) last.payload.literals.set(curr.nextLiterals)
+              const ctrlPtr = last.runnerCtrl
+              curr.runnerCtrl = ctrlPtr
+              currBar = lastBar
+              currBarPtr = nextBarPtr = lastBarPtr
+              // curr.runnerCtrl = ctrlPtr
+              // TODO: this is fucked up, why?
+              if (!curr.nextLiterals) this.runner.exports.pushBarCtrl(currBar.ptr, ctrlPtr)
+              lastCtrls.delete(last)
+              currCtrls.delete(curr)
+              continue curr
+            }
+          }
+        }
+
+        if (currCtrls.size) console.log('x x2 x2')
+        // start new ctrls
+        // const currCtrlsArray = Array.from(currCtrls)
+
+        for (const curr of currCtrls) {
+          // if (currCtrlsArray.length) {
+          //   const curr = currCtrlsArray.shift()!
+          //   const ctrlPtr = this.mixCtrls(curr, next)
+          //   next.runnerCtrl = ctrlPtr
+          //   this.runner.exports.pushBarCtrl(nextBar.ptr, ctrlPtr)
+          // }
+          // else {
+          let ctrlPtr: number
+          if (!curr.runnerCtrl) {
+            ctrlPtr = this.createCtrl(
+              0,
+              curr
+            )
+            curr.runnerCtrl = ctrlPtr
+          }
+          else {
+            ctrlPtr = curr.runnerCtrl
+          }
+          this.runner.exports.pushBarCtrl(currBar.ptr, ctrlPtr)
+          // }
+        }
+
+        // for (const curr of currBar.ctrls) {
+
+        // }
+      }
+    }
+
+    // if (!lastBar || (lastBarPtr && lastBarPtr !== currBarPtr)) {
+    //   if (lastBar && currBar) {
+    //     console.log('A')
+    //     const currCtrls = new Set(currBar.ctrls)
+    //     const lastCtrls = new Set(lastBar.ctrls)
+
+    //     // find and create mix transitions
+    //     curr: for (const curr of currCtrls) {
+    //       for (const last of lastCtrls) {
+    //         if (curr.payload.id !== last.payload.id) continue
+
+    //         const gensDiff = differ(
+    //           new Set(last.payload.gens),
+    //           new Set(curr.payload.gens),
+    //           false,
+    //           (gen) => `${gen.kind}`
+    //         )
+
+    //         const noGensChanged =
+    //           gensDiff.added.length
+    //           + gensDiff.changed.length
+    //           + gensDiff.removed.length
+    //           === 0
+
+    //         if (noGensChanged) {
+    //           console.log('AA')
+    //           // mix
+
+    //           // const ctrlPtr = this.mixCtrls(curr, next, gensDiff)
+
+    //           const ctrlPtr = this.createCtrl(
+    //             last.runnerCtrl,
+    //             curr
+    //           )
+    //           // const ctrlPtr = curr.runnerCtrl
+    //           curr.runnerCtrl = ctrlPtr
+    //           this.runner.exports.pushBarCtrl(currBar.ptr, ctrlPtr)
+    //           currCtrls.delete(curr)
+    //           lastCtrls.delete(last)
+    //           continue curr
+    //         }
+    //       }
+    //     }
+
+    //     console.log('Ax')
+    //     // start new ctrls
+    //     const currCtrlsArray = Array.from(lastCtrls)
+    //     for (const curr of currCtrls) {
+    //       // if (currCtrlsArray.length) {
+    //       //   const curr = currCtrlsArray.shift()!
+    //       //   const ctrlPtr = this.mixCtrls(curr, next)
+    //       //   next.runnerCtrl = ctrlPtr
+    //       //   this.runner.exports.pushBarCtrl(nextBar.ptr, ctrlPtr)
+    //       // }
+    //       // else {
+    //       const ctrlPtr = this.createCtrl(
+    //         0,
+    //         curr
+    //       )
+    //       curr.runnerCtrl = ctrlPtr
+    //       this.runner.exports.pushBarCtrl(currBar.ptr, ctrlPtr)
+    //       // }
+    //     }
+
+    //     // currBarPtr = nextBar.ptr
+    //   }
+    //   else if (currBar) {
+    //     console.log('YO', currBarPtr, nextBarPtr)
+    //     if (nextBar && currBar !== nextBar) {
+    //       console.log('B')
+    //     }
+    //     else {
+    //       console.log('C')
+
+    //       for (const curr of currBar.ctrls) {
+    //         const ctrlPtr = this.createCtrl(
+    //           0,
+    //           curr
+    //         )
+    //         curr.runnerCtrl = ctrlPtr
+    //         this.runner.exports.pushBarCtrl(currBar.ptr, ctrlPtr)
+    //       }
+    //     }
+
+    //     // if (!lastBar) {
+    //     //   lastBar = currBar
+    //     //   lastBarPtr = currBarPtr
+    //     // }
+    //     // currBarPtr = nextBar.ptr
+    //   }
+    // }
+
+    if (currBarPtr) {
+      this.runner.exports.run(
+        actualTime,
+        begin,
+        end,
+        currBarPtr,
+        nextBarPtr,
+        this.mainOuts[0].ptr,
+        this.mainOuts[1].ptr,
+      )
+    }
+
+    for (let i = 0; i < CHANNELS; i++) {
+      outputs[i].set(this.mainOuts![i][ringPos])
+    }
+
+    switch (state) {
+      case BackendState.Stopping:
+        this.state = BackendState.Idle
+        this.runner.exports.clearLastBar()
+        break
+
+      case BackendState.Resetting:
+        this.state = BackendState.Starting
+        this.bar?.reset()
+        this.runner.exports.clearLastBar()
+        break
+    }
+
+    this.ringPos = ++ringPos & 0xF // % 16
+    this.bar = currBar
+    this.currBarTime = barTime
+
+    return true
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "targets": {
+    "dev": {
+      "outFile": "./dist/wasm/vm-dev.wasm",
+      "textFile": "./dist/wasm/vm-dev.wat",
+      "sourceMap": true,
+      "debug": true
+    },
+    "prod": {
+      "outFile": "./dist/wasm/vm-prod.wasm",
+      "textFile": "./dist/wasm/vm-prod.wat",
+      "debug": false,
+      "optimizeLevel": 3,
+      "shrinkLevel": 0,
+      "converge": true,
+      "noAssert": false
+    }
+  },
+  "options": {
+    "enable": [
+      "simd",
+      "threads"
+    ],
+    "importMemory": true,
+    "importTable": true,
+    "sharedMemory": true,
+    "maximumMemory": 3000,
+    "memoryBase": 1048576,
+    "bindings": "raw",
+    "runtime": "stub"
+  }
+}
