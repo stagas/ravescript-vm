@@ -6,7 +6,7 @@ import { Frontend } from './frontend.ts'
 import { Vm, VmInit, createVmMemory, fetchVmBinary, initVm } from './vm.ts'
 
 // import { DEBUG } from '../../web/constants'
-const DEBUG = false
+const DEBUG = true
 const DEV = !location.href.includes('?prod')
 
 export enum RaveNodeState {
