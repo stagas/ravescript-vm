@@ -1,4 +1,4 @@
-import { Deferred } from 'everyday-utils'
+import { Deferred } from 'utils'
 import { Build } from './frontend.ts'
 import { RaveNode } from './rave-node.ts'
 import { RmsWorkerMessagePayload } from './rms-worker.ts'

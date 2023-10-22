@@ -24,7 +24,6 @@
     "alice-bob": "file:../alice-bob",
     "annotate-code": "file:../annotate-code",
     "event-toolkit": "file:../event-toolkit",
-    "everyday-utils": "file:../everyday-utils",
     "utils": "file:../utils",
     "visitor-as": "*"
   }

@@ -1,4 +1,4 @@
-import { Deferred } from 'everyday-utils'
+import { Deferred } from 'utils'
 import { Build } from './frontend.ts'
 import { GenRuntime } from './gen-runtime.ts'
 import { Emitter } from './lang/index.ts'

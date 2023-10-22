@@ -1,5 +1,5 @@
 import { Agent, Alice } from 'alice-bob'
-import { Deferred } from 'everyday-utils'
+import { Deferred } from 'utils'
 import { fetchPffftBinary } from '../vendor/pffft/pffft.ts'
 import { Backend, BackendInit } from './backend.ts'
 import { Frontend } from './frontend.ts'

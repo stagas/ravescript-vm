@@ -1,5 +1,5 @@
 import { Agent, Alice } from 'alice-bob'
-import { Deferred } from 'everyday-utils'
+import { Deferred } from 'utils'
 import { queue } from 'event-toolkit'
 import { Build, Frontend } from './frontend.ts'
 import { PreviewWorker } from './preview-worker.ts'
