@@ -55,7 +55,7 @@ export class AntialiasWavetable {
     const tableMask: u32 = (tableLength - 1) << 2
     const numOfTables: u32 = u32(Math.log2(f64(maxHarms)) + 1)
 
-    logi(tableLength)
+    // logi(tableLength)
     const saw = new StaticArray<StaticArray<f32>>(numOfTables)
     const ramp = new StaticArray<StaticArray<f32>>(numOfTables)
     const sqr = new StaticArray<StaticArray<f32>>(numOfTables)

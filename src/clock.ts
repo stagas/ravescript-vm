@@ -1,4 +1,4 @@
-import { defineStruct } from './struct'
+import { defineStruct } from './struct.ts'
 
 export type Clock = typeof Clock.type
 

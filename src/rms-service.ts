@@ -1,11 +1,11 @@
-import { RaveNode } from './rave-node'
-import { Build } from './frontend'
-import { RmsWorkerMessagePayload } from './rms-worker'
-import { post } from './util'
 import { Deferred } from 'everyday-utils'
-import { printer } from '../../web/util/printer'
+import { Build } from './frontend.ts'
+import { RaveNode } from './rave-node.ts'
+import { RmsWorkerMessagePayload } from './rms-worker.ts'
+import { post } from './util.ts'
+// import { printer } from '../../web/util/printer'
 
-const print = printer('rms-service')
+// const print = printer('rms-service')
 
 export type RmsServiceMessagePayload =
   | { onReady: true }
@@ -53,7 +53,7 @@ export function createRms(rave: RaveNode) {
 
   worker.onmessage = (e: MessageEvent<RmsServiceMessagePayload>) => {
     if ('onReady' in e.data) {
-      print('ready')
+      // print('ready')
       deferred.resolve()
       service.onReady?.()
     }

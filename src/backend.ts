@@ -1,11 +1,11 @@
-import { Clock } from './clock'
-import type { Block, Build } from './frontend'
-import type { GenInfo } from './gen-runtime'
-import { instantiate } from './instantiate'
-import type { Compile, Module } from './lang'
-import { BarView, CtrlView, SignalView } from './structs'
-import { FixedArray, Ring, toRing } from './util'
-import { Vm, VmInit, initVm } from './vm'
+import { Clock } from './clock.ts'
+import { type Block, type Build } from './frontend.ts'
+import type { GenInfo } from './gen-runtime.ts'
+import { instantiate } from './instantiate.ts'
+import type { Compile, Module } from './lang/index.ts'
+import { BarView, CtrlView, SignalView } from './structs.ts'
+import { FixedArray, Ring, toRing } from './util.ts'
+import { Vm, VmInit, initVm } from './vm.ts'
 
 const MAX = 4096
 const MAX_BAR_INSTANCES = MAX
@@ -181,7 +181,7 @@ export class Backend {
 
     this.env = {
       memory: vm.view.memory,
-      log(x: number) {
+      log: (x: number) => {
         console.log('[ctrl]', x)
       },
       ...this.vm.exports
@@ -606,3 +606,58 @@ export class Backend {
 }
 
 export type Process = (inputs: Float32Array[], outputs: Float32Array[]) => void
+
+export async function test_backend() {
+  // @env browser
+  const { fetchVmBinary, createVmMemory } = await import('./vm.ts')
+  const { fetchPffftBinary } = await import('../vendor/pffft/pffft.ts')
+  const { Frontend } = await import('./frontend.ts')
+
+  const vmBinary = await fetchVmBinary()
+  const pffftBinary = await fetchPffftBinary()
+
+  async function prepare() {
+    const vmMemory = createVmMemory()
+    const vm = await initVm({
+      memory: vmMemory,
+      vmBinary,
+      pffftBinary
+    })
+    const frontend = new Frontend(vm, 44100)
+
+    const processorOptions: BackendInit = {
+      vmInit: {
+        memory: vmMemory,
+        vmBinary,
+        pffftBinary,
+      },
+      buffers: frontend.buffers,
+      runner: true
+    }
+
+    const backend = await Backend.instantiate(processorOptions)
+
+    return { frontend, backend }
+  }
+
+  describe('backend', () => {
+    it('fill', async () => {
+      const { frontend, backend } = await prepare()
+
+      // TODO: this code should fail because it's DC
+      //  it should be [zero] 42+ LR+= to convert it to AC
+      const source = { code: `42 LR+=` }
+      const tokens = Array.from(frontend.tokenize(source))
+      const info = frontend.produce(tokens)
+      const sound = frontend.compile(info)
+      await backend.setBarAt([0], [sound.payload])
+
+      backend.fill(0, 2048)
+      // console.log(backend)
+
+      const outs = backend.signal
+      expect(outs.LR![0]).toEqual(42)
+    })
+  })
+
+}

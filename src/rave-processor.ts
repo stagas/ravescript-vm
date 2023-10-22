@@ -1,6 +1,6 @@
 import { Agent, Bob } from 'alice-bob'
-import { Backend, BackendInit } from './backend'
-import { RaveNode } from './rave-node'
+import { Backend, BackendInit } from './backend.ts'
+import { RaveNode } from './rave-node.ts'
 
 export interface RaveProcessorOptions extends BackendInit {
 }

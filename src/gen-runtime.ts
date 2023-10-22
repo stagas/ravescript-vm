@@ -1,7 +1,7 @@
-import { envLookupMethod } from './env-info'
-import { Frontend, Block } from './frontend'
-import { Emitter } from './lang'
-import { capitalize } from './util'
+import { envLookupMethod } from './env-info.ts'
+import { Block, Frontend } from './frontend.ts'
+import { Emitter } from './lang/index.ts'
+import { capitalize } from './util.ts'
 
 export interface GenInfo {
   kind: string

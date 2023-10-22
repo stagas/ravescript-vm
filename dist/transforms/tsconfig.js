@@ -6,9 +6,6 @@ module.exports = {
     ],
     module: "ESNext",
     target: "ESNext",
-    moduleResolution: "node",
-    types: [
-      "node"
-    ]
+    moduleResolution: "node"
   }
 };

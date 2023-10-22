@@ -1,9 +1,9 @@
 import { Deferred } from 'everyday-utils'
-import { Build } from './frontend'
-import { GenRuntime } from './gen-runtime'
-import { Emitter } from './lang'
-import { say } from './sam'
-import { upsampleBuffer } from './util'
+import { Build } from './frontend.ts'
+import { GenRuntime } from './gen-runtime.ts'
+import { Emitter } from './lang/index.ts'
+import { say } from './sam.ts'
+import { upsampleBuffer } from './util.ts'
 
 const samples: Map<number, Deferred<Float32Array[]>> = new Map()
 const assignedSamples: Map<GenRuntime, number> = new Map()

@@ -1,4 +1,4 @@
-import type { Compile } from './lang/compiler'
+import type { Compile } from './lang/compiler.ts'
 
 export async function instantiate<T>(binary: Uint8Array, env: Compile.Env) {
   const { instance: mod } = await WebAssembly.instantiate(binary, {

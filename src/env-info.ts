@@ -1,4 +1,4 @@
-import { envTypes } from './env-types'
+import { envTypes } from './env-types.ts'
 
 export { envTypes }
 

@@ -1,7 +1,7 @@
 import { Agent, Bob } from 'alice-bob'
-import { Backend, BackendInit } from './backend'
-import { Build } from './frontend'
-import { PreviewService } from './preview-service'
+import { Backend, BackendInit } from './backend.ts'
+import { Build } from './frontend.ts'
+import { PreviewService } from './preview-service.ts'
 
 export interface PreviewWorkerInit extends BackendInit {
   length: number

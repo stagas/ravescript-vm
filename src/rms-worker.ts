@@ -1,9 +1,9 @@
-import { Backend, BackendInit } from './backend'
-import { Build } from './frontend'
-import { instantiate } from './instantiate'
-import { Module } from './lang'
-import { RmsServiceMessagePayload } from './rms-service'
-import { post } from './util'
+import { Backend, BackendInit } from './backend.ts'
+import { Build } from './frontend.ts'
+import { instantiate } from './instantiate.ts'
+import { Module } from './lang/index.ts'
+import { RmsServiceMessagePayload } from './rms-service.ts'
+import { post } from './util.ts'
 
 export type RmsWorkerMessagePayload =
   | { run: Parameters<RmsWorker['run']> }

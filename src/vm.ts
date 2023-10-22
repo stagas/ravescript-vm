@@ -26,13 +26,13 @@ export async function fetchVmBinary(dev = location.href.includes('test')) {
   const filename = 'vm-' + (dev ? 'dev.wasm' : 'prod.wasm')
 
   const binaryRes = await fetch(
-    new URL('../../dist/wasm/' + filename, import.meta.url).href
+    new URL('../dist/wasm/' + filename, import.meta.url).href
   )
 
   let buffer = await binaryRes.arrayBuffer()
 
   if (dev) {
-    const absoluteUrl = new URL('../../dist/wasm/' + filename + '.map', import.meta.url).href
+    const absoluteUrl = new URL('../dist/wasm/' + filename + '.map', import.meta.url).href
     buffer = wasmSourceMap.setSourceMapURL(buffer, absoluteUrl)
   }
 
@@ -100,9 +100,9 @@ export async function initVm({
         memory,
         table,
         abort,
-        logi: print,
-        logf: print,
-        logd: print,
+        logi: console.log,
+        logf: console.log,
+        logd: console.log,
         timeFFT: timeFFTRunner,
         freqFFT: freqFFTRunner,
         ...pffft.exports,

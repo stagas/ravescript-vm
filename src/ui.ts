@@ -1,7 +1,7 @@
-import { LineCol } from '../../web/editor/editor'
-import { Build, Frontend } from './frontend'
-import { AstNode, Emitter, Scope, isExternalSource, tokenize } from './lang'
-import { Vm, fetchVmBinary, initVm } from './vm'
+// import { LineCol } from '../../web/editor/editor'
+import { Build, Frontend } from './frontend.ts'
+import { AstNode, Emitter, Scope, isExternalSource, tokenize } from './lang/index.ts'
+import { Vm, fetchVmBinary, initVm } from './vm.ts'
 
 type LineColId = string & readonly ['lineColId']
 type HashId = string & readonly ['hashId']

@@ -10,7 +10,6 @@ export const envTypes = {
   wavetable_set_exp: '(i32 i32) void',
   wavetable_set_noise: '(i32 i32) void',
   util_nextPowerOfTwo: '(i32) i32',
-  env_logi: '(i32) void',
   antialias_wavetable_AntialiasWavetable_set_real: '(i32 i32) void',
   antialias_wavetable_AntialiasWavetable_set_imag: '(i32 i32) void',
   antialias_wavetable_AntialiasWavetable_set_freqs: '(i32 i32) void',

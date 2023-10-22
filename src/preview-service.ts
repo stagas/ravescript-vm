@@ -1,14 +1,16 @@
 import { Agent, Alice } from 'alice-bob'
 import { Deferred } from 'everyday-utils'
-import { queue } from 'minimal-view'
-import { Build, Frontend } from './frontend'
-import { PreviewWorker } from './preview-worker'
-import { RaveNode } from './rave-node'
-import { Vm } from './vm'
-import { printer } from '../../web/util/printer'
-import { Sound } from '../../web/sound'
+import { queue } from 'event-toolkit'
+import { Build, Frontend } from './frontend.ts'
+import { PreviewWorker } from './preview-worker.ts'
+import { RaveNode } from './rave-node.ts'
+import { Vm } from './vm.ts'
+// import { printer } from '../../web/util/printer'
+// import { Sound } from '../../web/sound'
+// const print = printer('preview-service')
 
-const print = printer('preview-service')
+// TODO: fixme
+type Sound = any
 
 export const previews: Map<string, Deferred<[Float32Array, Float32Array]>> = new Map()
 
@@ -116,7 +118,7 @@ export class PreviewService {
       b.payload.instanceId !== build.payload.instanceId
     )
 
-    print.id('pushTrash', sound.$.id)
+    // print.id('pushTrash', sound.$.id)
     this.trash.push(build)
 
     if (this.trash.length > 48) {
@@ -127,7 +129,7 @@ export class PreviewService {
   }
 
   purge = async (instanceId: number, sound: Sound) => {
-    print.id('purge', sound.$.id)
+    // print.id('purge', sound.$.id)
     this.frontend.purge(instanceId)
     await this.worker.purge(instanceId)
   }

@@ -1,11 +1,12 @@
 import { Agent, Alice } from 'alice-bob'
 import { Deferred } from 'everyday-utils'
-import { DEBUG } from '../../web/constants'
-import { Backend, BackendInit } from './backend'
-import { Frontend } from './frontend'
-import { Vm, VmInit, createVmMemory, fetchVmBinary, initVm } from './vm'
-import { fetchPffftBinary } from '../../vendor/pffft/pffft'
+import { fetchPffftBinary } from '../vendor/pffft/pffft.ts'
+import { Backend, BackendInit } from './backend.ts'
+import { Frontend } from './frontend.ts'
+import { Vm, VmInit, createVmMemory, fetchVmBinary, initVm } from './vm.ts'
 
+// import { DEBUG } from '../../web/constants'
+const DEBUG = false
 const DEV = !location.href.includes('?prod')
 
 export enum RaveNodeState {
@@ -150,4 +151,43 @@ export class RaveNode extends AudioWorkletNode {
   async reset() {
     await this.worklet.reset()
   }
+}
+
+export async function test_rave_node() {
+  // @env browser
+  describe('RaveNode', () => {
+
+    it('works', async () => {
+      const ctx = new AudioContext()
+      await RaveNode.register(ctx)
+      const rave = await RaveNode.instantiate(ctx, {
+        fetchSample: () => { return Promise.resolve([new Float32Array()]) }
+      })
+      expect(rave).toBeInstanceOf(AudioWorkletNode)
+    })
+
+    it('can produce output', async () => {
+      const ctx = new OfflineAudioContext(1, 2048, 44100)
+      await RaveNode.register(ctx)
+      const rave = await RaveNode.instantiate(ctx, {
+        fetchSample: () => { return Promise.resolve([new Float32Array()]) }
+      })
+      const source = { code: `42 LR+=` }
+      rave.connect(ctx.destination)
+
+      const { frontend } = rave
+      rave.frontend.tokenize(source)
+      const tokens = Array.from(frontend.tokenize(source))
+      const info = frontend.produce(tokens)
+      const sound = frontend.compile(info)
+
+      await rave.worklet.setBarAt([0], [sound.payload])
+
+      await rave.start()
+
+      const buffer = await ctx.startRendering()
+      const data = buffer.getChannelData(0)
+      expect(data[128]).toEqual(42)
+    })
+  })
 }

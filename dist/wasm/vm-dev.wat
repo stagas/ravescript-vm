@@ -44,7 +44,6 @@
  (import "env" "memory" (memory $0 (shared 17 3000)))
  (import "env" "table" (table $0 10 funcref))
  (import "env" "abort" (func $~lib/builtins/abort (param i32 i32 i32 i32)))
- (import "env" "logi" (func $assembly/env/logi (param i32)))
  (import "env" "setCtrlInstanceAt" (func $assembly/env/setCtrlInstanceAt (param i32 i32) (result i32)))
  (import "env" "resetCtrlInstance" (func $assembly/env/resetCtrlInstance (param i32) (result i32)))
  (import "env" "logf" (func $assembly/env/logf (param f32)))
@@ -181,7 +180,6 @@
  (export "wavetable_set_exp" (func $assembly/core/wavetable/Wavetable#set:exp))
  (export "wavetable_set_noise" (func $assembly/core/wavetable/Wavetable#set:noise))
  (export "util_nextPowerOfTwo" (func $assembly/util/nextPowerOfTwo))
- (export "env_logi" (func $assembly/env/logi))
  (export "antialias_wavetable_AntialiasWavetable_set_real" (func $assembly/core/antialias-wavetable/AntialiasWavetable#set:real))
  (export "antialias_wavetable_AntialiasWavetable_set_imag" (func $assembly/core/antialias-wavetable/AntialiasWavetable#set:imag))
  (export "antialias_wavetable_AntialiasWavetable_set_freqs" (func $assembly/core/antialias-wavetable/AntialiasWavetable#set:freqs))
@@ -4368,8 +4366,6 @@
   f64.add
   i32.trunc_sat_f64_u
   local.set $numOfTables
-  local.get $tableLength
-  call $assembly/env/logi
   i32.const 0
   local.get $numOfTables
   call $~lib/staticarray/StaticArray<~lib/staticarray/StaticArray<f32>>#constructor
