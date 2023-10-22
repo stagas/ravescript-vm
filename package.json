@@ -21,9 +21,9 @@
   },
   "dependencies": {
     "@bjorn3/browser_wasi_shim": "*",
-    "alice-bob": "file:../alice-bob",
-    "annotate-code": "file:../annotate-code",
-    "event-toolkit": "file:../event-toolkit",
+    "alice-bob": "*",
+    "annotate-code": "*",
+    "event-toolkit": "*",
     "utils": "file:../utils",
     "visitor-as": "*"
   }
