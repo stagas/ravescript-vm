@@ -767,6 +767,8 @@ export namespace Emitter {
     callers: Emitter.Caller[]
     floats?: Float32Array
     // TODO: fix this
+    // This is used for ParamRms, to pick up the audio
+    // for the param using param.last.rms
     rms?: any //Rms['$']
   }
 
