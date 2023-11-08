@@ -1,15 +1,11 @@
 import { Agent, Alice } from 'alice-bob'
-import { Deferred } from 'utils'
 import { queue } from 'event-toolkit'
+import { Deferred } from 'utils'
 import { Build, Frontend } from './frontend.ts'
 import { PreviewWorker } from './preview-worker.ts'
 import { RaveNode } from './rave-node.ts'
 import { Vm } from './vm.ts'
-// import { printer } from '../../web/util/printer'
-// import { Sound } from '../../web/sound'
-// const print = printer('preview-service')
 
-// TODO: fixme
 type Sound = any
 
 export const previews: Map<string, Deferred<[Float32Array, Float32Array]>> = new Map()
@@ -26,17 +22,6 @@ export async function createPreviewService(length: number, vm: Vm) {
   deferred = Deferred()
   previewServices.set(length, deferred)
 
-  // const vmMemory = createVmMemory()
-
-  // const vmInit: VmInit = {
-  //   vmBinary: RaveNode.vmBinary,
-  //   pffftBinary: RaveNode.pffftBinary,
-  //   memory: vmMemory
-  // }
-
-  // const vm = await initVm(vmInit)
-
-  // delete Frontend.core
   const frontend = new Frontend(vm)
 
   frontend.clock.endTime = 1
@@ -85,31 +70,6 @@ export class PreviewService {
     build: Build.Sound,
     builds: Build.Sound[] | undefined,
   ) => {
-    // TODO: why aren't they cleaned up properly?
-    // build.shared.memories!.audios.forEach((audio) =>
-    //   audio.fill(0)
-    // )
-    // build.info.literals.forEach((l) => {
-    //   build.payload.liveLiterals[l.ptr]
-    //     = build.payload.ownLiterals[l.ptr]
-    //     = l.value
-    // })
-    // // build.payload.liveLiterals.set(
-    // //   build.payload.ownLiterals
-    // // )
-    // builds?.forEach((build) => {
-    //   build.shared.memories!.audios.forEach((audio) =>
-    //     audio.fill(0)
-    //   )
-    //   build.info.literals.forEach((l) => {
-    //     build.payload.liveLiterals[l.ptr]
-    //       = build.payload.ownLiterals[l.ptr]
-    //       = l.value
-    //   })
-    //   // build.payload.liveLiterals.set(
-    //   //   build.payload.ownLiterals
-    //   // )
-    // })
     await this.worker.render(build.payload, builds?.map((build) => build.payload))
   })
 
@@ -118,7 +78,6 @@ export class PreviewService {
       b.payload.instanceId !== build.payload.instanceId
     )
 
-    // print.id('pushTrash', sound.$.id)
     this.trash.push(build)
 
     if (this.trash.length > 48) {
@@ -129,7 +88,6 @@ export class PreviewService {
   }
 
   purge = async (instanceId: number, sound: Sound) => {
-    // print.id('purge', sound.$.id)
     this.frontend.purge(instanceId)
     await this.worker.purge(instanceId)
   }
