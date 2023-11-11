@@ -1,13 +1,17 @@
-// import { LineCol } from '../../web/editor/editor'
-import { Build, Frontend } from './frontend.ts'
-import { AstNode, Emitter, Scope, isExternalSource, tokenize } from './lang/index.ts'
-import { Vm, fetchVmBinary, initVm } from './vm.ts'
+import { Build } from './frontend.ts'
+import { AstNode, Emitter, Scope, isExternalSource } from './lang/index.ts'
 
 type LineColId = string & readonly ['lineColId']
 type HashId = string & readonly ['hashId']
 type ScopeHashId = string & readonly ['scopeHashId']
 
 export namespace UI {
+  export interface Dim {
+    line: number
+    col: number
+    right: number
+    bottom: number
+  }
   export interface View {
     lineCol: LineColId
     hash: HashId
@@ -17,7 +21,6 @@ export namespace UI {
     audio: Emitter.Audio
     ancestorIds: number[]
   }
-
   export interface Node {
     lineCol: LineColId
     view: View | null

@@ -49,6 +49,7 @@ export namespace Build {
   }
 
   export interface Sound {
+    frontend: Frontend
     info: Emitter.Info
     shared: Shared
     signal: Signal
@@ -90,6 +91,7 @@ export class Frontend {
   zero: Block
 
   constructor(
+    public name = 'default',
     public vm: Vm,
     public sampleRate = SAMPLE_RATE,
     public blockSize = BLOCK_SIZE,
@@ -322,6 +324,7 @@ export class Frontend {
       shared.info = info
 
       const sound: Build.Sound = {
+        frontend: this,
         info,
         shared,
         signal: shared.payload.signal,
@@ -416,6 +419,7 @@ export class Frontend {
     })
 
     const sound: Build.Sound = {
+      frontend: this,
       info,
       shared,
       signal,
@@ -423,7 +427,8 @@ export class Frontend {
       payload: {
         ...shared.payload,
         ownLiterals
-      }
+      },
+      isNew: true,
     }
 
     if (this.debug) {

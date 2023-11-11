@@ -59,7 +59,7 @@ export class RaveNode extends AudioWorkletNode {
       memory: options.vmMemory,
     }
     const vm: Vm = await initVm(vmInit)
-    const frontend = new Frontend(vm, context.sampleRate)
+    const frontend = new Frontend('live', vm, context.sampleRate)
     const processorOptions: BackendInit = this.processorOptions = {
       vmInit,
       // vmInit: {

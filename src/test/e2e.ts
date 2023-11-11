@@ -18,7 +18,7 @@ export async function test() {
       vmBinary,
       pffftBinary
     })
-    const frontend = new Frontend(vm, 44100)
+    const frontend = new Frontend('test', vm, 44100)
 
     const processorOptions: BackendInit = {
       vmInit: {

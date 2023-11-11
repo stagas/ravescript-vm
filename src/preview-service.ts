@@ -22,7 +22,7 @@ export async function createPreviewService(length: number, vm: Vm) {
   deferred = Deferred()
   previewServices.set(length, deferred)
 
-  const frontend = new Frontend(vm)
+  const frontend = new Frontend('preview', vm)
 
   frontend.clock.endTime = 1
 
