@@ -1,4 +1,4 @@
-import { MapSet } from 'utils'
+import { MapSet, trunc } from 'utils'
 import { envGens } from '../env-info.ts'
 import { Emitter } from './emitter.ts'
 import { AstNode, parse } from './parser.ts'
@@ -557,8 +557,9 @@ function visit(scope: Scope, node: AstNode.Item) {
           const slopeInfo = Scope.unboxLiteral(scope.lookupProp('slope'))
           const stepInfo = Scope.unboxLiteral(scope.lookupProp('step'))
 
-          const min = minInfo?.value ?? range[0]
-          const max = maxInfo?.value ?? range[1]
+          const digits = literal.info.astNode.info.digits
+          const min = minInfo?.value ?? trunc(range[0], digits)
+          const max = maxInfo?.value ?? trunc(range[1], digits)
           const slope = slopeInfo?.value ?? 1
           const step = stepInfo?.value ?? (1 / 10 ** literal.info.astNode.info.digits)
 
