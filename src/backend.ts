@@ -623,7 +623,7 @@ export async function test_backend() {
       vmBinary,
       pffftBinary
     })
-    const frontend = new Frontend(vm, 44100)
+    const frontend = new Frontend('test', vm, 44100)
 
     const processorOptions: BackendInit = {
       vmInit: {
