@@ -67,10 +67,15 @@ export class PreviewService {
   }
 
   render = queue.atomic(async (
+    isMain: boolean,
     build: Build.Sound,
-    builds: Build.Sound[] | undefined,
+    builds: Build.Sound[],
   ) => {
-    await this.worker.render(build.payload, builds?.map((build) => build.payload))
+    await this.worker.render(
+      isMain,
+      build.payload,
+      builds.map((build) => build.payload)
+    )
   })
 
   async pushTrash(build: Build.Sound, sound: Sound) {
