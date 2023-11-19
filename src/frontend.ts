@@ -117,7 +117,8 @@ export class Frontend {
     signal.LR = this.signal.LR!.byteOffset
 
     const mainInfo = this.produce([...this.tokenize({ code: defaultMainCode })])
-    this.main = this.compileMain(mainInfo)
+    this.setupMain(mainInfo)
+    this.main = this.compile(mainInfo)
     // console.log(this.main, this)
 
     this.buffers = {
@@ -260,23 +261,25 @@ export class Frontend {
     return produce(scope, idModifier)
   }
 
-  compileMain(mainInfo: Emitter.Info, clear = false): Build.Sound {
-    mainInfo.overrideAudios.set(0, this.signal.L!)
-    mainInfo.overrideAudios.set(1, this.signal.R!)
-    mainInfo.overrideAudios.set(2, this.signal.LR!)
-
-    //   , namedSignals ?: Map<string, Signal>
-    // for (const [name, audio] of mainInfo.withs.entries()) {
-    //   const signal = namedSignals?.get(name)
-    //   if (signal) {
-    //     mainInfo.overrideAudios.set(audio.ptr, signal.LR!)
-    //   }
-    // }
-    // this.mainInfo.overrideAudios.set(this.mainInfo.L, this.mainOuts[0])
-    // this.mainInfo.overrideAudios.set(this.mainInfo.R, this.mainOuts[1])
-    this.main = this.compile(mainInfo, clear ? null : this.main, true)
-    return this.main
+  setupMain(info: Emitter.Info) {
+    info.overrideAudios.set(0, this.signal.L!)
+    info.overrideAudios.set(1, this.signal.R!)
+    info.overrideAudios.set(2, this.signal.LR!)
   }
+  // compileMain(mainInfo: Emitter.Info, clear = false): Build.Sound {
+
+  //   //   , namedSignals ?: Map<string, Signal>
+  //   // for (const [name, audio] of mainInfo.withs.entries()) {
+  //   //   const signal = namedSignals?.get(name)
+  //   //   if (signal) {
+  //   //     mainInfo.overrideAudios.set(audio.ptr, signal.LR!)
+  //   //   }
+  //   // }
+  //   // this.mainInfo.overrideAudios.set(this.mainInfo.L, this.mainOuts[0])
+  //   // this.mainInfo.overrideAudios.set(this.mainInfo.R, this.mainOuts[1])
+  //   this.main = this.compile(mainInfo, clear ? null : this.main, true)
+  //   return this.main
+  // }
 
   compile(info: Emitter.Info, current?: Build.Sound | null | undefined, immediate = false) {
     // console.warn('compile')

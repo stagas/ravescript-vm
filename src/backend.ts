@@ -69,6 +69,7 @@ export class Bar {
   bar: BarView
   barCtrls: Uint32Array
   ctrls: FixedArray<Ctrl> = new FixedArray(16 * 4)
+  main?: Ctrl
 
   constructor(public backend: Backend, public ptr: number) {
     barsByPtr.set(ptr, this)
@@ -78,18 +79,23 @@ export class Bar {
 
   reset() {
     this.ctrls.forEach(resetCtrl)
+    if (this.main) resetCtrl(this.main)
   }
 
   clear() {
     const endTime = this.backend.clock.endTime
+
+    // try to free and maybe reset the ctrls that are not used
     this.ctrls.forEach((ctrl) => {
       let reset = true
       for (let t = 0; t < endTime; t++) {
         const bar = this.backend.bars[t]
         if (bar) {
           for (const other of bar.ctrls) {
+            // the ctrl instanceId exists in another bar, we should not reset it
             if (ctrl.instanceId === other.instanceId) {
               reset = false
+              // the ctrl is the same in another bar, so we should not free it
               if (ctrl === other) {
                 return
               }
@@ -97,11 +103,41 @@ export class Bar {
           }
         }
       }
+      // ctrl's instanceId isn't used anywhere, so we can reset it
       if (reset) resetCtrl(ctrl)
+      // free the ctrl object
       this.backend.ctrlPool.unshift(ctrl)
     })
-    this.ctrls.clear()
+
+    // try to free main and maybe reset it
+    // this.ctrls.forEach((ctrl) => {
+    if (this.main) {
+      out: {
+        const { main } = this
+        let reset = true
+        for (let t = 0; t < endTime; t++) {
+          const bar = this.backend.bars[t]
+          if (bar) {
+            // the ctrl instanceId exists in another bar, we should not reset it
+            if (main.instanceId === bar.main?.instanceId) {
+              reset = false
+              // the ctrl is the same in another bar, so we should not free it
+              if (main === bar.main) {
+                break out
+              }
+            }
+          }
+        }
+        // ctrl's instanceId isn't used anywhere, so we can reset it
+        if (reset) resetCtrl(main)
+        // free the ctrl object
+        this.backend.ctrlPool.unshift(main)
+      }
+    }
+
     this.bar.size = 0
+    this.bar.main = 0
+    this.ctrls.clear()
   }
 
   addCtrl(instance: Module.Instance, payload: Build.Payload) {
@@ -360,24 +396,24 @@ export class Backend {
     return instance
   }
 
-  async setMain(payload: Build.Payload) {
-    // console.log('SET MAIN')
-    const instance = await this.getCtrlInstance(payload)
-    const ctrl = this.putCtrl(instance, payload)
-    this.main = ctrl
-    this.vm.exports.runner_set_main(this.runnerPtr, ctrl.ptr)
-  }
+  // async setMain(payload: Build.Payload) {
+  //   // console.log('SET MAIN')
+  //   const instance = await this.getCtrlInstance(payload)
+  //   const ctrl = this.putCtrl(instance, payload)
+  //   this.main = ctrl
+  //   this.vm.exports.runner_set_main(this.runnerPtr, ctrl.ptr)
+  // }
 
-  clearMain() {
-    this.vm.exports.runner_set_main(this.runnerPtr, 0)
-    this.main = null
-  }
+  // clearMain() {
+  //   this.vm.exports.runner_set_main(this.runnerPtr, 0)
+  //   this.main = null
+  // }
 
   removeBarAt(barTime: number) {
     this.runnerBars[barTime] = 0
   }
 
-  async setBarAt(barTimes: number[], buildPayloads: Build.Payload[]) {
+  async setBarAt(barTimes: number[], buildPayloads: Build.Payload[], mainPayload: Build.Payload | null) {
     if (!this.barPool.size) {
       if (this.barTrash.size) {
         const bar = this.barTrash.pop()
@@ -432,27 +468,17 @@ export class Backend {
       bar.addCtrl(instance, payload)
     }
 
+    if (mainPayload) {
+      const instance = await this.getCtrlInstance(mainPayload)
+      const ctrl = this.putCtrl(instance, mainPayload)
+      bar.bar.main = ctrl.ptr
+    }
+
     if (this.oldBars.size) {
       for (const old of this.oldBars) {
         this.barTrash.unshift(old)
       }
     }
-
-    // if (old) {
-    //   old.clear()
-    //   this.barPool.unshift(old)
-    // }
-    // if (this.process === this.doIdle) {
-    //   this.runner.exports.Runner_fill(
-    //     this.runnerPtr,
-    //     0,
-    //     2048,
-    //     this.mainOuts[0].ptr,
-    //     this.mainOuts[1].ptr,
-    //   )
-    //   this.bar?.reset()
-    // }
-    // console.log('CREATE', bar)
   }
 
   putCtrl(instance: Module.Instance, payload: Build.Payload) {
@@ -461,15 +487,10 @@ export class Backend {
       this.barPool.unshift(bar)
       bar.clear()
     }
-    // const is0 = this.ctrlIndex === 0
-    // if (is0) debugger
 
     const ctrl: Ctrl = this.ctrlPool.pop()
     ctrl.instance = instance
     Object.assign(ctrl, payload)
-    // this.ctrlIndex = (this.ctrlIndex + 1) % MAX_CTRL_INSTANCES
-
-    // if (this.ctrlIndex === 0) this.ctrlIndex = 1
 
     this.ctrl.byteOffset = ctrl.ptr
     this.ctrl.id = ctrl.instanceId
@@ -485,10 +506,6 @@ export class Backend {
     this.ctrl.liveLiterals = ctrl.liveLiterals.byteOffset
     this.ctrl.ownLiterals = ctrl.ownLiterals.byteOffset
 
-    // if (is0) {
-    //   console.log({ ...this.ctrl }, ctrl)
-    // }
-    // console.log(this.ctrlPool.size)
     return ctrl
   }
 
@@ -588,8 +605,8 @@ export class Backend {
     if (!bar) return
 
     bar.reset()
-    if (this.main) resetCtrl(this.main)
-    else this.clearMain()
+    // if (this.main) resetCtrl(this.main)
+    // else this.clearMain()
 
     this.resetClock()
     this.clearSignal()
@@ -650,7 +667,7 @@ export async function test_backend() {
       const tokens = Array.from(frontend.tokenize(source))
       const info = frontend.produce(tokens)
       const sound = frontend.compile(info)
-      await backend.setBarAt([0], [sound.payload])
+      await backend.setBarAt([0], [sound.payload], null)
 
       backend.fill(0, 2048)
       // console.log(backend)

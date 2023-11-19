@@ -127,19 +127,19 @@
  (data $8 (i32.const 1048992) "\f8\ac\b1k($\f7?\00\b0\cd\ee_\t\e1\bf\a1\cc\d2f\f7\e1\f6?\00\d0v\bd\94\84\e0\bf\8a\d40\0e=\a1\f6?\00\f8\e8\aeC\01\e0\bf\85l\d02\eca\f6?\00@\0b6\c5\fe\de\bf\f8\98\11\95\fa#\f6?\00\e0\b7\1a\d9\fd\dd\bfl\02\cf\a4[\e7\f5?\00\90\c7\0c\ae\ff\dc\bf\b8O!Z\05\ac\f5?\00\a0\fd\118\04\dc\bf\1en\16\0f\edq\f5?\00\e0:2g\0b\db\bf5\f8\0bY\t9\f5?\00\b0-Z/\15\da\bf\dd\ada\edO\01\f5?\00`\f8Z\7f!\d9\bf\d0{H\8e\b8\ca\f4?\00\90q\b0M0\d8\bf\eeO3\b49\95\f4?\00\e0\a9\f9\89A\d7\bfi\d5\af\df\cb`\f4?\00\90\19\b5+U\d6\bfS\b9\e4Nf-\f4?\00\10\9b\a2#k\d5\bf\a6\d8\1d\11\01\fb\f3?\00\a0_\0fe\83\d4\bf6X\0c\b7\95\c9\f3?\00\a0\f67\e9\9d\d3\bfJ\fd\b6J\1c\99\f3?\00`\8dS\a1\ba\d2\bf\b5\99\e0\0c\8ei\f3?\00@\ca@\83\d9\d1\bf\b2\e7\13\82\e4:\f3?\00\e0@:\85\fa\d0\bf\b1\bd\85\19\19\r\f3?\000\e72\9c\1d\d0\bf\d7q\b2\ca%\e0\f2?\00`\fa\a2}\85\ce\bf\82\cd\13\cf\04\b4\f2?\00\80=c\c8\d3\cc\bfP\cb|,\b0\88\f2?\00\a0\14L\03&\cb\bf\e5M\94c\"^\f2?\00\e0O/\1c|\c9\bf\b1\15\86=V4\f2?\00\00\80?\02\d6\c7\bf8\af>\e3F\0b\f2?\00\e0\05\1a\a73\c6\bf\dd\a3\cd\fd\ee\e2\f1?\00\00W\e9\f5\94\c4\bf09\0bXJ\bb\f1?\00\a0\e0$\e4\f9\c2\bf\00\"\7f\84S\94\f1?\00\c0\fdZYb\c1\bf<\d7\d5\c0\06n\f1?\00\80\bdu\9a\9c\bf\bf\c2\e4\b7G_H\f1?\00\c0\f9[W{\bc\bf\d1\85\00\adX#\f1?\00\80\f4\0f\c6`\b9\bf\'\"S\0f\f0\fe\f0?\00\00\b6G\e2L\b6\bf\8f:\d0w \db\f0?\00@\01\b2x?\b3\bf\d9\80Y\d6\e6\b7\f0?\00\c0B\1a}8\b0\bf\8d@{\fe>\95\f0?\00\00\b5\08\92o\aa\bf\83;\c5\ca%s\f0?\00\00wO\95z\a4\bf\\\1b\r\e4\97Q\f0?\00\00\0c\c5\a8#\9d\bf\a2\8e \c1\910\f0?\00\00x)&j\91\bf!~\b3%\10\10\f0?\00\00\e8\d8\f8 w\bfk\a7\ca\f9~\c0\ef?\00\00P\b1S\fe\86?\84\f1\f6\d3eD\ef?\00\80\0f\e1\cc\1c\a1?\7f\10\84\9f\07\cc\ee?\00\80\8b\8c\fcM\ac?\e8Z\97\99:W\ee?\00@W\1e2\aa\b3?\e6=\bd\f0\d6\e5\ed?\00\80\8b\d0\a0\18\b9?\b38\ff\81\b6w\ed?\00@\04\da\e9r\be?C\e9Mr\b5\0c\ed?\00`\7fP\d2\dc\c1?cu\0e\dc\b2\a4\ec?\00\a0\de\03\abv\c4?Q\cb\d6\e8\8e?\ec?\00 \e2wC\07\c7?L\0c\02O+\dd\eb?\00@\a9\8b\de\8e\c9?\ca\15`\00l}\eb?\00\e0\d2j\b8\r\cc?\8f3.n6 \eb?\00\e0\ce\af\n\84\ce?9P)&p\c5\ea?\00\80g\b4\ny\d0?\dd1\'\bc\01m\ea?\00\c0\01h\05\ac\d1?\8b\f1?\bc\d3\16\ea?\00\e0\fe\d4\11\db\d2?\ad\fegI\d1\c2\e9?\00\80\c5NF\06\d4?\02\99|\f4\e4p\e9?\00\f0:\t\be-\d5?\f2\bc\829\fb \e9?\00\d0P \90Q\d6?\f1Y\f7\87\01\d3\e8?\00\f0\ea\cd\d2q\d7?m\f6\b9\eb\e5\86\e8?\00\90}\85\9c\8e\d8?\94\b9X\b6\97<\e8?\00`\e1U\01\a8\d9?\"\10\c6\ff\05\f4\e7?\00\d0\d3n\18\be\da?\ca\15\14\18\"\ad\e7?\00\e0\a0\ae\f2\d0\db?\8c\ff\9e\f9\dcg\e7?\00@\bf=\a4\e0\dc?")
  (data $9 (i32.const 1050016) "\8e\n\b9\12\00 \e6?\05\b6D\06\ab\04\89<\a64W\04\00`\e6?\a9\f7b\ea\9b\ffa<\c5\f2%\c3\ff\9f\e6?\ba\90<\cb\cf~\82<\04Z\b98\00\e0\e6?&\93sV\88\ff\88<\e3\94\99\e0\ff\1f\e7?\b1\82_\'@\fd\8a<\10\0eY\15\00`\e7?A\83#\b4u\fdr\bc\d5[e\12\00\a0\e7?v+$|\e6\08x<\a6\e9Y2\00\e0\e7?\b7\"\f6&\e4\08b\bc\d2\b2\b4\ed\ff\1f\e8?/\c9\a5\1eF\02\84\bc\c3\fc\fa-\00`\e8?\1f\9a\f2\a2\f4\f7m<Pk\8c\f7\ff\9f\e8?\fd\95I\tS\04\8e\bcf\15g9\00\e0\e8?E{\c7\be\f3\04\8a\bcE\17\bf\e2\ff\1f\e9?< \0e@4\faw\bc\d1\9f\\\cc\ff_\e9?]i\a0\05\80\ffv\bcgG\ba;\00\a0\e9?\03~\ec\c4\c4\f8p<\a5-\b9\e7\ff\df\e9?\02F\8cG\d9\7f\8e<\af\fd.\d7\ff\1f\ea?~\ae\cdMU\0cj\bc\95\ff\04\de\ff_\ea?k\b2\e9\8c\a9}\86<+\8d^\ca\ff\9f\ea?\de\13L\b5\c9\84\82\bc\ea\03\ad\dd\ff\df\ea?<.`\ea\c8\12X<M=\r\f1\ff\1f\eb?\9cx\'\ad\dd\fa\8e\bcZ\16!\ce\ff_\eb?7\12\c6\19\17\cbS<t\e6P\d9\ff\9f\eb?\00\ce\94A\d9\f7s<\af\a8\9c\13\00\e0\eb?\c0\9b]!\c4\nu<\99\dfF[\00 \ec?\c9\c1\e9S\a6\eek<\ae\f7\b9@\00`\ec?\d6pJ\'\9f\07|\bc\8a\fdUb\00\a0\ec?\1fL\e8v@\0bz\bc]\tL\d9\ff\df\ec?\d7\b5\9a\f93\f9\88<\cf\d6u\f9\ff\1f\ed?\be\e1_f\08,X\bc\93\1cV\a2\ff_\ed?\f3\95\d2\9b(\04{\bc\0c\8b\"\9d\ff\9f\ed?6\a2\0f4Q\02\87<\16~\bce\00\e0\ed?\0c\d8\a4\16\1e\01u\bc\91G\f6\02\00 \ee?\e0b\ef\t/\80\89<\d8\a6\d7W\00`\ee?\fa\f7\0cXu\0b~\bc\0c\c0\ed\'\00\a0\ee?\11\98E\t\83\84\8c\bc|\cb\f5l\00\e0\ee?\f4v\15\95\'\80\8f\bc\cc}+x\00 \ef?\8fStr\d9\81\8f\bc\nE\0c&\00`\ef?\dc\ff\'\'\00q@\bc3\d5\8c\e8\ff\9f\ef?\b0\a8\fd\e1\dc\1bX\bc\89\86\0f\d5\ff\df\ef?n\8e\91\cb\1a\f9\87<g#)\04\00 \f0?\81F2e\f3\7f\9b<h\d6\e3\e3\ff_\f0?{\95\ae\dd\08\fa\86<W\a7\85\n\00\a0\f0?\91\fb\d3\80\de\e2W\bc\cc?_\1a\00\e0\f0?\14\f0\c5\053\82\91\bc\f5\ba\af\f8\ff\1f\f1?\c2\ba\80f\bb\fa\8b\bc\ad\91M\e5\ff_\f1?\ef\e77\17\12\7f\9d\bc\e16\ac\11\00\a0\f1?\ff\f5\16\05\n\00\9c<HB\c8\19\00\e0\f1?\a0]\da\e4\fb\82\90\bcn^\fe\0f\00 \f2?C\fb\9cL\d0\fd\88\bc\91\d8\9f&\00`\f2?\82\d1\94y*\fe\8c<\da\e6\a6)\00\a0\f2?\c5\8b^qs\02p\bc9>)\e0\ff\df\f2?\f9\a6\b2\da9|\9b<\82\f0\dc\f7\ff\1f\f3?TR\dcn3\f1}<`\8bZ\f0\ff_\f3?\eb1\cdLV\03\9e\bc\cc\ae\0e.\00\a0\f3?w\a4\d3K\e7\f0u<6\b2;\04\00\e0\f3?3\88\9d\14\cb}\9c<\ff\87\d1\02\00 \f4?(=-\cf\af\08~<\b1|8\r\00`\f4?\a6\99e\857\08\82<\89\9fV\04\00\a0\f4?\d2\bcO\90\\\fa\89\bc\f3C5\04\00\e0\f4?)S\17\ed%\11x\bc\0f\7f\02\cc\ff\1f\f5?\dcTw\84\d8\83\98<o\b3\87\fd\ff_\f5?\07(\d01\e7\t\87\bc\ba\f7\1d\f2\ff\9f\f5?\02{rh\9f\f7\87<\814\fc\eb\ff\df\f5?>\e90.\90\80\91\bc")
  (data $10 (i32.const 1051052) "<\00\00\00\00\00\00\00\00\00\00\00\02\00\00\00$\00\00\00I\00n\00d\00e\00x\00 \00o\00u\00t\00 \00o\00f\00 \00r\00a\00n\00g\00e\00\00\00\00\00\00\00\00\00")
- (data $11 (i32.const 1051116) "\1c\00\00\00\00\00\00\00\00\00\00\00\16\00\00\00\08\00\00\00\01\00\00\00\00\00\00\00\00\00\00\00")
+ (data $11 (i32.const 1051116) "\1c\00\00\00\00\00\00\00\00\00\00\00\13\00\00\00\08\00\00\00\01\00\00\00\00\00\00\00\00\00\00\00")
  (data $12 (i32.const 1051148) "|\00\00\00\00\00\00\00\00\00\00\00\02\00\00\00^\00\00\00E\00l\00e\00m\00e\00n\00t\00 \00t\00y\00p\00e\00 \00m\00u\00s\00t\00 \00b\00e\00 \00n\00u\00l\00l\00a\00b\00l\00e\00 \00i\00f\00 \00a\00r\00r\00a\00y\00 \00i\00s\00 \00h\00o\00l\00e\00y\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00")
  (data $13 (i32.const 1051280) ")\15DNn\83\f9\a2\c0\dd4\f5\d1W\'\fcA\90C<\99\95b\dba\c5\bb\de\abcQ\fe")
- (data $14 (i32.const 1051324) "\1c\00\00\00\00\00\00\00\00\00\00\00\16\00\00\00\08\00\00\00\02\00\00\00\00\00\00\00\00\00\00\00")
- (data $15 (i32.const 1051356) "\1c\00\00\00\00\00\00\00\00\00\00\00\16\00\00\00\08\00\00\00\03\00\00\00\00\00\00\00\00\00\00\00")
- (data $16 (i32.const 1051388) "\1c\00\00\00\00\00\00\00\00\00\00\00\16\00\00\00\08\00\00\00\04\00\00\00\00\00\00\00\00\00\00\00")
+ (data $14 (i32.const 1051324) "\1c\00\00\00\00\00\00\00\00\00\00\00\13\00\00\00\08\00\00\00\02\00\00\00\00\00\00\00\00\00\00\00")
+ (data $15 (i32.const 1051356) "\1c\00\00\00\00\00\00\00\00\00\00\00\13\00\00\00\08\00\00\00\03\00\00\00\00\00\00\00\00\00\00\00")
+ (data $16 (i32.const 1051388) "\1c\00\00\00\00\00\00\00\00\00\00\00\13\00\00\00\08\00\00\00\04\00\00\00\00\00\00\00\00\00\00\00")
  (data $17 (i32.const 1051424) "n\83\f9\a2\00\00\00\00\d1W\'\fc)\15DN\99\95b\db\c0\dd4\f5\abcQ\feA\90C<:n$\b7a\c5\bb\de\ea.I\06\e0\d2MB\1c\eb\1d\fe\1c\92\d1\t\f55\82\e8>\a7)\b1&p\9c\e9\84D\bb.9\d6\919A~_\b4\8b_\84\9c\f49S\83\ff\97\f8\1f;(\f9\bd\8b\11/\ef\0f\98\05\de\cf~6m\1fm\nZf?FO\b7\t\cb\'\c7\ba\'u-\ea_\9e\f79\07={\f1\e5\eb\b1_\fbk\ea\92R\8aF0\03V\08]\8d\1f \bc\cf\f0\abk{\fca\91\e3\a9\1d6\f4\9a_\85\99e\08\1b\e6^\80\d8\ff\8d@h\a0\14W\15\06\061\'sM")
- (data $18 (i32.const 1051628) "\1c\00\00\00\00\00\00\00\00\00\00\00\17\00\00\00\08\00\00\00\05\00\00\00\00\00\00\00\00\00\00\00")
- (data $19 (i32.const 1051660) "\1c\00\00\00\00\00\00\00\00\00\00\00\18\00\00\00\08\00\00\00\06\00\00\00\00\00\00\00\00\00\00\00")
- (data $20 (i32.const 1051692) "\1c\00\00\00\00\00\00\00\00\00\00\00\17\00\00\00\08\00\00\00\07\00\00\00\00\00\00\00\00\00\00\00")
+ (data $18 (i32.const 1051628) "\1c\00\00\00\00\00\00\00\00\00\00\00\14\00\00\00\08\00\00\00\05\00\00\00\00\00\00\00\00\00\00\00")
+ (data $19 (i32.const 1051660) "\1c\00\00\00\00\00\00\00\00\00\00\00\15\00\00\00\08\00\00\00\06\00\00\00\00\00\00\00\00\00\00\00")
+ (data $20 (i32.const 1051692) "\1c\00\00\00\00\00\00\00\00\00\00\00\14\00\00\00\08\00\00\00\07\00\00\00\00\00\00\00\00\00\00\00")
  (data $21 (i32.const 1051728) "\00\00\00\00\00\00\00\00\00\00\00\00\00\00\f0?n\bf\88\1aO;\9b<53\fb\a9=\f6\ef?]\dc\d8\9c\13`q\bca\80w>\9a\ec\ef?\d1f\87\10z^\90\bc\85\7fn\e8\15\e3\ef?\13\f6g5R\d2\8c<t\85\15\d3\b0\d9\ef?\fa\8e\f9#\80\ce\8b\bc\de\f6\dd)k\d0\ef?a\c8\e6aN\f7`<\c8\9bu\18E\c7\ef?\99\d33[\e4\a3\90<\83\f3\c6\ca>\be\ef?m{\83]\a6\9a\97<\0f\89\f9lX\b5\ef?\fc\ef\fd\92\1a\b5\8e<\f7Gr+\92\ac\ef?\d1\9c/p=\be><\a2\d1\d32\ec\a3\ef?\0bn\90\894\03j\bc\1b\d3\fe\aff\9b\ef?\0e\bd/*RV\95\bcQ[\12\d0\01\93\ef?U\eaN\8c\ef\80P\bc\cc1l\c0\bd\8a\ef?\16\f4\d5\b9#\c9\91\bc\e0-\a9\ae\9a\82\ef?\afU\\\e9\e3\d3\80<Q\8e\a5\c8\98z\ef?H\93\a5\ea\15\1b\80\bc{Q}<\b8r\ef?=2\deU\f0\1f\8f\bc\ea\8d\8c8\f9j\ef?\bfS\13?\8c\89\8b<u\cbo\eb[c\ef?&\eb\11v\9c\d9\96\bc\d4\\\04\84\e0[\ef?`/:>\f7\ec\9a<\aa\b9h1\87T\ef?\9d8\86\cb\82\e7\8f\bc\1d\d9\fc\"PM\ef?\8d\c3\a6DAo\8a<\d6\8cb\88;F\ef?}\04\e4\b0\05z\80<\96\dc}\91I?\ef?\94\a8\a8\e3\fd\8e\96<8bunz8\ef?}Ht\f2\18^\87<?\a6\b2O\ce1\ef?\f2\e7\1f\98+G\80<\dd|\e2eE+\ef?^\08q?{\b8\96\bc\81c\f5\e1\df$\ef?1\ab\tm\e1\f7\82<\e1\de\1f\f5\9d\1e\ef?\fa\bfo\1a\9b!=\bc\90\d9\da\d0\7f\18\ef?\b4\n\0cr\827\8b<\0b\03\e4\a6\85\12\ef?\8f\cb\ce\89\92\14n<V/>\a9\af\0c\ef?\b6\ab\b0MuM\83<\15\b71\n\fe\06\ef?Lt\ac\e2\01B\86<1\d8L\fcp\01\ef?J\f8\d3]9\dd\8f<\ff\16d\b2\08\fc\ee?\04[\8e;\80\a3\86\bc\f1\9f\92_\c5\f6\ee?hPK\cc\edJ\92\bc\cb\a9:7\a7\f1\ee?\8e-Q\1b\f8\07\99\bcf\d8\05m\ae\ec\ee?\d26\94>\e8\d1q\bc\f7\9f\e54\db\e7\ee?\15\1b\ce\b3\19\19\99\bc\e5\a8\13\c3-\e3\ee?mL*\a7H\9f\85<\"4\12L\a6\de\ee?\8ai(z`\12\93\bc\1c\80\ac\04E\da\ee?[\89\17H\8f\a7X\bc*.\f7!\n\d6\ee?\1b\9aIg\9b,|\bc\97\a8P\d9\f5\d1\ee?\11\ac\c2`\edcC<-\89a`\08\ce\ee?\efd\06;\tf\96<W\00\1d\edA\ca\ee?y\03\a1\da\e1\ccn<\d0<\c1\b5\a2\c6\ee?0\12\0f?\8e\ff\93<\de\d3\d7\f0*\c3\ee?\b0\afz\bb\ce\90v<\'*6\d5\da\bf\ee?w\e0T\eb\bd\1d\93<\r\dd\fd\99\b2\bc\ee?\8e\a3q\004\94\8f\bc\a7,\9dv\b2\b9\ee?I\a3\93\dc\cc\de\87\bcBf\cf\a2\da\b6\ee?_8\0f\bd\c6\dex\bc\82O\9dV+\b4\ee?\f6\\{\ecF\12\86\bc\0f\92]\ca\a4\b1\ee?\8e\d7\fd\18\055\93<\da\'\b56G\af\ee?\05\9b\8a/\b7\98{<\fd\c7\97\d4\12\ad\ee?\tT\1c\e2\e1c\90<)TH\dd\07\ab\ee?\ea\c6\19P\85\c74<\b7FY\8a&\a9\ee?5\c0d+\e62\94<H!\ad\15o\a7\ee?\9fv\99aJ\e4\8c\bc\t\dcv\b9\e1\a5\ee?\a8M\ef;\c53\8c\bc\85U:\b0~\a4\ee?\ae\e9+\89xS\84\bc \c3\cc4F\a3\ee?XXVx\dd\ce\93\bc%\"U\828\a2\ee?d\19~\80\aa\10W<s\a9L\d4U\a1\ee?(\"^\bf\ef\b3\93\bc\cd;\7ff\9e\a0\ee?\82\b94\87\ad\12j\bc\bf\da\0bu\12\a0\ee?\ee\a9m\b8\efgc\bc/\1ae<\b2\9f\ee?Q\88\e0T=\dc\80\bc\84\94Q\f9}\9f\ee?\cf>Z~d\1fx\bct_\ec\e8u\9f\ee?\b0}\8b\c0J\ee\86\bct\81\a5H\9a\9f\ee?\8a\e6U\1e2\19\86\bc\c9gBV\eb\9f\ee?\d3\d4\t^\cb\9c\90<?]\deOi\a0\ee?\1d\a5M\b9\dc2{\bc\87\01\ebs\14\a1\ee?k\c0gT\fd\ec\94<2\c10\01\ed\a1\ee?Ul\d6\ab\e1\ebe<bN\cf6\f3\a2\ee?B\cf\b3/\c5\a1\88\bc\12\1a>T\'\a4\ee?47;\f1\b6i\93\bc\13\ceL\99\89\a5\ee?\1e\ff\19:\84^\80\bc\ad\c7#F\1a\a7\ee?nWr\d8P\d4\94\bc\ed\92D\9b\d9\a8\ee?\00\8a\0e[g\ad\90<\99f\8a\d9\c7\aa\ee?\b4\ea\f0\c1/\b7\8d<\db\a0*B\e5\ac\ee?\ff\e7\c5\9c`\b6e\bc\8cD\b5\162\af\ee?D_\f3Y\83\f6{<6w\15\99\ae\b1\ee?\83=\1e\a7\1f\t\93\bc\c6\ff\91\0b[\b4\ee?)\1el\8b\b8\a9]\bc\e5\c5\cd\b07\b7\ee?Y\b9\90|\f9#l\bc\0fR\c8\cbD\ba\ee?\aa\f9\f4\"CC\92\bcPN\de\9f\82\bd\ee?K\8ef\d7l\ca\85\bc\ba\07\cap\f1\c0\ee?\'\ce\91+\fc\afq<\90\f0\a3\82\91\c4\ee?\bbs\n\e15\d2m<##\e3\19c\c8\ee?c\"b\"\04\c5\87\bce\e5]{f\cc\ee?\d51\e2\e3\86\1c\8b<3-J\ec\9b\d0\ee?\15\bb\bc\d3\d1\bb\91\bc]%>\b2\03\d5\ee?\d21\ee\9c1\cc\90<X\b30\13\9e\d9\ee?\b3Zsn\84i\84<\bf\fdyUk\de\ee?\b4\9d\8e\97\cd\df\82\bcz\f3\d3\bfk\e3\ee?\873\cb\92w\1a\8c<\ad\d3Z\99\9f\e8\ee?\fa\d9\d1J\8f{\90\bcf\b6\8d)\07\ee\ee?\ba\ae\dcV\d9\c3U\bc\fb\15O\b8\a2\f3\ee?@\f6\a6=\0e\a4\90\bc:Y\e5\8dr\f9\ee?4\93\ad8\f4\d6h\bcG^\fb\f2v\ff\ee?5\8aXk\e2\ee\91\bcJ\06\a10\b0\05\ef?\cd\dd_\n\d7\fft<\d2\c1K\90\1e\0c\ef?\ac\98\92\fa\fb\bd\91\bc\t\1e\d7[\c2\12\ef?\b3\0c\af0\aens<\9cR\85\dd\9b\19\ef?\94\fd\9f\\2\e3\8e<z\d0\ff_\ab \ef?\acY\t\d1\8f\e0\84<K\d1W.\f1\'\ef?g\1aN8\af\cdc<\b5\e7\06\94m/\ef?h\19\92l,kg<i\90\ef\dc 7\ef?\d2\b5\cc\83\18\8a\80\bc\fa\c3]U\0b?\ef?o\fa\ff?]\ad\8f\bc|\89\07J-G\ef?I\a9u8\ae\r\90\bc\f2\89\r\08\87O\ef?\a7\07=\a6\85\a3t<\87\a4\fb\dc\18X\ef?\0f\"@ \9e\91\82\bc\98\83\c9\16\e3`\ef?\ac\92\c1\d5PZ\8e<\852\db\03\e6i\ef?Kk\01\acY:\84<`\b4\01\f3!s\ef?\1f>\b4\07!\d5\82\bc_\9b{3\97|\ef?\c9\rG;\b9*\89\bc)\a1\f5\14F\86\ef?\d3\88:`\04\b6t<\f6?\8b\e7.\90\ef?qr\9dQ\ec\c5\83<\83L\c7\fbQ\9a\ef?\f0\91\d3\8f\12\f7\8f\bc\da\90\a4\a2\af\a4\ef?}t#\e2\98\ae\8d\bc\f1g\8e-H\af\ef?\08 \aaA\bc\c3\8e<\'Za\ee\1b\ba\ef?2\eb\a9\c3\94+\84<\97\bak7+\c5\ef?\ee\85\d11\a9d\8a<@En[v\d0\ef?\ed\e3;\e4\ba7\8e\bc\14\be\9c\ad\fd\db\ef?\9d\cd\91M;\89w<\d8\90\9e\81\c1\e7\ef?\89\cc`A\c1\05S<\f1q\8f+\c2\f3\ef?")
- (data $22 (i32.const 1053788) "\1c\00\00\00\00\00\00\00\00\00\00\00\17\00\00\00\08\00\00\00\08\00\00\00\00\00\00\00\00\00\00\00")
- (data $23 (i32.const 1053820) "\1c\00\00\00\00\00\00\00\00\00\00\00\17\00\00\00\08\00\00\00\t\00\00\00\00\00\00\00\00\00\00\00")
+ (data $22 (i32.const 1053788) "\1c\00\00\00\00\00\00\00\00\00\00\00\14\00\00\00\08\00\00\00\08\00\00\00\00\00\00\00\00\00\00\00")
+ (data $23 (i32.const 1053820) "\1c\00\00\00\00\00\00\00\00\00\00\00\14\00\00\00\08\00\00\00\t\00\00\00\00\00\00\00\00\00\00\00")
  (data $24 (i32.const 1053852) ",\00\00\00\00\00\00\00\00\00\00\00\02\00\00\00\1a\00\00\00~\00l\00i\00b\00/\00a\00r\00r\00a\00y\00.\00t\00s\00\00\00")
  (data $25 (i32.const 1053900) "\1c\00\00\00\00\00\00\00\00\00\00\00\01\00\00\00\0c\00\00\00\00\00HB\000\acF\00\00zE")
  (data $26 (i32.const 1053932) "\1c\00\00\00\00\00\00\00\00\00\00\00\01\00\00\00\0c\00\00\00\n\d7#<\00\00 B\00\00\80?")
@@ -249,8 +249,8 @@
  (export "clock_set_ringPos" (func $assembly/core/clock/Clock#set:ringPos))
  (export "clock_constructor" (func $assembly/core/clock/Clock#constructor))
  (export "runner_Bar_set_size" (func $assembly/core/runner/Bar#set:size))
+ (export "runner_Bar_set_main" (func $assembly/core/runner/Bar#set:main))
  (export "runner_Bar_set_ctrls" (func $assembly/core/runner/Bar#set:ctrls))
- (export "runner_Bar_set_events" (func $assembly/core/runner/Bar#set:events))
  (export "runner_Bar_constructor" (func $assembly/core/runner/Bar#constructor))
  (export "runner_get_barInstances" (func $assembly/core/runner/Runner#get:barInstances))
  (export "runner_Ctrl_set_tableIndex" (func $assembly/core/runner/Ctrl#set:tableIndex))
@@ -270,7 +270,6 @@
  (export "runner_set_bars" (func $assembly/core/runner/Runner#set:bars))
  (export "runner_set_ctrlInstances" (func $assembly/core/runner/Runner#set:ctrlInstances))
  (export "runner_set_ctrls" (func $assembly/core/runner/Runner#set:ctrls))
- (export "runner_set_main" (func $assembly/core/runner/Runner#set:main))
  (export "runner_set_lastMain" (func $assembly/core/runner/Runner#set:lastMain))
  (export "runner_set_last" (func $assembly/core/runner/Runner#set:last))
  (export "runner_set_tableIndex" (func $assembly/core/runner/Runner#set:tableIndex))
@@ -292,7 +291,6 @@
  (export "engine_createBlock" (func $assembly/core/engine/Engine#createBlock))
  (export "engine_get_runner" (func $assembly/core/engine/Engine#get:runner))
  (export "runner_clearLastBar" (func $assembly/core/runner/Runner#clearLastBar))
- (export "runner_get_main" (func $assembly/core/runner/Runner#get:main))
  (export "runner_get_ctrls" (func $assembly/core/runner/Runner#get:ctrls))
  (export "runner_Ctrl_get_signal" (func $assembly/core/runner/Ctrl#get:signal))
  (export "runner_get_bars" (func $assembly/core/runner/Runner#get:bars))
@@ -312,6 +310,7 @@
  (export "add_audio_audio" (func $assembly/math/add_audio_audio))
  (export "runner_Signal_get_R" (func $assembly/core/runner/Signal#get:R))
  (export "runner_Signal_get_LR" (func $assembly/core/runner/Signal#get:LR))
+ (export "runner_Bar_get_main" (func $assembly/core/runner/Bar#get:main))
  (export "copy_copyInto" (func $assembly/graph/copy/copyInto))
  (export "runner_fill" (func $assembly/core/runner/Runner#fill))
  (export "clock_get_timeStep" (func $assembly/core/clock/Clock#get:timeStep))
@@ -6722,7 +6721,7 @@
   i32.eqz
   if
    i32.const 8
-   i32.const 21
+   i32.const 18
    call $~lib/rt/stub/__new
    local.set $this
   end
@@ -6868,6 +6867,11 @@
   local.get $size
   i32.store $0
  )
+ (func $assembly/core/runner/Bar#set:main (param $this i32) (param $main i32)
+  local.get $this
+  local.get $main
+  i32.store $0 offset=4
+ )
  (func $~lib/staticarray/StaticArray<assembly/core/runner/Ctrl>#constructor (param $this i32) (param $length i32) (result i32)
   (local $outSize i32)
   (local $out i32)
@@ -6906,46 +6910,6 @@
  (func $assembly/core/runner/Bar#set:ctrls (param $this i32) (param $ctrls i32)
   local.get $this
   local.get $ctrls
-  i32.store $0 offset=4
- )
- (func $~lib/staticarray/StaticArray<assembly/core/runner/Beats>#constructor (param $this i32) (param $length i32) (result i32)
-  (local $outSize i32)
-  (local $out i32)
-  local.get $length
-  i32.const 1073741820
-  i32.const 2
-  i32.shr_u
-  i32.gt_u
-  if
-   i32.const 1048768
-   i32.const 1048816
-   i32.const 51
-   i32.const 60
-   call $~lib/builtins/abort
-   unreachable
-  end
-  local.get $length
-  i32.const 2
-  i32.shl
-  local.set $outSize
-  local.get $outSize
-  i32.const 18
-  call $~lib/rt/stub/__new
-  local.set $out
-  i32.const 0
-  global.get $~lib/shared/runtime/Runtime.Incremental
-  i32.ne
-  drop
-  local.get $out
-  i32.const 0
-  local.get $outSize
-  memory.fill $0
-  local.get $out
-  return
- )
- (func $assembly/core/runner/Bar#set:events (param $this i32) (param $events i32)
-  local.get $this
-  local.get $events
   i32.store $0 offset=8
  )
  (func $assembly/core/runner/Bar#constructor (param $this i32) (result i32)
@@ -6961,14 +6925,12 @@
   call $assembly/core/runner/Bar#set:size
   local.get $this
   i32.const 0
-  i32.const 16
-  call $~lib/staticarray/StaticArray<assembly/core/runner/Ctrl>#constructor
-  call $assembly/core/runner/Bar#set:ctrls
+  call $assembly/core/runner/Bar#set:main
   local.get $this
   i32.const 0
   i32.const 16
-  call $~lib/staticarray/StaticArray<assembly/core/runner/Beats>#constructor
-  call $assembly/core/runner/Bar#set:events
+  call $~lib/staticarray/StaticArray<assembly/core/runner/Ctrl>#constructor
+  call $assembly/core/runner/Bar#set:ctrls
   local.get $this
  )
  (func $assembly/core/runner/Runner#get:barInstances (param $this i32) (result i32)
@@ -7151,7 +7113,7 @@
  (func $assembly/core/runner/Runner#set:clock (param $this i32) (param $clock i32)
   local.get $this
   local.get $clock
-  i32.store $0 offset=32
+  i32.store $0 offset=28
  )
  (func $~lib/staticarray/StaticArray<assembly/core/runner/Bar>#constructor (param $this i32) (param $length i32) (result i32)
   (local $outSize i32)
@@ -7174,7 +7136,7 @@
   i32.shl
   local.set $outSize
   local.get $outSize
-  i32.const 19
+  i32.const 16
   call $~lib/rt/stub/__new
   local.set $out
   i32.const 0
@@ -7218,7 +7180,7 @@
   i32.shl
   local.set $outSize
   local.get $outSize
-  i32.const 20
+  i32.const 17
   call $~lib/rt/stub/__new
   local.set $out
   i32.const 0
@@ -7259,25 +7221,20 @@
   i32.const 0
   call $~lib/rt/stub/__link
  )
- (func $assembly/core/runner/Runner#set:main (param $this i32) (param $main i32)
-  local.get $this
-  local.get $main
-  i32.store $0 offset=16
- )
  (func $assembly/core/runner/Runner#set:lastMain (param $this i32) (param $lastMain i32)
   local.get $this
   local.get $lastMain
-  i32.store $0 offset=20
+  i32.store $0 offset=16
  )
  (func $assembly/core/runner/Runner#set:last (param $this i32) (param $last i32)
   local.get $this
   local.get $last
-  i32.store $0 offset=24
+  i32.store $0 offset=20
  )
  (func $assembly/core/runner/Runner#set:tableIndex (param $this i32) (param $tableIndex i32)
   local.get $this
   local.get $tableIndex
-  i32.store $0 offset=28
+  i32.store $0 offset=24
  )
  (func $assembly/core/runner/Runner#constructor (param $this i32) (param $clock i32) (result i32)
   (local $i i32)
@@ -7285,7 +7242,7 @@
   local.get $this
   i32.eqz
   if
-   i32.const 36
+   i32.const 32
    i32.const 14
    call $~lib/rt/stub/__new
    local.set $this
@@ -7313,9 +7270,6 @@
   global.get $assembly/core/runner/MAX_CTRLS
   call $~lib/staticarray/StaticArray<assembly/core/runner/Ctrl>#constructor
   call $assembly/core/runner/Runner#set:ctrls
-  local.get $this
-  i32.const 0
-  call $assembly/core/runner/Runner#set:main
   local.get $this
   i32.const 0
   call $assembly/core/runner/Runner#set:lastMain
@@ -7848,10 +7802,6 @@
   i32.const 0
   call $assembly/core/runner/Runner#set:last
  )
- (func $assembly/core/runner/Runner#get:main (param $this i32) (result i32)
-  local.get $this
-  i32.load $0 offset=16
- )
  (func $assembly/core/runner/Runner#get:ctrls (param $this i32) (result i32)
   local.get $this
   i32.load $0 offset=12
@@ -7947,15 +7897,15 @@
  )
  (func $assembly/core/runner/Runner#get:clock (param $this i32) (result i32)
   local.get $this
-  i32.load $0 offset=32
+  i32.load $0 offset=28
  )
  (func $assembly/core/runner/Bar#get:ctrls (param $this i32) (result i32)
   local.get $this
-  i32.load $0 offset=4
+  i32.load $0 offset=8
  )
  (func $assembly/core/runner/Runner#get:tableIndex (param $this i32) (result i32)
   local.get $this
-  i32.load $0 offset=28
+  i32.load $0 offset=24
  )
  (func $assembly/core/runner/Ctrl#get:id (param $this i32) (result i32)
   local.get $this
@@ -8437,6 +8387,10 @@
   local.get $this
   i32.load $0 offset=8
  )
+ (func $assembly/core/runner/Bar#get:main (param $this i32) (result i32)
+  local.get $this
+  i32.load $0 offset=4
+ )
  (func $assembly/graph/copy/copyInto (param $begin i32) (param $end i32) (param $inp i32) (param $out i32)
   (local $size i32)
   (local $offset i32)
@@ -8619,8 +8573,8 @@
     br $for-loop|0
    end
   end
-  local.get $this
-  call $assembly/core/runner/Runner#get:main
+  local.get $curr
+  call $assembly/core/runner/Bar#get:main
   local.set $main
   local.get $main
   if
@@ -8707,7 +8661,7 @@
  )
  (func $assembly/core/runner/Runner#get:last (param $this i32) (result i32)
   local.get $this
-  i32.load $0 offset=24
+  i32.load $0 offset=20
  )
  (func $assembly/graph/fade/fadeOut (param $total i32) (param $begin i32) (param $end i32) (param $block i32)
   (local $gainv v128)
@@ -9963,13 +9917,13 @@
  )
  (func $assembly/core/runner/Runner#get:lastMain (param $this i32) (result i32)
   local.get $this
-  i32.load $0 offset=20
+  i32.load $0 offset=16
  )
  (func $assembly/core/runner/Runner#process (param $this i32) (param $actualTime f64) (param $barTime f64) (param $nextBarTime f64) (param $begin i32) (param $end i32) (param $out i32)
   (local $currBarIndex i32)
   (local $nextBarIndex i32)
-  (local $main i32)
   (local $curr i32)
+  (local $main i32)
   (local $next i32)
   (local $last i32)
   (local $ctrl i32)
@@ -10116,9 +10070,6 @@
   i32.trunc_sat_f64_s
   local.set $nextBarIndex
   local.get $this
-  call $assembly/core/runner/Runner#get:main
-  local.set $main
-  local.get $this
   call $assembly/core/runner/Runner#get:bars
   local.get $currBarIndex
   call $~lib/staticarray/StaticArray<assembly/core/runner/Bar|null>#__get
@@ -10145,6 +10096,9 @@
    call $assembly/core/clock/Clock#set:time
    return
   end
+  local.get $curr
+  call $assembly/core/runner/Bar#get:main
+  local.set $main
   local.get $nextBarIndex
   i32.const 0
   i32.lt_s
@@ -11535,55 +11489,52 @@
     call $assembly/core/runner/Runner#set:tableIndex
    end
   end
+  local.get $this
+  local.set $this|146
+  local.get $actualTime
+  local.set $time|147
+  local.get $barTime
+  local.set $barTime|148
+  local.get $this|146
+  call $assembly/core/runner/Runner#get:clock
+  local.get $time|147
+  call $assembly/core/clock/Clock#set:time
+  local.get $this|146
+  call $assembly/core/runner/Runner#get:clock
+  local.get $barTime|148
+  call $assembly/core/clock/Clock#set:barTime
   local.get $main
-  if
-   local.get $this
-   local.set $this|146
-   local.get $actualTime
-   local.set $time|147
-   local.get $barTime
-   local.set $barTime|148
-   local.get $this|146
-   call $assembly/core/runner/Runner#get:clock
-   local.get $time|147
-   call $assembly/core/clock/Clock#set:time
-   local.get $this|146
-   call $assembly/core/runner/Runner#get:clock
-   local.get $barTime|148
-   call $assembly/core/clock/Clock#set:barTime
-   local.get $main
-   local.set $ctrl|149
-   local.get $ctrl|149
-   call $assembly/core/runner/Ctrl#get:ownLiterals
-   local.get $ctrl|149
-   call $assembly/core/runner/Ctrl#get:liveLiterals
-   local.get $ctrl|149
-   call $assembly/core/runner/Ctrl#get:literalsCount
-   i32.const 2
-   i32.shl
-   call $assembly/graph/copy/copyMem
-   local.get $begin
-   local.get $end
-   local.get $main
-   call $assembly/core/runner/Ctrl#get:run
-   call_indirect $0 (type $i32_i32_=>_none)
-   local.get $begin
-   local.get $end
-   local.get $main
-   call $assembly/core/runner/Ctrl#get:signal
-   call $assembly/core/runner/Signal#get:L
-   local.get $out
-   call $assembly/core/runner/Signal#get:L
-   call $assembly/graph/copy/copyInto
-   local.get $begin
-   local.get $end
-   local.get $main
-   call $assembly/core/runner/Ctrl#get:signal
-   call $assembly/core/runner/Signal#get:R
-   local.get $out
-   call $assembly/core/runner/Signal#get:R
-   call $assembly/graph/copy/copyInto
-  end
+  local.set $ctrl|149
+  local.get $ctrl|149
+  call $assembly/core/runner/Ctrl#get:ownLiterals
+  local.get $ctrl|149
+  call $assembly/core/runner/Ctrl#get:liveLiterals
+  local.get $ctrl|149
+  call $assembly/core/runner/Ctrl#get:literalsCount
+  i32.const 2
+  i32.shl
+  call $assembly/graph/copy/copyMem
+  local.get $begin
+  local.get $end
+  local.get $main
+  call $assembly/core/runner/Ctrl#get:run
+  call_indirect $0 (type $i32_i32_=>_none)
+  local.get $begin
+  local.get $end
+  local.get $main
+  call $assembly/core/runner/Ctrl#get:signal
+  call $assembly/core/runner/Signal#get:L
+  local.get $out
+  call $assembly/core/runner/Signal#get:L
+  call $assembly/graph/copy/copyInto
+  local.get $begin
+  local.get $end
+  local.get $main
+  call $assembly/core/runner/Ctrl#get:signal
+  call $assembly/core/runner/Signal#get:R
+  local.get $out
+  call $assembly/core/runner/Signal#get:R
+  call $assembly/graph/copy/copyInto
   local.get $this
   local.get $curr
   call $assembly/core/runner/Runner#set:last
@@ -11624,7 +11575,7 @@
   i32.eqz
   if
    i32.const 8
-   i32.const 25
+   i32.const 22
    call $~lib/rt/stub/__new
    local.set $this
   end
@@ -11783,7 +11734,7 @@
   i32.eqz
   if
    i32.const 40
-   i32.const 27
+   i32.const 24
    call $~lib/rt/stub/__new
    local.set $this
   end
@@ -11822,7 +11773,7 @@
   i32.eqz
   if
    i32.const 40
-   i32.const 26
+   i32.const 23
    call $~lib/rt/stub/__new
    local.set $this
   end
@@ -11841,7 +11792,7 @@
   i32.eqz
   if
    i32.const 40
-   i32.const 28
+   i32.const 25
    call $~lib/rt/stub/__new
    local.set $this
   end
@@ -11865,7 +11816,7 @@
   i32.eqz
   if
    i32.const 44
-   i32.const 30
+   i32.const 27
    call $~lib/rt/stub/__new
    local.set $this
   end
@@ -11883,7 +11834,7 @@
   i32.eqz
   if
    i32.const 44
-   i32.const 29
+   i32.const 26
    call $~lib/rt/stub/__new
    local.set $this
   end
@@ -11902,7 +11853,7 @@
   i32.eqz
   if
    i32.const 44
-   i32.const 31
+   i32.const 28
    call $~lib/rt/stub/__new
    local.set $this
   end
@@ -11921,7 +11872,7 @@
   i32.eqz
   if
    i32.const 44
-   i32.const 32
+   i32.const 29
    call $~lib/rt/stub/__new
    local.set $this
   end
@@ -11940,7 +11891,7 @@
   i32.eqz
   if
    i32.const 44
-   i32.const 33
+   i32.const 30
    call $~lib/rt/stub/__new
    local.set $this
   end
@@ -11959,7 +11910,7 @@
   i32.eqz
   if
    i32.const 40
-   i32.const 34
+   i32.const 31
    call $~lib/rt/stub/__new
    local.set $this
   end
@@ -11993,7 +11944,7 @@
   i32.eqz
   if
    i32.const 20
-   i32.const 35
+   i32.const 32
    call $~lib/rt/stub/__new
    local.set $this
   end
@@ -12065,7 +12016,7 @@
   i32.eqz
   if
    i32.const 40
-   i32.const 36
+   i32.const 33
    call $~lib/rt/stub/__new
    local.set $this
   end
@@ -12151,7 +12102,7 @@
   i32.eqz
   if
    i32.const 36
-   i32.const 37
+   i32.const 34
    call $~lib/rt/stub/__new
    local.set $this
   end
@@ -12215,7 +12166,7 @@
   i32.eqz
   if
    i32.const 24
-   i32.const 38
+   i32.const 35
    call $~lib/rt/stub/__new
    local.set $this
   end
@@ -12264,7 +12215,7 @@
   i32.eqz
   if
    i32.const 12
-   i32.const 39
+   i32.const 36
    call $~lib/rt/stub/__new
    local.set $this
   end
@@ -12434,7 +12385,7 @@
   i32.eqz
   if
    i32.const 108
-   i32.const 41
+   i32.const 38
    call $~lib/rt/stub/__new
    local.set $this
   end
@@ -12478,21 +12429,21 @@
   local.get $this
   i32.const 3
   i32.const 2
-  i32.const 42
+  i32.const 39
   i32.const 1053920
   call $~lib/rt/__newArray
   call $assembly/gen/biquad/Biquad#set:_params_freq
   local.get $this
   i32.const 3
   i32.const 2
-  i32.const 42
+  i32.const 39
   i32.const 1053952
   call $~lib/rt/__newArray
   call $assembly/gen/biquad/Biquad#set:_params_Q
   local.get $this
   i32.const 3
   i32.const 2
-  i32.const 42
+  i32.const 39
   i32.const 1053984
   call $~lib/rt/__newArray
   call $assembly/gen/biquad/Biquad#set:_params_gain
@@ -12513,7 +12464,7 @@
   i32.eqz
   if
    i32.const 116
-   i32.const 40
+   i32.const 37
    call $~lib/rt/stub/__new
    local.set $this
   end
@@ -12548,7 +12499,7 @@
   i32.eqz
   if
    i32.const 116
-   i32.const 44
+   i32.const 41
    call $~lib/rt/stub/__new
    local.set $this
   end
@@ -12583,7 +12534,7 @@
   i32.eqz
   if
    i32.const 116
-   i32.const 45
+   i32.const 42
    call $~lib/rt/stub/__new
    local.set $this
   end
@@ -12618,7 +12569,7 @@
   i32.eqz
   if
    i32.const 116
-   i32.const 46
+   i32.const 43
    call $~lib/rt/stub/__new
    local.set $this
   end
@@ -12658,7 +12609,7 @@
   i32.eqz
   if
    i32.const 120
-   i32.const 47
+   i32.const 44
    call $~lib/rt/stub/__new
    local.set $this
   end
@@ -12696,7 +12647,7 @@
   i32.eqz
   if
    i32.const 116
-   i32.const 48
+   i32.const 45
    call $~lib/rt/stub/__new
    local.set $this
   end
@@ -12736,7 +12687,7 @@
   i32.eqz
   if
    i32.const 120
-   i32.const 49
+   i32.const 46
    call $~lib/rt/stub/__new
    local.set $this
   end
@@ -12779,7 +12730,7 @@
   i32.eqz
   if
    i32.const 120
-   i32.const 50
+   i32.const 47
    call $~lib/rt/stub/__new
    local.set $this
   end
@@ -12884,7 +12835,7 @@
   i32.eqz
   if
    i32.const 104
-   i32.const 52
+   i32.const 49
    call $~lib/rt/stub/__new
    local.set $this
   end
@@ -12928,14 +12879,14 @@
   local.get $this
   i32.const 3
   i32.const 2
-  i32.const 42
+  i32.const 39
   i32.const 1054016
   call $~lib/rt/__newArray
   call $assembly/gen/svf/Svf#set:_params_freq
   local.get $this
   i32.const 3
   i32.const 2
-  i32.const 42
+  i32.const 39
   i32.const 1054048
   call $~lib/rt/__newArray
   call $assembly/gen/svf/Svf#set:_params_Q
@@ -12956,7 +12907,7 @@
   i32.eqz
   if
    i32.const 112
-   i32.const 51
+   i32.const 48
    call $~lib/rt/stub/__new
    local.set $this
   end
@@ -12991,7 +12942,7 @@
   i32.eqz
   if
    i32.const 112
-   i32.const 53
+   i32.const 50
    call $~lib/rt/stub/__new
    local.set $this
   end
@@ -13026,7 +12977,7 @@
   i32.eqz
   if
    i32.const 112
-   i32.const 54
+   i32.const 51
    call $~lib/rt/stub/__new
    local.set $this
   end
@@ -13061,7 +13012,7 @@
   i32.eqz
   if
    i32.const 112
-   i32.const 55
+   i32.const 52
    call $~lib/rt/stub/__new
    local.set $this
   end
@@ -13096,7 +13047,7 @@
   i32.eqz
   if
    i32.const 112
-   i32.const 56
+   i32.const 53
    call $~lib/rt/stub/__new
    local.set $this
   end
@@ -13131,7 +13082,7 @@
   i32.eqz
   if
    i32.const 112
-   i32.const 57
+   i32.const 54
    call $~lib/rt/stub/__new
    local.set $this
   end
@@ -13258,7 +13209,7 @@
   i32.eqz
   if
    i32.const 80
-   i32.const 59
+   i32.const 56
    call $~lib/rt/stub/__new
    local.set $this
   end
@@ -13317,14 +13268,14 @@
   local.get $this
   i32.const 3
   i32.const 2
-  i32.const 42
+  i32.const 39
   i32.const 1054080
   call $~lib/rt/__newArray
   call $assembly/gen/moog/Moog#set:_params_freq
   local.get $this
   i32.const 3
   i32.const 2
-  i32.const 42
+  i32.const 39
   i32.const 1054112
   call $~lib/rt/__newArray
   call $assembly/gen/moog/Moog#set:_params_Q
@@ -13345,7 +13296,7 @@
   i32.eqz
   if
    i32.const 88
-   i32.const 58
+   i32.const 55
    call $~lib/rt/stub/__new
    local.set $this
   end
@@ -13380,7 +13331,7 @@
   i32.eqz
   if
    i32.const 88
-   i32.const 60
+   i32.const 57
    call $~lib/rt/stub/__new
    local.set $this
   end
@@ -13737,7 +13688,7 @@
   i32.eqz
   if
    i32.const 184
-   i32.const 61
+   i32.const 58
    call $~lib/rt/stub/__new
    local.set $this
   end
@@ -13781,70 +13732,70 @@
   local.get $this
   i32.const 3
   i32.const 2
-  i32.const 42
+  i32.const 39
   i32.const 1054144
   call $~lib/rt/__newArray
   call $assembly/gen/daverb/Daverb#set:_params_pd
   local.get $this
   i32.const 3
   i32.const 2
-  i32.const 42
+  i32.const 39
   i32.const 1054176
   call $~lib/rt/__newArray
   call $assembly/gen/daverb/Daverb#set:_params_bw
   local.get $this
   i32.const 3
   i32.const 2
-  i32.const 42
+  i32.const 39
   i32.const 1054208
   call $~lib/rt/__newArray
   call $assembly/gen/daverb/Daverb#set:_params_fi
   local.get $this
   i32.const 3
   i32.const 2
-  i32.const 42
+  i32.const 39
   i32.const 1054240
   call $~lib/rt/__newArray
   call $assembly/gen/daverb/Daverb#set:_params_si
   local.get $this
   i32.const 3
   i32.const 2
-  i32.const 42
+  i32.const 39
   i32.const 1054272
   call $~lib/rt/__newArray
   call $assembly/gen/daverb/Daverb#set:_params_dc
   local.get $this
   i32.const 3
   i32.const 2
-  i32.const 42
+  i32.const 39
   i32.const 1054304
   call $~lib/rt/__newArray
   call $assembly/gen/daverb/Daverb#set:_params_ft
   local.get $this
   i32.const 3
   i32.const 2
-  i32.const 42
+  i32.const 39
   i32.const 1054336
   call $~lib/rt/__newArray
   call $assembly/gen/daverb/Daverb#set:_params_st
   local.get $this
   i32.const 3
   i32.const 2
-  i32.const 42
+  i32.const 39
   i32.const 1054368
   call $~lib/rt/__newArray
   call $assembly/gen/daverb/Daverb#set:_params_dp
   local.get $this
   i32.const 3
   i32.const 2
-  i32.const 42
+  i32.const 39
   i32.const 1054400
   call $~lib/rt/__newArray
   call $assembly/gen/daverb/Daverb#set:_params_ex
   local.get $this
   i32.const 3
   i32.const 2
-  i32.const 42
+  i32.const 39
   i32.const 1054432
   call $~lib/rt/__newArray
   call $assembly/gen/daverb/Daverb#set:_params_ed
@@ -13971,7 +13922,7 @@
   i32.eqz
   if
    i32.const 36
-   i32.const 62
+   i32.const 59
    call $~lib/rt/stub/__new
    local.set $this
   end
@@ -14110,7 +14061,7 @@
   i32.eqz
   if
    i32.const 96
-   i32.const 63
+   i32.const 60
    call $~lib/rt/stub/__new
    local.set $this
   end
@@ -14200,7 +14151,7 @@
   i32.eqz
   if
    i32.const 12
-   i32.const 64
+   i32.const 61
    call $~lib/rt/stub/__new
    local.set $this
   end
@@ -14237,7 +14188,7 @@
   i32.eqz
   if
    i32.const 20
-   i32.const 65
+   i32.const 62
    call $~lib/rt/stub/__new
    local.set $this
   end
@@ -14275,7 +14226,7 @@
   i32.eqz
   if
    i32.const 16
-   i32.const 66
+   i32.const 63
    call $~lib/rt/stub/__new
    local.set $this
   end
@@ -14315,7 +14266,7 @@
   i32.eqz
   if
    i32.const 20
-   i32.const 67
+   i32.const 64
    call $~lib/rt/stub/__new
    local.set $this
   end
@@ -14353,7 +14304,7 @@
   i32.eqz
   if
    i32.const 16
-   i32.const 68
+   i32.const 65
    call $~lib/rt/stub/__new
    local.set $this
   end
@@ -14418,7 +14369,7 @@
   i32.eqz
   if
    i32.const 40
-   i32.const 69
+   i32.const 66
    call $~lib/rt/stub/__new
    local.set $this
   end
@@ -14512,7 +14463,7 @@
   i32.eqz
   if
    i32.const 52
-   i32.const 71
+   i32.const 68
    call $~lib/rt/stub/__new
    local.set $this
   end
@@ -14563,7 +14514,7 @@
   i32.eqz
   if
    i32.const 56
-   i32.const 70
+   i32.const 67
    call $~lib/rt/stub/__new
    local.set $this
   end
@@ -14594,7 +14545,7 @@
   i32.eqz
   if
    i32.const 56
-   i32.const 72
+   i32.const 69
    call $~lib/rt/stub/__new
    local.set $this
   end
@@ -21122,7 +21073,6 @@
   (local $engineSignal i32)
   (local $rateSamples i32)
   (local $runner i32)
-  (local $main i32)
   (local $ctrl i32)
   (local $signal i32)
   (local $L i32)
@@ -21240,9 +21190,6 @@
   local.get $runner
   call $assembly/core/runner/Runner#clearLastBar
   local.get $runner
-  call $assembly/core/runner/Runner#get:main
-  local.set $main
-  local.get $runner
   call $assembly/core/runner/Runner#get:ctrls
   i32.const 0
   call $~lib/staticarray/StaticArray<assembly/core/runner/Ctrl>#__get
@@ -21297,6 +21244,9 @@
    local.get $bar
    i32.const 3
    call $assembly/core/runner/Bar#set:size
+   local.get $bar
+   i32.const 0
+   call $assembly/core/runner/Bar#set:main
   end
   local.get $runner
   call $assembly/core/runner/Runner#get:last
@@ -64232,103 +64182,111 @@
                               i32.load $0
                               local.set $1
                               local.get $1
-                              i32.const 48
+                              i32.const 45
                               i32.eq
                               br_if $case0
                               local.get $1
-                              i32.const 45
+                              i32.const 42
                               i32.eq
                               br_if $case1
                               local.get $1
-                              i32.const 44
+                              i32.const 41
                               i32.eq
                               br_if $case2
                               local.get $1
-                              i32.const 50
+                              i32.const 47
                               i32.eq
                               br_if $case3
                               local.get $1
-                              i32.const 40
+                              i32.const 37
                               i32.eq
                               br_if $case4
                               local.get $1
-                              i32.const 49
+                              i32.const 46
                               i32.eq
                               br_if $case5
                               local.get $1
-                              i32.const 46
+                              i32.const 43
                               i32.eq
                               br_if $case6
                               local.get $1
-                              i32.const 47
+                              i32.const 44
                               i32.eq
                               br_if $case7
                               local.get $1
-                              i32.const 69
+                              i32.const 66
                               i32.eq
                               br_if $case8
                               local.get $1
-                              i32.const 61
+                              i32.const 58
                               i32.eq
                               br_if $case9
                               local.get $1
-                              i32.const 36
+                              i32.const 33
                               i32.eq
                               br_if $case10
                               local.get $1
-                              i32.const 63
+                              i32.const 60
                               i32.eq
                               br_if $case11
                               local.get $1
-                              i32.const 38
+                              i32.const 35
                               i32.eq
                               br_if $case12
                               local.get $1
-                              i32.const 60
+                              i32.const 57
                               i32.eq
                               br_if $case13
                               local.get $1
-                              i32.const 58
+                              i32.const 55
                               i32.eq
                               br_if $case14
                               local.get $1
-                              i32.const 39
+                              i32.const 36
                               i32.eq
                               br_if $case15
                               local.get $1
-                              i32.const 55
+                              i32.const 52
                               i32.eq
                               br_if $case16
                               local.get $1
-                              i32.const 54
+                              i32.const 51
                               i32.eq
                               br_if $case17
                               local.get $1
-                              i32.const 53
+                              i32.const 50
                               i32.eq
                               br_if $case18
                               local.get $1
-                              i32.const 51
+                              i32.const 48
                               i32.eq
                               br_if $case19
                               local.get $1
-                              i32.const 56
+                              i32.const 53
                               i32.eq
                               br_if $case20
                               local.get $1
-                              i32.const 57
+                              i32.const 54
                               i32.eq
                               br_if $case21
                               local.get $1
-                              i32.const 62
+                              i32.const 59
                               i32.eq
                               br_if $case22
                               local.get $1
-                              i32.const 37
+                              i32.const 34
                               i32.eq
                               br_if $case23
                               local.get $1
-                              i32.const 27
+                              i32.const 24
+                              i32.eq
+                              br_if $case24
+                              local.get $1
+                              i32.const 23
+                              i32.eq
+                              br_if $case24
+                              local.get $1
+                              i32.const 25
                               i32.eq
                               br_if $case24
                               local.get $1
@@ -64344,35 +64302,35 @@
                               i32.eq
                               br_if $case24
                               local.get $1
+                              i32.const 30
+                              i32.eq
+                              br_if $case24
+                              local.get $1
                               i32.const 31
                               i32.eq
                               br_if $case24
                               local.get $1
-                              i32.const 32
-                              i32.eq
-                              br_if $case24
-                              local.get $1
-                              i32.const 33
-                              i32.eq
-                              br_if $case24
-                              local.get $1
-                              i32.const 34
-                              i32.eq
-                              br_if $case24
-                              local.get $1
-                              i32.const 71
+                              i32.const 68
                               i32.eq
                               br_if $case25
                               local.get $1
-                              i32.const 70
+                              i32.const 67
                               i32.eq
                               br_if $case25
                               local.get $1
-                              i32.const 72
+                              i32.const 69
                               i32.eq
                               br_if $case25
                               local.get $1
-                              i32.const 30
+                              i32.const 27
+                              i32.eq
+                              br_if $case26
+                              local.get $1
+                              i32.const 26
+                              i32.eq
+                              br_if $case26
+                              local.get $1
+                              i32.const 28
                               i32.eq
                               br_if $case26
                               local.get $1
@@ -64380,15 +64338,7 @@
                               i32.eq
                               br_if $case26
                               local.get $1
-                              i32.const 31
-                              i32.eq
-                              br_if $case26
-                              local.get $1
-                              i32.const 32
-                              i32.eq
-                              br_if $case26
-                              local.get $1
-                              i32.const 33
+                              i32.const 30
                               i32.eq
                               br_if $case26
                               br $default
@@ -64538,99 +64488,111 @@
                             i32.load $0
                             local.set $4
                             local.get $4
-                            i32.const 67
+                            i32.const 64
                             i32.eq
                             br_if $case0
                             local.get $4
-                            i32.const 68
+                            i32.const 65
                             i32.eq
                             br_if $case1
                             local.get $4
-                            i32.const 69
+                            i32.const 66
                             i32.eq
                             br_if $case2
                             local.get $4
-                            i32.const 61
+                            i32.const 58
                             i32.eq
                             br_if $case3
                             local.get $4
-                            i32.const 35
+                            i32.const 32
                             i32.eq
                             br_if $case4
                             local.get $4
-                            i32.const 64
+                            i32.const 61
                             i32.eq
                             br_if $case5
                             local.get $4
-                            i32.const 66
+                            i32.const 63
                             i32.eq
                             br_if $case6
                             local.get $4
-                            i32.const 65
+                            i32.const 62
                             i32.eq
                             br_if $case7
                             local.get $4
-                            i32.const 36
+                            i32.const 33
                             i32.eq
                             br_if $case8
                             local.get $4
-                            i32.const 63
+                            i32.const 60
                             i32.eq
                             br_if $case9
                             local.get $4
-                            i32.const 38
+                            i32.const 35
                             i32.eq
                             br_if $case10
                             local.get $4
-                            i32.const 60
+                            i32.const 57
                             i32.eq
                             br_if $case11
                             local.get $4
-                            i32.const 58
+                            i32.const 55
                             i32.eq
                             br_if $case12
                             local.get $4
-                            i32.const 55
+                            i32.const 52
                             i32.eq
                             br_if $case13
                             local.get $4
-                            i32.const 54
+                            i32.const 51
                             i32.eq
                             br_if $case14
                             local.get $4
-                            i32.const 53
+                            i32.const 50
                             i32.eq
                             br_if $case15
                             local.get $4
-                            i32.const 51
+                            i32.const 48
                             i32.eq
                             br_if $case16
                             local.get $4
-                            i32.const 56
+                            i32.const 53
                             i32.eq
                             br_if $case17
                             local.get $4
-                            i32.const 57
+                            i32.const 54
                             i32.eq
                             br_if $case18
                             local.get $4
-                            i32.const 62
+                            i32.const 59
                             i32.eq
                             br_if $case19
                             local.get $4
-                            i32.const 37
+                            i32.const 34
                             i32.eq
                             br_if $case20
                             local.get $4
-                            i32.const 25
+                            i32.const 22
                             i32.eq
                             br_if $case21
+                            local.get $4
+                            i32.const 38
+                            i32.eq
+                            br_if $case22
+                            local.get $4
+                            i32.const 37
+                            i32.eq
+                            br_if $case22
                             local.get $4
                             i32.const 41
                             i32.eq
                             br_if $case22
                             local.get $4
-                            i32.const 40
+                            i32.const 42
+                            i32.eq
+                            br_if $case22
+                            local.get $4
+                            i32.const 43
                             i32.eq
                             br_if $case22
                             local.get $4
@@ -64650,17 +64612,17 @@
                             i32.eq
                             br_if $case22
                             local.get $4
-                            i32.const 48
+                            i32.const 24
                             i32.eq
-                            br_if $case22
+                            br_if $case23
                             local.get $4
-                            i32.const 49
+                            i32.const 23
                             i32.eq
-                            br_if $case22
+                            br_if $case23
                             local.get $4
-                            i32.const 50
+                            i32.const 25
                             i32.eq
-                            br_if $case22
+                            br_if $case23
                             local.get $4
                             i32.const 27
                             i32.eq
@@ -64674,11 +64636,11 @@
                             i32.eq
                             br_if $case23
                             local.get $4
-                            i32.const 30
+                            i32.const 29
                             i32.eq
                             br_if $case23
                             local.get $4
-                            i32.const 29
+                            i32.const 30
                             i32.eq
                             br_if $case23
                             local.get $4
@@ -64686,27 +64648,15 @@
                             i32.eq
                             br_if $case23
                             local.get $4
-                            i32.const 32
-                            i32.eq
-                            br_if $case23
-                            local.get $4
-                            i32.const 33
-                            i32.eq
-                            br_if $case23
-                            local.get $4
-                            i32.const 34
-                            i32.eq
-                            br_if $case23
-                            local.get $4
-                            i32.const 71
+                            i32.const 68
                             i32.eq
                             br_if $case24
                             local.get $4
-                            i32.const 70
+                            i32.const 67
                             i32.eq
                             br_if $case24
                             local.get $4
-                            i32.const 72
+                            i32.const 69
                             i32.eq
                             br_if $case24
                             br $default
@@ -64905,19 +64855,27 @@
        i32.load $0
        local.set $1
        local.get $1
-       i32.const 28
+       i32.const 25
        i32.eq
        br_if $case0
        local.get $1
-       i32.const 34
+       i32.const 31
        i32.eq
        br_if $case1
        local.get $1
-       i32.const 26
+       i32.const 23
        i32.eq
        br_if $case2
        local.get $1
-       i32.const 30
+       i32.const 27
+       i32.eq
+       br_if $case3
+       local.get $1
+       i32.const 26
+       i32.eq
+       br_if $case3
+       local.get $1
+       i32.const 28
        i32.eq
        br_if $case3
        local.get $1
@@ -64925,15 +64883,7 @@
        i32.eq
        br_if $case3
        local.get $1
-       i32.const 31
-       i32.eq
-       br_if $case3
-       local.get $1
-       i32.const 32
-       i32.eq
-       br_if $case3
-       local.get $1
-       i32.const 33
+       i32.const 30
        i32.eq
        br_if $case3
        br $default
@@ -64967,7 +64917,15 @@
     i32.load $0
     local.set $1
     local.get $1
-    i32.const 30
+    i32.const 27
+    i32.eq
+    br_if $case0
+    local.get $1
+    i32.const 26
+    i32.eq
+    br_if $case0
+    local.get $1
+    i32.const 28
     i32.eq
     br_if $case0
     local.get $1
@@ -64975,15 +64933,7 @@
     i32.eq
     br_if $case0
     local.get $1
-    i32.const 31
-    i32.eq
-    br_if $case0
-    local.get $1
-    i32.const 32
-    i32.eq
-    br_if $case0
-    local.get $1
-    i32.const 33
+    i32.const 30
     i32.eq
     br_if $case0
     br $default
@@ -65008,19 +64958,19 @@
        i32.load $0
        local.set $1
        local.get $1
-       i32.const 31
+       i32.const 28
        i32.eq
        br_if $case0
        local.get $1
-       i32.const 29
+       i32.const 26
        i32.eq
        br_if $case1
        local.get $1
-       i32.const 32
+       i32.const 29
        i32.eq
        br_if $case2
        local.get $1
-       i32.const 33
+       i32.const 30
        i32.eq
        br_if $case3
        br $default

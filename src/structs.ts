@@ -10,7 +10,8 @@ export const SignalView = defineStruct({
 export type BarView = typeof BarView.type
 export const BarView = defineStruct({
   size: 'u32',
-  ctrls: 'usize'
+  main: 'usize',
+  ctrls: 'usize',
 })
 
 export type CtrlView = typeof CtrlView.type

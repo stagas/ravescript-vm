@@ -71,7 +71,7 @@ export function preventTreeShaking(gen: Gen): void {
 
   const runner: Runner = engine.runner
   runner.clearLastBar()
-  const main: Ctrl | null = runner.main
+  // const main: Ctrl | null = runner.main
   const ctrl: Ctrl = runner.ctrls[0]
   const signal: Signal = ctrl.signal
   runner.fill(0, 0, 0, signal)
@@ -87,6 +87,7 @@ export function preventTreeShaking(gen: Gen): void {
   if (bar) {
     bar.ctrls[0] = ctrl
     bar.size = 3
+    bar.main = 0
   }
   const last: Bar | null = runner.last
   runner.last = bar

@@ -25,8 +25,9 @@ export class Beats {
 @unmanaged
 export class Bar {
   size: u32 = 0
+  main: usize = 0
   ctrls: StaticArray<Ctrl> = new StaticArray<Ctrl>(16)
-  events: StaticArray<Beats> = new StaticArray<Beats>(16)
+  // events: StaticArray<Beats> = new StaticArray<Beats>(16)
 }
 
 @unmanaged
@@ -103,7 +104,7 @@ export class Runner {
   ctrlInstances: StaticArray<Ctrl> = new StaticArray<Ctrl>(MAX_CTRL_INSTANCES)
   ctrls: StaticArray<Ctrl> = new StaticArray<Ctrl>(MAX_CTRLS)
 
-  main: Ctrl | null = null
+  // main: Ctrl | null = null
   lastMain: Ctrl | null = null
 
   last: Bar | null = null
@@ -156,7 +157,7 @@ export class Runner {
       addSignal(begin, end, ctrl.signal, out)
     }
 
-    const main: Ctrl | null = this.main
+    const main: Ctrl | null = changetype<Ctrl | null>(curr.main)
     if (main) {
       this.setTimes(0, 0)
       this.register(main)
@@ -178,13 +179,14 @@ export class Runner {
     const currBarIndex: u32 = u32(barTime)
     const nextBarIndex: i32 = i32(nextBarTime)
 
-    const main: Ctrl | null = this.main
+    // const main: Ctrl | null = this.main
     const curr: Bar | null = this.bars[currBarIndex]
     if (!curr || !curr.size) {
       this.clock.time = actualTime + (128 * this.clock.timeStep)
       return
     }
 
+    const main: Ctrl = changetype<Ctrl>(curr.main)
     const next: Bar | null = nextBarIndex < 0 ? null : this.bars[nextBarIndex]
     const last: Bar | null = this.last
     let ctrl: Ctrl
@@ -311,13 +313,11 @@ export class Runner {
       this.lastMain = main
       if (main) this.register(main)
     }
-    if (main) {
-      this.setTimes(actualTime, barTime)
-      applyLiterals(main)
-      call_indirect<void>(main.run, begin, end)
-      copyInto(begin, end, main.signal.L, out.L)
-      copyInto(begin, end, main.signal.R, out.R)
-    }
+    this.setTimes(actualTime, barTime)
+    applyLiterals(main)
+    call_indirect<void>(main.run, begin, end)
+    copyInto(begin, end, main.signal.L, out.L)
+    copyInto(begin, end, main.signal.R, out.R)
 
     this.last = curr
   }
@@ -350,32 +350,3 @@ function fadeOutSignal(total: u32, begin: u32, end: u32, s: Signal): void {
   if (s.R) fadeOut(total, begin, end, s.R)
   if (s.LR) fadeOut(total, begin, end, s.LR)
 }
-
-// // @ts-ignore
-// @inline
-// function fadeCtrlIn(total: u32, begin: u32, end: u32, ctrl: Ctrl): void {
-//   fadeIn(total, begin, end, ctrl.outs_0)
-//   fadeIn(total, begin, end, ctrl.outs_1)
-// }
-
-
-// // @ts-ignore
-// @inline
-// function join(begin: u32, end: u32, ctrl: Ctrl, out_0: i32, out_1: i32): void {
-//   join21(begin, end, ctrl.outs_0, out_0, out_0)
-//   join21(begin, end, ctrl.outs_1, out_1, out_1)
-// }
-
-// // @ts-ignore
-// @inline
-// function fadeCtrlIn(total: u32, begin: u32, end: u32, ctrl: Ctrl): void {
-//   fadeIn(total, begin, end, ctrl.outs_0)
-//   fadeIn(total, begin, end, ctrl.outs_1)
-// }
-
-// // @ts-ignore
-// @inline
-// function fadeCtrlOut(total: u32, begin: u32, end: u32, ctrl: Ctrl): void {
-//   fadeOut(total, begin, end, ctrl.outs_0)
-//   fadeOut(total, begin, end, ctrl.outs_1)
-// }

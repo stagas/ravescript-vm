@@ -113,7 +113,7 @@ export class RaveNode extends AudioWorkletNode {
   }
 
   async onProcessorReady() {
-    await this.worklet.setMain(this.frontend.main!.payload)
+    // await this.worklet.setMain(this.frontend.main!.payload)
     this.ready.resolve()
   }
 
@@ -181,7 +181,7 @@ export async function test_rave_node() {
       const info = frontend.produce(tokens)
       const sound = frontend.compile(info)
 
-      await rave.worklet.setBarAt([0], [sound.payload])
+      await rave.worklet.setBarAt([0], [sound.payload], null)
 
       await rave.start()
 

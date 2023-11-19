@@ -33,14 +33,14 @@ export class PreviewWorker {
   async render(isMain: boolean, payload: Build.Payload, payloads: Build.Payload[]) {
     if (!isMain) {
       // let tries = 3
-      this.backend.clearMain()
+      // this.backend.clearMain()
       // // try {
       // while (--tries) {
-        await this.backend.setBarAt([0], [payload])
-        await this.backend.fill(0, this.length)
-        // if (!(this.backend.signal?.LR ?? this.backend.signal?.L ?? this.backend.signal?.R)?.every((x) => x === 0)) {
-        //   break
-        // }
+      await this.backend.setBarAt([0], [payload], null)
+      await this.backend.fill(0, this.length)
+      // if (!(this.backend.signal?.LR ?? this.backend.signal?.L ?? this.backend.signal?.R)?.every((x) => x === 0)) {
+      //   break
+      // }
       // }
       // }
       // catch (error) {
@@ -51,8 +51,8 @@ export class PreviewWorker {
       // this.backend.clearMain()
       // console.log('WHATTTT', payloads)
       // try {
-      await this.backend.setMain(payload)
-      await this.backend.setBarAt([0], payloads)
+      // await this.backend.setMain(payload)
+      await this.backend.setBarAt([0], payloads, payload)
       await this.backend.fill(0, this.length)
       // }
       // catch (error) {
