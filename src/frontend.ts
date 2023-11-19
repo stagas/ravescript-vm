@@ -319,9 +319,7 @@ export class Frontend {
       //   ownLiterals.set(shared.memories.literals)
       // }
 
-      info.literals.forEach((l) => {
-        ownLiterals[l.ptr] = l.value
-      })
+      info.writeLiterals(ownLiterals)
 
       // update info for next use
       shared.info = info
@@ -354,6 +352,7 @@ export class Frontend {
     }
 
     const code = info.codes.join('\n')
+      + info.resets.join('\n')
       + ' rms_ '
 
     const envTypesShaked =
@@ -417,9 +416,7 @@ export class Frontend {
 
     this.buildsShared.set(info.id, shared)
 
-    info.literals.forEach((l) => {
-      ownLiterals[l.ptr] = l.value
-    })
+    info.writeLiterals(ownLiterals)
 
     const sound: Build.Sound = {
       frontend: this,

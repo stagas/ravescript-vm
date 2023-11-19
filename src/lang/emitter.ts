@@ -1,5 +1,6 @@
 // import { Rms } from '../../../web/rms'
 import { PropInfo, envGens, envLookupMethod, envTypes } from '../env-info.ts'
+import { Block } from '../frontend.ts'
 import { GenRuntime } from '../gen-runtime.ts'
 import { checksum, parseNumber } from '../util.ts'
 import { Scope, analyse, isExternalSource } from './analyser.ts'
@@ -185,7 +186,7 @@ export class Emitter {
 
     // info
     this.info = new Emitter.Info(this.scope)
-    const { codes, updates, lists, picks, withs, gfx } = this.info
+    const { codes, updates, resets, lists, picks, withs, gfx } = this.info
     // TODO: Hardcoding 2 inputs for the time being, but we need to
     //  actually infer the number of inputs from usage.
     // this.info.ins = 2
@@ -601,6 +602,12 @@ export class Emitter {
               codes.push(code)
             }
 
+            const resetMethod = envLookupMethod(kind, '_reset')
+            if (resetMethod) {
+              const code = `${resetMethod}(${gen.code})`
+              resets.push(code)
+            }
+
             // Note: Special case gen `rate` needs these jit operations
             //  that set the audio rate inside the jit context.
             // if (kind === 'rate') {
@@ -666,6 +673,7 @@ export namespace Emitter {
     lists: string[] = []
     codes: string[] = []
     updates: string[] = []
+    resets: string[] = []
     withs: Map<string, { index: number, audio: Emitter.Audio }> = new Map()
     gfx: { kind: string, item: Emitter.Item, prop: Scope.Item }[] = []
 
@@ -691,6 +699,12 @@ export namespace Emitter {
             )
         )))
       )
+    }
+
+    writeLiterals(block: Block) {
+      this.literals.forEach((l) => {
+        block[l.ptr] = l.value
+      })
     }
   }
 

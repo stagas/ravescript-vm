@@ -13,6 +13,7 @@ export interface Module {
   rms(begin: number, end: number, resultsPtr: number): void
   rms_params(begin: number, end: number, resultsPtr: number): void
   update_gens(): void
+  reset_gens(): void
   bench(times: number, begin: number, end: number): void
 }
 
@@ -199,6 +200,11 @@ rms_params: fn (begin: i32, end: i32, results: ptr f32) void {
 export update_gens
 update_gens: fn () void {
   ${info.updates.join('\n  ')}
+}
+
+export reset_gens
+reset_gens: fn () void {
+  ${info.resets.join('\n  ')}
 }
 
 export bench

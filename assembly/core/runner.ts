@@ -89,7 +89,7 @@ function mix(last: Bar, ctrl: Ctrl, begin: u32, end: u32): void {
   call_indirect<void>(ctrl.run, begin, end)
 
   if (!existed) {
-    fadeInSignal(32, begin, end, ctrl.signal)
+    fadeInSignal(8, begin, end, ctrl.signal)
   }
 }
 

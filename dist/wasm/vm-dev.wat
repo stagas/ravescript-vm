@@ -5,9 +5,9 @@
  (type $i32_=>_f32 (func (param i32) (result f32)))
  (type $i32_i32_=>_i32 (func (param i32 i32) (result i32)))
  (type $none_=>_i32 (func (result i32)))
+ (type $i32_=>_none (func (param i32)))
  (type $i32_i32_i32_i32_=>_none (func (param i32 i32 i32 i32)))
  (type $i32_f64_=>_none (func (param i32 f64)))
- (type $i32_=>_none (func (param i32)))
  (type $i32_=>_f64 (func (param i32) (result f64)))
  (type $i32_i32_i32_=>_none (func (param i32 i32 i32)))
  (type $f64_=>_f64 (func (param f64) (result f64)))
@@ -626,6 +626,7 @@
  (export "gen_say_constructor" (func $assembly/gen/say/Say#constructor))
  (export "util_getObjectSize__gen_say_Say_" (func $assembly/util/getObjectSize<assembly/gen/say/Say>))
  (export "gen_gen__update" (func $assembly/gen/gen/Gen#_update))
+ (export "gen_gen__reset" (func $assembly/gen/gen/Gen#_reset))
  (export "gen_gen__audio" (func $assembly/gen/gen/Gen#_audio))
  (export "pow_audio_scalar" (func $assembly/math/pow_audio_scalar))
  (export "pow_scalar_audio" (func $assembly/math/pow_scalar_audio))
@@ -767,6 +768,8 @@
  (export "antialias_wavetable_AntialiasWavetable_get_stepShift" (func $assembly/core/antialias-wavetable/AntialiasWavetable#get:stepShift))
  (export "gen_osc_get__step" (func $assembly/gen/osc/Osc#get:_step))
  (export "gen_aosc__update" (func $assembly/gen/aosc/AOsc#_update))
+ (export "gen_delay_get__floats" (func $assembly/gen/delay/Delay#get:_floats))
+ (export "gen_delay__reset" (func $assembly/gen/delay/Delay#_reset))
  (export "gen_clamp_get_min" (func $assembly/gen/clamp/Clamp#get:min))
  (export "gen_clamp_get_max" (func $assembly/gen/clamp/Clamp#get:max))
  (export "gen_clamp_get_in" (func $assembly/gen/clamp/Clamp#get:in))
@@ -832,7 +835,6 @@
  (export "gen_delay_get__mask" (func $assembly/gen/delay/Delay#get:_mask))
  (export "gen_delay_get__index" (func $assembly/gen/delay/Delay#get:_index))
  (export "gen_delay_get_fb" (func $assembly/gen/delay/Delay#get:fb))
- (export "gen_delay_get__floats" (func $assembly/gen/delay/Delay#get:_floats))
  (export "gen_delay__audio" (func $assembly/gen/delay/Delay#_audio))
  (export "gen_diode_get__A" (func $assembly/gen/diode/Diode#get:_A))
  (export "gen_diode_get__a" (func $assembly/gen/diode/Diode#get:_a))
@@ -925,6 +927,7 @@
  (export "gen_sqr_get__tables" (func $assembly/gen/sqr/Sqr#get:_tables))
  (export "gen_tri_get__tables" (func $assembly/gen/tri/Tri#get:_tables))
  (export "gen_gen__update_override" (func $assembly/gen/gen/Gen#_update@override))
+ (export "gen_gen__reset_override" (func $assembly/gen/gen/Gen#_reset@override))
  (export "gen_gen__audio_override" (func $assembly/gen/gen/Gen#_audio@override))
  (export "gen_osc_get__table_override" (func $assembly/gen/osc/Osc#get:_table@override))
  (export "gen_osc_get__mask_override" (func $assembly/gen/osc/Osc#get:_mask@override))
@@ -10566,7 +10569,7 @@
        local.get $existed
        i32.eqz
        if
-        i32.const 32
+        i32.const 8
         local.set $total|59
         local.get $begin|50
         local.set $begin|60
@@ -10804,7 +10807,7 @@
        local.get $existed|83
        i32.eqz
        if
-        i32.const 32
+        i32.const 8
         local.set $total|85
         local.get $begin|76
         local.set $begin|86
@@ -14563,6 +14566,9 @@
   return
  )
  (func $assembly/gen/gen/Gen#_update (param $this i32)
+  nop
+ )
+ (func $assembly/gen/gen/Gen#_reset (param $this i32)
   nop
  )
  (func $assembly/gen/gen/Gen#_audio (param $this i32) (param $begin i32) (param $end i32) (param $targetPtr i32)
@@ -21510,6 +21516,8 @@
   local.get $gen
   call $assembly/gen/gen/Gen#_update@override
   local.get $gen
+  call $assembly/gen/gen/Gen#_reset@override
+  local.get $gen
   i32.const 0
   i32.const 0
   i32.const 0
@@ -27841,6 +27849,19 @@
    i32.shr_u
   end
   call $assembly/gen/osc/Osc#set:_step
+ )
+ (func $assembly/gen/delay/Delay#get:_floats (param $this i32) (result i32)
+  local.get $this
+  i32.load $0 offset=20
+ )
+ (func $assembly/gen/delay/Delay#_reset (param $this i32)
+  local.get $this
+  call $assembly/gen/delay/Delay#get:_floats
+  f32.const 0
+  i32.const 0
+  global.get $assembly/core/constants/DELAY_MAX_SIZE
+  call $~lib/staticarray/StaticArray<f32>#fill
+  drop
  )
  (func $assembly/gen/clamp/Clamp#get:min (param $this i32) (result f32)
   local.get $this
@@ -42662,10 +42683,6 @@
  (func $assembly/gen/delay/Delay#get:fb (param $this i32) (result f32)
   local.get $this
   f32.load $0 offset=12
- )
- (func $assembly/gen/delay/Delay#get:_floats (param $this i32) (result i32)
-  local.get $this
-  i32.load $0 offset=20
  )
  (func $assembly/gen/delay/Delay#_audio (param $this i32) (param $begin i32) (param $end i32) (param $out i32)
   (local $length i32)
@@ -64453,6 +64470,28 @@
   end
   local.get $0
   call $assembly/gen/gen/Gen#_update
+ )
+ (func $assembly/gen/gen/Gen#_reset@override (param $0 i32)
+  (local $1 i32)
+  block $default
+   block $case0
+    local.get $0
+    i32.const 8
+    i32.sub
+    i32.load $0
+    local.set $1
+    local.get $1
+    i32.const 33
+    i32.eq
+    br_if $case0
+    br $default
+   end
+   local.get $0
+   call $assembly/gen/delay/Delay#_reset
+   return
+  end
+  local.get $0
+  call $assembly/gen/gen/Gen#_reset
  )
  (func $assembly/gen/gen/Gen#_audio@override (param $0 i32) (param $1 i32) (param $2 i32) (param $3 i32)
   (local $4 i32)

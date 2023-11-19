@@ -206,6 +206,7 @@ export function preventTreeShaking(gen: Gen): void {
   const saySize: usize = util.getObjectSize<Say>()
 
   gen._update()
+  gen._reset()
   gen._audio(0, 0, 0)
 
   // math

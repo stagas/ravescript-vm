@@ -49,15 +49,18 @@ function resetCtrlById(id: number) {
   const ctrl = ctrlsById.get(id)
   if (ctrl) {
     resetCtrl(ctrl)
-    // console.log('RESET', id, ctrl)
   }
 }
 
 function resetCtrl(ctrl: Ctrl) {
+  // TODO: clear audios?
   ctrl.gens.forEach((gen) => {
     gen.mem.set(gen.initial)
   })
+
+  // TODO: apply initial literals before this update/reset
   ctrl.instance.exports.update_gens()
+  ctrl.instance.exports.reset_gens()
   ctrl.signal.L?.fill(0)
   ctrl.signal.R?.fill(0)
   ctrl.signal.LR?.fill(0)
@@ -146,7 +149,6 @@ export class Bar {
     this.barCtrls[this.ctrls.size] = ctrl.ptr
     this.ctrls.push(ctrl)
     this.bar.size = this.ctrls.size
-    // console.log(this.bar.size, this.bar)
   }
 }
 
@@ -191,10 +193,8 @@ export class Backend {
 
   barPool: FixedArray<Bar> = new FixedArray(MAX_BAR_INSTANCES)
   barTrash: FixedArray<Bar> = new FixedArray(MAX_BAR_INSTANCES)
-  // barIndex = 0
 
   ctrlPool: FixedArray<Ctrl> = new FixedArray(MAX_CTRL_INSTANCES)
-  // ctrlIndex = 0
 
   clock: Clock
 
@@ -396,19 +396,6 @@ export class Backend {
     return instance
   }
 
-  // async setMain(payload: Build.Payload) {
-  //   // console.log('SET MAIN')
-  //   const instance = await this.getCtrlInstance(payload)
-  //   const ctrl = this.putCtrl(instance, payload)
-  //   this.main = ctrl
-  //   this.vm.exports.runner_set_main(this.runnerPtr, ctrl.ptr)
-  // }
-
-  // clearMain() {
-  //   this.vm.exports.runner_set_main(this.runnerPtr, 0)
-  //   this.main = null
-  // }
-
   removeBarAt(barTime: number) {
     this.runnerBars[barTime] = 0
   }
@@ -605,9 +592,6 @@ export class Backend {
     if (!bar) return
 
     bar.reset()
-    // if (this.main) resetCtrl(this.main)
-    // else this.clearMain()
-
     this.resetClock()
     this.clearSignal()
 
