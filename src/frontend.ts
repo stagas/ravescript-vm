@@ -119,7 +119,6 @@ export class Frontend {
     const mainInfo = this.produce([...this.tokenize({ code: defaultMainCode })])
     this.setupMain(mainInfo)
     this.main = this.compile(mainInfo)
-    // console.log(this.main, this)
 
     this.buffers = {
       clock: this.clock.byteOffset,
@@ -129,8 +128,7 @@ export class Frontend {
   }
 
   getBlock = (length = this.blockSize): Block => {
-    // console.warn('GET BLOCK!')
-    let block = this.blocks.pop()
+    let block = this.blocks.pop()?.fill(0)
     if (!block) {
       block = this.vm.view.getF32(
         this.vm.exports.engine_createBlock(this.engine, length),
@@ -141,8 +139,7 @@ export class Frontend {
   }
 
   getBlockU32 = (length = this.blockSize): BlockU32 => {
-    // console.warn('GET BLOCK U32')
-    let block = this.blocksU32.pop()
+    let block = this.blocksU32.pop()?.fill(0)
     if (!block) {
       block = this.vm.view.getU32(
         this.vm.exports.engine_createBlock(this.engine, length),
@@ -153,7 +150,6 @@ export class Frontend {
   }
 
   getMemories(info: Emitter.Info): Build.Memories {
-    // console.warn('GET MEMORIES!')
     const audios = Array.from(info.audios,
       (_, index) =>
         info.overrideAudios.get(index) ?? this.getBlock()
@@ -197,13 +193,11 @@ export class Frontend {
 
     if (this.blocks.includes(block)) return
     this.blocks.unshift(block)
-    block.fill(0)
   }
 
   freeBlockU32 = (block: BlockU32) => {
     if (this.blocksU32.includes(block)) return
     this.blocksU32.unshift(block)
-    block.fill(0)
   }
 
   free(memories: Partial<Build.Memories>) {
@@ -228,6 +222,7 @@ export class Frontend {
   createGen(gen: Emitter.Gen, out: Block | null) {
     if (gen.kind in this.gensFree && this.gensFree[gen.kind]!.length) {
       const genRuntime = this.gensFree[gen.kind]!.pop()!
+      genRuntime.reset()
       gen.runtime = genRuntime
       genRuntime.out = out
       this.gensUsed[gen.kind]!.push(genRuntime)
@@ -248,7 +243,6 @@ export class Frontend {
 
     this.gensUsed[gen.kind]!.splice(index, 1)
     this.gensFree[gen.kind]!.unshift(gen)
-    gen.reset()
   }
 
   tokenize(source: Source) {
