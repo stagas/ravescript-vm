@@ -7,7 +7,7 @@ import { Vm, VmInit, createVmMemory, fetchVmBinary, initVm } from './vm.ts'
 
 // import { DEBUG } from '../../web/constants'
 const DEBUG = true
-const DEV = !location.href.includes('?prod')
+const DEV = Boolean(location.port && !location.href.includes('?prod'))
 
 export enum RaveNodeState {
   Idle,

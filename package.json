@@ -17,7 +17,9 @@
     "test": "utr src/index.ts",
     "asc": "npm run asc:js && asc ./assembly/index.ts --stats --config=asconfig.json --transform ./dist/transforms/unroll.js --transform ./dist/transforms/export-all.js",
     "asc:js": "esbuild transforms/* --outdir=dist/transforms",
-    "asc:dev": "npm run asc -- --target=dev"
+    "asc:dev": "npm run asc -- --target=dev",
+    "asc:prod": "npm run asc -- --target=prod",
+    "build": "npm run asc:prod"
   },
   "dependencies": {
     "@bjorn3/browser_wasi_shim": "*",

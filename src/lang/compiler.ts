@@ -150,6 +150,10 @@ run: fn (i: i32, end: i32) void {
   literals[0] = literal_0
   literals[1] = literal_1
 
+  coeff: f64 = clock[6]
+  literal_3 = to_f32 coeff
+  literals[3] = literal_3
+
   // list pointers
   list_pos: f32 = 0.0
   list_index: f32 = 0.0
