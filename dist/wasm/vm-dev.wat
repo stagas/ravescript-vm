@@ -502,16 +502,16 @@
  (export "gen_mhp_constructor" (func $assembly/gen/mhp/Mhp#constructor))
  (export "util_getObjectSize__gen_mhp_Mhp_" (func $assembly/util/getObjectSize<assembly/gen/mhp/Mhp>))
  (export "gen_daverb_set_in" (func $assembly/gen/daverb/Daverb#set:in))
- (export "gen_daverb_set__pd" (func $assembly/gen/daverb/Daverb#set:_pd))
- (export "gen_daverb_set__bw" (func $assembly/gen/daverb/Daverb#set:_bw))
- (export "gen_daverb_set__fi" (func $assembly/gen/daverb/Daverb#set:_fi))
- (export "gen_daverb_set__si" (func $assembly/gen/daverb/Daverb#set:_si))
- (export "gen_daverb_set__dc" (func $assembly/gen/daverb/Daverb#set:_dc))
- (export "gen_daverb_set__ft" (func $assembly/gen/daverb/Daverb#set:_ft))
- (export "gen_daverb_set__st" (func $assembly/gen/daverb/Daverb#set:_st))
- (export "gen_daverb_set__dp" (func $assembly/gen/daverb/Daverb#set:_dp))
- (export "gen_daverb_set__ex" (func $assembly/gen/daverb/Daverb#set:_ex))
- (export "gen_daverb_set__ed" (func $assembly/gen/daverb/Daverb#set:_ed))
+ (export "gen_daverb_set_pd" (func $assembly/gen/daverb/Daverb#set:pd))
+ (export "gen_daverb_set_bw" (func $assembly/gen/daverb/Daverb#set:bw))
+ (export "gen_daverb_set_fi" (func $assembly/gen/daverb/Daverb#set:fi))
+ (export "gen_daverb_set_si" (func $assembly/gen/daverb/Daverb#set:si))
+ (export "gen_daverb_set_dc" (func $assembly/gen/daverb/Daverb#set:dc))
+ (export "gen_daverb_set_ft" (func $assembly/gen/daverb/Daverb#set:ft))
+ (export "gen_daverb_set_st" (func $assembly/gen/daverb/Daverb#set:st))
+ (export "gen_daverb_set_dp" (func $assembly/gen/daverb/Daverb#set:dp))
+ (export "gen_daverb_set_ex" (func $assembly/gen/daverb/Daverb#set:ex))
+ (export "gen_daverb_set_ed" (func $assembly/gen/daverb/Daverb#set:ed))
  (export "gen_daverb_set__params_pd" (func $assembly/gen/daverb/Daverb#set:_params_pd))
  (export "gen_daverb_set__params_bw" (func $assembly/gen/daverb/Daverb#set:_params_bw))
  (export "gen_daverb_set__params_fi" (func $assembly/gen/daverb/Daverb#set:_params_fi))
@@ -689,10 +689,10 @@
  (export "gen_bpk_get_amt" (func $assembly/gen/bpk/Bpk#get:amt))
  (export "gen_bpk__update" (func $assembly/gen/bpk/Bpk#_update))
  (export "gen_comp__update" (func $assembly/gen/comp/Comp#_update))
- (export "gen_daverb_get__dp" (func $assembly/gen/daverb/Daverb#get:_dp))
- (export "gen_daverb_get__ex" (func $assembly/gen/daverb/Daverb#get:_ex))
- (export "gen_daverb_get__ed" (func $assembly/gen/daverb/Daverb#get:_ed))
- (export "gen_daverb_get__pd" (func $assembly/gen/daverb/Daverb#get:_pd))
+ (export "gen_daverb_get_dp" (func $assembly/gen/daverb/Daverb#get:dp))
+ (export "gen_daverb_get_ex" (func $assembly/gen/daverb/Daverb#get:ex))
+ (export "gen_daverb_get_ed" (func $assembly/gen/daverb/Daverb#get:ed))
+ (export "gen_daverb_get_pd" (func $assembly/gen/daverb/Daverb#get:pd))
  (export "gen_daverb__update" (func $assembly/gen/daverb/Daverb#_update))
  (export "gen_delay_get_ms" (func $assembly/gen/delay/Delay#get:ms))
  (export "engine_get_rateStep" (func $assembly/core/engine/Engine#get:rateStep))
@@ -793,25 +793,25 @@
  (export "gen_daverb_get__lp3" (func $assembly/gen/daverb/Daverb#get:_lp3))
  (export "gen_daverb_get__excPhase" (func $assembly/gen/daverb/Daverb#get:_excPhase))
  (export "gen_daverb_get__predelay" (func $assembly/gen/daverb/Daverb#get:_predelay))
- (export "gen_daverb_get__bw" (func $assembly/gen/daverb/Daverb#get:_bw))
+ (export "gen_daverb_get_bw" (func $assembly/gen/daverb/Daverb#get:bw))
  (export "gen_daverb_get__pdn" (func $assembly/gen/daverb/Daverb#get:_pdn))
  (export "util_cubic" (func $assembly/util/cubic))
- (export "gen_daverb_get__fi" (func $assembly/gen/daverb/Daverb#get:_fi))
+ (export "gen_daverb_get_fi" (func $assembly/gen/daverb/Daverb#get:fi))
  (export "gen_daverb_get__d0" (func $assembly/gen/daverb/Daverb#get:_d0))
  (export "gen_daverb_get__d1" (func $assembly/gen/daverb/Daverb#get:_d1))
- (export "gen_daverb_get__si" (func $assembly/gen/daverb/Daverb#get:_si))
+ (export "gen_daverb_get_si" (func $assembly/gen/daverb/Daverb#get:si))
  (export "gen_daverb_get__d2" (func $assembly/gen/daverb/Daverb#get:_d2))
  (export "gen_daverb_get__d3" (func $assembly/gen/daverb/Daverb#get:_d3))
  (export "gen_daverb_get__edn" (func $assembly/gen/daverb/Daverb#get:_edn))
  (export "wavetable_get_mask" (func $assembly/core/wavetable/Wavetable#get:mask))
  (export "wavetable_readAt" (func $assembly/core/wavetable/Wavetable#readAt))
  (export "gen_daverb_get__d4" (func $assembly/gen/daverb/Daverb#get:_d4))
- (export "gen_daverb_get__dc" (func $assembly/gen/daverb/Daverb#get:_dc))
+ (export "gen_daverb_get_dc" (func $assembly/gen/daverb/Daverb#get:dc))
  (export "gen_daverb_get__d11" (func $assembly/gen/daverb/Daverb#get:_d11))
- (export "gen_daverb_get__ft" (func $assembly/gen/daverb/Daverb#get:_ft))
+ (export "gen_daverb_get_ft" (func $assembly/gen/daverb/Daverb#get:ft))
  (export "gen_daverb_get__d5" (func $assembly/gen/daverb/Daverb#get:_d5))
  (export "gen_daverb_get__dpn" (func $assembly/gen/daverb/Daverb#get:_dpn))
- (export "gen_daverb_get__st" (func $assembly/gen/daverb/Daverb#get:_st))
+ (export "gen_daverb_get_st" (func $assembly/gen/daverb/Daverb#get:st))
  (export "gen_daverb_get__d6" (func $assembly/gen/daverb/Daverb#get:_d6))
  (export "gen_daverb_get__d7" (func $assembly/gen/daverb/Daverb#get:_d7))
  (export "gen_daverb_get__d8" (func $assembly/gen/daverb/Daverb#get:_d8))
@@ -13359,54 +13359,54 @@
   local.get $in
   i32.store $0 offset=8
  )
- (func $assembly/gen/daverb/Daverb#set:_pd (param $this i32) (param $_pd f32)
+ (func $assembly/gen/daverb/Daverb#set:pd (param $this i32) (param $pd f32)
   local.get $this
-  local.get $_pd
+  local.get $pd
   f32.store $0 offset=12
  )
- (func $assembly/gen/daverb/Daverb#set:_bw (param $this i32) (param $_bw f32)
+ (func $assembly/gen/daverb/Daverb#set:bw (param $this i32) (param $bw f32)
   local.get $this
-  local.get $_bw
+  local.get $bw
   f32.store $0 offset=16
  )
- (func $assembly/gen/daverb/Daverb#set:_fi (param $this i32) (param $_fi f32)
+ (func $assembly/gen/daverb/Daverb#set:fi (param $this i32) (param $fi f32)
   local.get $this
-  local.get $_fi
+  local.get $fi
   f32.store $0 offset=20
  )
- (func $assembly/gen/daverb/Daverb#set:_si (param $this i32) (param $_si f32)
+ (func $assembly/gen/daverb/Daverb#set:si (param $this i32) (param $si f32)
   local.get $this
-  local.get $_si
+  local.get $si
   f32.store $0 offset=24
  )
- (func $assembly/gen/daverb/Daverb#set:_dc (param $this i32) (param $_dc f32)
+ (func $assembly/gen/daverb/Daverb#set:dc (param $this i32) (param $dc f32)
   local.get $this
-  local.get $_dc
+  local.get $dc
   f32.store $0 offset=28
  )
- (func $assembly/gen/daverb/Daverb#set:_ft (param $this i32) (param $_ft f32)
+ (func $assembly/gen/daverb/Daverb#set:ft (param $this i32) (param $ft f32)
   local.get $this
-  local.get $_ft
+  local.get $ft
   f32.store $0 offset=32
  )
- (func $assembly/gen/daverb/Daverb#set:_st (param $this i32) (param $_st f32)
+ (func $assembly/gen/daverb/Daverb#set:st (param $this i32) (param $st f32)
   local.get $this
-  local.get $_st
+  local.get $st
   f32.store $0 offset=36
  )
- (func $assembly/gen/daverb/Daverb#set:_dp (param $this i32) (param $_dp f32)
+ (func $assembly/gen/daverb/Daverb#set:dp (param $this i32) (param $dp f32)
   local.get $this
-  local.get $_dp
+  local.get $dp
   f32.store $0 offset=40
  )
- (func $assembly/gen/daverb/Daverb#set:_ex (param $this i32) (param $_ex f32)
+ (func $assembly/gen/daverb/Daverb#set:ex (param $this i32) (param $ex f32)
   local.get $this
-  local.get $_ex
+  local.get $ex
   f32.store $0 offset=44
  )
- (func $assembly/gen/daverb/Daverb#set:_ed (param $this i32) (param $_ed f32)
+ (func $assembly/gen/daverb/Daverb#set:ed (param $this i32) (param $ed f32)
   local.get $this
-  local.get $_ed
+  local.get $ed
   f32.store $0 offset=48
  )
  (func $assembly/gen/daverb/Daverb#set:_params_pd (param $this i32) (param $_params_pd i32)
@@ -13704,34 +13704,34 @@
   call $assembly/gen/daverb/Daverb#set:in
   local.get $this
   f32.const 0.029999999329447746
-  call $assembly/gen/daverb/Daverb#set:_pd
+  call $assembly/gen/daverb/Daverb#set:pd
   local.get $this
   f32.const 0.10000000149011612
-  call $assembly/gen/daverb/Daverb#set:_bw
+  call $assembly/gen/daverb/Daverb#set:bw
   local.get $this
   f32.const 0.5
-  call $assembly/gen/daverb/Daverb#set:_fi
+  call $assembly/gen/daverb/Daverb#set:fi
   local.get $this
   f32.const 0.5
-  call $assembly/gen/daverb/Daverb#set:_si
+  call $assembly/gen/daverb/Daverb#set:si
   local.get $this
   f32.const 0.5
-  call $assembly/gen/daverb/Daverb#set:_dc
+  call $assembly/gen/daverb/Daverb#set:dc
   local.get $this
   f32.const 0.5
-  call $assembly/gen/daverb/Daverb#set:_ft
+  call $assembly/gen/daverb/Daverb#set:ft
   local.get $this
   f32.const 0.5
-  call $assembly/gen/daverb/Daverb#set:_st
+  call $assembly/gen/daverb/Daverb#set:st
   local.get $this
   f32.const 0.5
-  call $assembly/gen/daverb/Daverb#set:_dp
+  call $assembly/gen/daverb/Daverb#set:dp
   local.get $this
   f32.const 0.5
-  call $assembly/gen/daverb/Daverb#set:_ex
+  call $assembly/gen/daverb/Daverb#set:ex
   local.get $this
   f32.const 0.5
-  call $assembly/gen/daverb/Daverb#set:_ed
+  call $assembly/gen/daverb/Daverb#set:ed
   local.get $this
   i32.const 3
   i32.const 2
@@ -24724,19 +24724,19 @@
  (func $assembly/gen/comp/Comp#_update (param $this i32)
   nop
  )
- (func $assembly/gen/daverb/Daverb#get:_dp (param $this i32) (result f32)
+ (func $assembly/gen/daverb/Daverb#get:dp (param $this i32) (result f32)
   local.get $this
   f32.load $0 offset=40
  )
- (func $assembly/gen/daverb/Daverb#get:_ex (param $this i32) (result f32)
+ (func $assembly/gen/daverb/Daverb#get:ex (param $this i32) (result f32)
   local.get $this
   f32.load $0 offset=44
  )
- (func $assembly/gen/daverb/Daverb#get:_ed (param $this i32) (result f32)
+ (func $assembly/gen/daverb/Daverb#get:ed (param $this i32) (result f32)
   local.get $this
   f32.load $0 offset=48
  )
- (func $assembly/gen/daverb/Daverb#get:_pd (param $this i32) (result f32)
+ (func $assembly/gen/daverb/Daverb#get:pd (param $this i32) (result f32)
   local.get $this
   f32.load $0 offset=12
  )
@@ -24750,18 +24750,18 @@
   local.get $this
   f32.const 1
   local.get $this
-  call $assembly/gen/daverb/Daverb#get:_dp
+  call $assembly/gen/daverb/Daverb#get:dp
   f32.sub
   call $assembly/gen/daverb/Daverb#set:_dpn
   local.get $this
   local.get $this
-  call $assembly/gen/daverb/Daverb#get:_ex
+  call $assembly/gen/daverb/Daverb#get:ex
   local.get $arf
   f32.div
   call $assembly/gen/daverb/Daverb#set:_exn
   local.get $this
   local.get $this
-  call $assembly/gen/daverb/Daverb#get:_ed
+  call $assembly/gen/daverb/Daverb#get:ed
   local.get $arf
   f32.mul
   f32.const 1e3
@@ -24769,7 +24769,7 @@
   call $assembly/gen/daverb/Daverb#set:_edn
   local.get $this
   local.get $this
-  call $assembly/gen/daverb/Daverb#get:_pd
+  call $assembly/gen/daverb/Daverb#get:pd
   local.get $arf
   f32.mul
   call $assembly/gen/daverb/Daverb#set:_pdn
@@ -31393,7 +31393,7 @@
   local.get $this
   i32.load $0 offset=108
  )
- (func $assembly/gen/daverb/Daverb#get:_bw (param $this i32) (result f32)
+ (func $assembly/gen/daverb/Daverb#get:bw (param $this i32) (result f32)
   local.get $this
   f32.load $0 offset=16
  )
@@ -31501,7 +31501,7 @@
   f32.add
   return
  )
- (func $assembly/gen/daverb/Daverb#get:_fi (param $this i32) (result f32)
+ (func $assembly/gen/daverb/Daverb#get:fi (param $this i32) (result f32)
   local.get $this
   f32.load $0 offset=20
  )
@@ -31513,7 +31513,7 @@
   local.get $this
   i32.load $0 offset=116
  )
- (func $assembly/gen/daverb/Daverb#get:_si (param $this i32) (result f32)
+ (func $assembly/gen/daverb/Daverb#get:si (param $this i32) (result f32)
   local.get $this
   f32.load $0 offset=24
  )
@@ -31604,7 +31604,7 @@
   local.get $this
   i32.load $0 offset=128
  )
- (func $assembly/gen/daverb/Daverb#get:_dc (param $this i32) (result f32)
+ (func $assembly/gen/daverb/Daverb#get:dc (param $this i32) (result f32)
   local.get $this
   f32.load $0 offset=28
  )
@@ -31612,7 +31612,7 @@
   local.get $this
   i32.load $0 offset=156
  )
- (func $assembly/gen/daverb/Daverb#get:_ft (param $this i32) (result f32)
+ (func $assembly/gen/daverb/Daverb#get:ft (param $this i32) (result f32)
   local.get $this
   f32.load $0 offset=32
  )
@@ -31624,7 +31624,7 @@
   local.get $this
   f32.load $0 offset=92
  )
- (func $assembly/gen/daverb/Daverb#get:_st (param $this i32) (result f32)
+ (func $assembly/gen/daverb/Daverb#get:st (param $this i32) (result f32)
   local.get $this
   f32.load $0 offset=36
  )
@@ -31747,7 +31747,7 @@
     call $~lib/staticarray/StaticArray<f32>#__set
     local.get $lp1
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_bw
+    call $assembly/gen/daverb/Daverb#get:bw
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_predelay
     local.get $p
@@ -31769,7 +31769,7 @@
     i32.and
     local.get $lp1
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_fi
+    call $assembly/gen/daverb/Daverb#get:fi
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d0
     local.get $pm
@@ -31785,7 +31785,7 @@
     global.get $assembly/gen/daverb/md1
     i32.and
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_fi
+    call $assembly/gen/daverb/Daverb#get:fi
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d0
     local.get $p
@@ -31814,7 +31814,7 @@
     global.get $assembly/gen/daverb/md2
     i32.and
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_fi
+    call $assembly/gen/daverb/Daverb#get:fi
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d1
     local.get $p
@@ -31830,7 +31830,7 @@
     call $~lib/staticarray/StaticArray<f32>#__get
     f32.add
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_si
+    call $assembly/gen/daverb/Daverb#get:si
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d2
     local.get $pm
@@ -31846,7 +31846,7 @@
     global.get $assembly/gen/daverb/md3
     i32.and
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_si
+    call $assembly/gen/daverb/Daverb#get:si
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d2
     local.get $p
@@ -31870,7 +31870,7 @@
     f32.add
     call $~lib/staticarray/StaticArray<f32>#__set
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_si
+    call $assembly/gen/daverb/Daverb#get:si
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d3
     local.get $p
@@ -31915,7 +31915,7 @@
     i32.and
     local.get $split
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_dc
+    call $assembly/gen/daverb/Daverb#get:dc
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d11
     local.get $pm
@@ -31925,7 +31925,7 @@
     f32.mul
     f32.add
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_ft
+    call $assembly/gen/daverb/Daverb#get:ft
     local.get $d4p
     f32.mul
     f32.add
@@ -31937,7 +31937,7 @@
     i32.and
     local.get $d4p
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_ft
+    call $assembly/gen/daverb/Daverb#get:ft
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d4
     local.get $p
@@ -31967,11 +31967,11 @@
     global.get $assembly/gen/daverb/md6
     i32.and
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_dc
+    call $assembly/gen/daverb/Daverb#get:dc
     local.get $lp2
     f32.mul
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_st
+    call $assembly/gen/daverb/Daverb#get:st
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d6
     local.get $pm
@@ -31993,7 +31993,7 @@
     i32.and
     call $~lib/staticarray/StaticArray<f32>#__get
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_st
+    call $assembly/gen/daverb/Daverb#get:st
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d6
     local.get $p
@@ -32019,7 +32019,7 @@
     i32.and
     local.get $split
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_dc
+    call $assembly/gen/daverb/Daverb#get:dc
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d7
     local.get $pm
@@ -32029,7 +32029,7 @@
     f32.mul
     f32.add
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_ft
+    call $assembly/gen/daverb/Daverb#get:ft
     local.get $d8p
     f32.mul
     f32.add
@@ -32041,7 +32041,7 @@
     i32.and
     local.get $d8p
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_ft
+    call $assembly/gen/daverb/Daverb#get:ft
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d8
     local.get $p
@@ -32071,11 +32071,11 @@
     global.get $assembly/gen/daverb/md10
     i32.and
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_dc
+    call $assembly/gen/daverb/Daverb#get:dc
     local.get $lp3
     f32.mul
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_st
+    call $assembly/gen/daverb/Daverb#get:st
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d10
     local.get $pm
@@ -32097,7 +32097,7 @@
     i32.and
     call $~lib/staticarray/StaticArray<f32>#__get
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_st
+    call $assembly/gen/daverb/Daverb#get:st
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d10
     local.get $p
@@ -32278,7 +32278,7 @@
     call $~lib/staticarray/StaticArray<f32>#__set
     local.get $lp1
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_bw
+    call $assembly/gen/daverb/Daverb#get:bw
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_predelay
     local.get $p
@@ -32300,7 +32300,7 @@
     i32.and
     local.get $lp1
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_fi
+    call $assembly/gen/daverb/Daverb#get:fi
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d0
     local.get $pm
@@ -32316,7 +32316,7 @@
     global.get $assembly/gen/daverb/md1
     i32.and
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_fi
+    call $assembly/gen/daverb/Daverb#get:fi
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d0
     local.get $p
@@ -32345,7 +32345,7 @@
     global.get $assembly/gen/daverb/md2
     i32.and
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_fi
+    call $assembly/gen/daverb/Daverb#get:fi
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d1
     local.get $p
@@ -32361,7 +32361,7 @@
     call $~lib/staticarray/StaticArray<f32>#__get
     f32.add
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_si
+    call $assembly/gen/daverb/Daverb#get:si
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d2
     local.get $pm
@@ -32377,7 +32377,7 @@
     global.get $assembly/gen/daverb/md3
     i32.and
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_si
+    call $assembly/gen/daverb/Daverb#get:si
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d2
     local.get $p
@@ -32401,7 +32401,7 @@
     f32.add
     call $~lib/staticarray/StaticArray<f32>#__set
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_si
+    call $assembly/gen/daverb/Daverb#get:si
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d3
     local.get $p
@@ -32446,7 +32446,7 @@
     i32.and
     local.get $split
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_dc
+    call $assembly/gen/daverb/Daverb#get:dc
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d11
     local.get $pm
@@ -32456,7 +32456,7 @@
     f32.mul
     f32.add
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_ft
+    call $assembly/gen/daverb/Daverb#get:ft
     local.get $d4p
     f32.mul
     f32.add
@@ -32468,7 +32468,7 @@
     i32.and
     local.get $d4p
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_ft
+    call $assembly/gen/daverb/Daverb#get:ft
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d4
     local.get $p
@@ -32498,11 +32498,11 @@
     global.get $assembly/gen/daverb/md6
     i32.and
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_dc
+    call $assembly/gen/daverb/Daverb#get:dc
     local.get $lp2
     f32.mul
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_st
+    call $assembly/gen/daverb/Daverb#get:st
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d6
     local.get $pm
@@ -32524,7 +32524,7 @@
     i32.and
     call $~lib/staticarray/StaticArray<f32>#__get
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_st
+    call $assembly/gen/daverb/Daverb#get:st
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d6
     local.get $p
@@ -32550,7 +32550,7 @@
     i32.and
     local.get $split
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_dc
+    call $assembly/gen/daverb/Daverb#get:dc
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d7
     local.get $pm
@@ -32560,7 +32560,7 @@
     f32.mul
     f32.add
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_ft
+    call $assembly/gen/daverb/Daverb#get:ft
     local.get $d8p
     f32.mul
     f32.add
@@ -32572,7 +32572,7 @@
     i32.and
     local.get $d8p
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_ft
+    call $assembly/gen/daverb/Daverb#get:ft
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d8
     local.get $p
@@ -32602,11 +32602,11 @@
     global.get $assembly/gen/daverb/md10
     i32.and
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_dc
+    call $assembly/gen/daverb/Daverb#get:dc
     local.get $lp3
     f32.mul
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_st
+    call $assembly/gen/daverb/Daverb#get:st
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d10
     local.get $pm
@@ -32628,7 +32628,7 @@
     i32.and
     call $~lib/staticarray/StaticArray<f32>#__get
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_st
+    call $assembly/gen/daverb/Daverb#get:st
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d10
     local.get $p
@@ -32809,7 +32809,7 @@
     call $~lib/staticarray/StaticArray<f32>#__set
     local.get $lp1
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_bw
+    call $assembly/gen/daverb/Daverb#get:bw
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_predelay
     local.get $p
@@ -32831,7 +32831,7 @@
     i32.and
     local.get $lp1
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_fi
+    call $assembly/gen/daverb/Daverb#get:fi
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d0
     local.get $pm
@@ -32847,7 +32847,7 @@
     global.get $assembly/gen/daverb/md1
     i32.and
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_fi
+    call $assembly/gen/daverb/Daverb#get:fi
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d0
     local.get $p
@@ -32876,7 +32876,7 @@
     global.get $assembly/gen/daverb/md2
     i32.and
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_fi
+    call $assembly/gen/daverb/Daverb#get:fi
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d1
     local.get $p
@@ -32892,7 +32892,7 @@
     call $~lib/staticarray/StaticArray<f32>#__get
     f32.add
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_si
+    call $assembly/gen/daverb/Daverb#get:si
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d2
     local.get $pm
@@ -32908,7 +32908,7 @@
     global.get $assembly/gen/daverb/md3
     i32.and
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_si
+    call $assembly/gen/daverb/Daverb#get:si
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d2
     local.get $p
@@ -32932,7 +32932,7 @@
     f32.add
     call $~lib/staticarray/StaticArray<f32>#__set
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_si
+    call $assembly/gen/daverb/Daverb#get:si
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d3
     local.get $p
@@ -32977,7 +32977,7 @@
     i32.and
     local.get $split
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_dc
+    call $assembly/gen/daverb/Daverb#get:dc
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d11
     local.get $pm
@@ -32987,7 +32987,7 @@
     f32.mul
     f32.add
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_ft
+    call $assembly/gen/daverb/Daverb#get:ft
     local.get $d4p
     f32.mul
     f32.add
@@ -32999,7 +32999,7 @@
     i32.and
     local.get $d4p
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_ft
+    call $assembly/gen/daverb/Daverb#get:ft
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d4
     local.get $p
@@ -33029,11 +33029,11 @@
     global.get $assembly/gen/daverb/md6
     i32.and
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_dc
+    call $assembly/gen/daverb/Daverb#get:dc
     local.get $lp2
     f32.mul
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_st
+    call $assembly/gen/daverb/Daverb#get:st
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d6
     local.get $pm
@@ -33055,7 +33055,7 @@
     i32.and
     call $~lib/staticarray/StaticArray<f32>#__get
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_st
+    call $assembly/gen/daverb/Daverb#get:st
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d6
     local.get $p
@@ -33081,7 +33081,7 @@
     i32.and
     local.get $split
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_dc
+    call $assembly/gen/daverb/Daverb#get:dc
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d7
     local.get $pm
@@ -33091,7 +33091,7 @@
     f32.mul
     f32.add
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_ft
+    call $assembly/gen/daverb/Daverb#get:ft
     local.get $d8p
     f32.mul
     f32.add
@@ -33103,7 +33103,7 @@
     i32.and
     local.get $d8p
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_ft
+    call $assembly/gen/daverb/Daverb#get:ft
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d8
     local.get $p
@@ -33133,11 +33133,11 @@
     global.get $assembly/gen/daverb/md10
     i32.and
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_dc
+    call $assembly/gen/daverb/Daverb#get:dc
     local.get $lp3
     f32.mul
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_st
+    call $assembly/gen/daverb/Daverb#get:st
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d10
     local.get $pm
@@ -33159,7 +33159,7 @@
     i32.and
     call $~lib/staticarray/StaticArray<f32>#__get
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_st
+    call $assembly/gen/daverb/Daverb#get:st
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d10
     local.get $p
@@ -33340,7 +33340,7 @@
     call $~lib/staticarray/StaticArray<f32>#__set
     local.get $lp1
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_bw
+    call $assembly/gen/daverb/Daverb#get:bw
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_predelay
     local.get $p
@@ -33362,7 +33362,7 @@
     i32.and
     local.get $lp1
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_fi
+    call $assembly/gen/daverb/Daverb#get:fi
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d0
     local.get $pm
@@ -33378,7 +33378,7 @@
     global.get $assembly/gen/daverb/md1
     i32.and
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_fi
+    call $assembly/gen/daverb/Daverb#get:fi
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d0
     local.get $p
@@ -33407,7 +33407,7 @@
     global.get $assembly/gen/daverb/md2
     i32.and
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_fi
+    call $assembly/gen/daverb/Daverb#get:fi
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d1
     local.get $p
@@ -33423,7 +33423,7 @@
     call $~lib/staticarray/StaticArray<f32>#__get
     f32.add
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_si
+    call $assembly/gen/daverb/Daverb#get:si
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d2
     local.get $pm
@@ -33439,7 +33439,7 @@
     global.get $assembly/gen/daverb/md3
     i32.and
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_si
+    call $assembly/gen/daverb/Daverb#get:si
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d2
     local.get $p
@@ -33463,7 +33463,7 @@
     f32.add
     call $~lib/staticarray/StaticArray<f32>#__set
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_si
+    call $assembly/gen/daverb/Daverb#get:si
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d3
     local.get $p
@@ -33508,7 +33508,7 @@
     i32.and
     local.get $split
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_dc
+    call $assembly/gen/daverb/Daverb#get:dc
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d11
     local.get $pm
@@ -33518,7 +33518,7 @@
     f32.mul
     f32.add
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_ft
+    call $assembly/gen/daverb/Daverb#get:ft
     local.get $d4p
     f32.mul
     f32.add
@@ -33530,7 +33530,7 @@
     i32.and
     local.get $d4p
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_ft
+    call $assembly/gen/daverb/Daverb#get:ft
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d4
     local.get $p
@@ -33560,11 +33560,11 @@
     global.get $assembly/gen/daverb/md6
     i32.and
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_dc
+    call $assembly/gen/daverb/Daverb#get:dc
     local.get $lp2
     f32.mul
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_st
+    call $assembly/gen/daverb/Daverb#get:st
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d6
     local.get $pm
@@ -33586,7 +33586,7 @@
     i32.and
     call $~lib/staticarray/StaticArray<f32>#__get
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_st
+    call $assembly/gen/daverb/Daverb#get:st
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d6
     local.get $p
@@ -33612,7 +33612,7 @@
     i32.and
     local.get $split
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_dc
+    call $assembly/gen/daverb/Daverb#get:dc
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d7
     local.get $pm
@@ -33622,7 +33622,7 @@
     f32.mul
     f32.add
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_ft
+    call $assembly/gen/daverb/Daverb#get:ft
     local.get $d8p
     f32.mul
     f32.add
@@ -33634,7 +33634,7 @@
     i32.and
     local.get $d8p
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_ft
+    call $assembly/gen/daverb/Daverb#get:ft
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d8
     local.get $p
@@ -33664,11 +33664,11 @@
     global.get $assembly/gen/daverb/md10
     i32.and
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_dc
+    call $assembly/gen/daverb/Daverb#get:dc
     local.get $lp3
     f32.mul
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_st
+    call $assembly/gen/daverb/Daverb#get:st
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d10
     local.get $pm
@@ -33690,7 +33690,7 @@
     i32.and
     call $~lib/staticarray/StaticArray<f32>#__get
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_st
+    call $assembly/gen/daverb/Daverb#get:st
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d10
     local.get $p
@@ -33871,7 +33871,7 @@
     call $~lib/staticarray/StaticArray<f32>#__set
     local.get $lp1
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_bw
+    call $assembly/gen/daverb/Daverb#get:bw
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_predelay
     local.get $p
@@ -33893,7 +33893,7 @@
     i32.and
     local.get $lp1
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_fi
+    call $assembly/gen/daverb/Daverb#get:fi
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d0
     local.get $pm
@@ -33909,7 +33909,7 @@
     global.get $assembly/gen/daverb/md1
     i32.and
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_fi
+    call $assembly/gen/daverb/Daverb#get:fi
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d0
     local.get $p
@@ -33938,7 +33938,7 @@
     global.get $assembly/gen/daverb/md2
     i32.and
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_fi
+    call $assembly/gen/daverb/Daverb#get:fi
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d1
     local.get $p
@@ -33954,7 +33954,7 @@
     call $~lib/staticarray/StaticArray<f32>#__get
     f32.add
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_si
+    call $assembly/gen/daverb/Daverb#get:si
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d2
     local.get $pm
@@ -33970,7 +33970,7 @@
     global.get $assembly/gen/daverb/md3
     i32.and
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_si
+    call $assembly/gen/daverb/Daverb#get:si
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d2
     local.get $p
@@ -33994,7 +33994,7 @@
     f32.add
     call $~lib/staticarray/StaticArray<f32>#__set
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_si
+    call $assembly/gen/daverb/Daverb#get:si
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d3
     local.get $p
@@ -34039,7 +34039,7 @@
     i32.and
     local.get $split
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_dc
+    call $assembly/gen/daverb/Daverb#get:dc
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d11
     local.get $pm
@@ -34049,7 +34049,7 @@
     f32.mul
     f32.add
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_ft
+    call $assembly/gen/daverb/Daverb#get:ft
     local.get $d4p
     f32.mul
     f32.add
@@ -34061,7 +34061,7 @@
     i32.and
     local.get $d4p
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_ft
+    call $assembly/gen/daverb/Daverb#get:ft
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d4
     local.get $p
@@ -34091,11 +34091,11 @@
     global.get $assembly/gen/daverb/md6
     i32.and
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_dc
+    call $assembly/gen/daverb/Daverb#get:dc
     local.get $lp2
     f32.mul
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_st
+    call $assembly/gen/daverb/Daverb#get:st
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d6
     local.get $pm
@@ -34117,7 +34117,7 @@
     i32.and
     call $~lib/staticarray/StaticArray<f32>#__get
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_st
+    call $assembly/gen/daverb/Daverb#get:st
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d6
     local.get $p
@@ -34143,7 +34143,7 @@
     i32.and
     local.get $split
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_dc
+    call $assembly/gen/daverb/Daverb#get:dc
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d7
     local.get $pm
@@ -34153,7 +34153,7 @@
     f32.mul
     f32.add
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_ft
+    call $assembly/gen/daverb/Daverb#get:ft
     local.get $d8p
     f32.mul
     f32.add
@@ -34165,7 +34165,7 @@
     i32.and
     local.get $d8p
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_ft
+    call $assembly/gen/daverb/Daverb#get:ft
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d8
     local.get $p
@@ -34195,11 +34195,11 @@
     global.get $assembly/gen/daverb/md10
     i32.and
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_dc
+    call $assembly/gen/daverb/Daverb#get:dc
     local.get $lp3
     f32.mul
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_st
+    call $assembly/gen/daverb/Daverb#get:st
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d10
     local.get $pm
@@ -34221,7 +34221,7 @@
     i32.and
     call $~lib/staticarray/StaticArray<f32>#__get
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_st
+    call $assembly/gen/daverb/Daverb#get:st
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d10
     local.get $p
@@ -34402,7 +34402,7 @@
     call $~lib/staticarray/StaticArray<f32>#__set
     local.get $lp1
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_bw
+    call $assembly/gen/daverb/Daverb#get:bw
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_predelay
     local.get $p
@@ -34424,7 +34424,7 @@
     i32.and
     local.get $lp1
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_fi
+    call $assembly/gen/daverb/Daverb#get:fi
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d0
     local.get $pm
@@ -34440,7 +34440,7 @@
     global.get $assembly/gen/daverb/md1
     i32.and
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_fi
+    call $assembly/gen/daverb/Daverb#get:fi
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d0
     local.get $p
@@ -34469,7 +34469,7 @@
     global.get $assembly/gen/daverb/md2
     i32.and
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_fi
+    call $assembly/gen/daverb/Daverb#get:fi
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d1
     local.get $p
@@ -34485,7 +34485,7 @@
     call $~lib/staticarray/StaticArray<f32>#__get
     f32.add
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_si
+    call $assembly/gen/daverb/Daverb#get:si
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d2
     local.get $pm
@@ -34501,7 +34501,7 @@
     global.get $assembly/gen/daverb/md3
     i32.and
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_si
+    call $assembly/gen/daverb/Daverb#get:si
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d2
     local.get $p
@@ -34525,7 +34525,7 @@
     f32.add
     call $~lib/staticarray/StaticArray<f32>#__set
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_si
+    call $assembly/gen/daverb/Daverb#get:si
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d3
     local.get $p
@@ -34570,7 +34570,7 @@
     i32.and
     local.get $split
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_dc
+    call $assembly/gen/daverb/Daverb#get:dc
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d11
     local.get $pm
@@ -34580,7 +34580,7 @@
     f32.mul
     f32.add
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_ft
+    call $assembly/gen/daverb/Daverb#get:ft
     local.get $d4p
     f32.mul
     f32.add
@@ -34592,7 +34592,7 @@
     i32.and
     local.get $d4p
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_ft
+    call $assembly/gen/daverb/Daverb#get:ft
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d4
     local.get $p
@@ -34622,11 +34622,11 @@
     global.get $assembly/gen/daverb/md6
     i32.and
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_dc
+    call $assembly/gen/daverb/Daverb#get:dc
     local.get $lp2
     f32.mul
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_st
+    call $assembly/gen/daverb/Daverb#get:st
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d6
     local.get $pm
@@ -34648,7 +34648,7 @@
     i32.and
     call $~lib/staticarray/StaticArray<f32>#__get
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_st
+    call $assembly/gen/daverb/Daverb#get:st
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d6
     local.get $p
@@ -34674,7 +34674,7 @@
     i32.and
     local.get $split
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_dc
+    call $assembly/gen/daverb/Daverb#get:dc
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d7
     local.get $pm
@@ -34684,7 +34684,7 @@
     f32.mul
     f32.add
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_ft
+    call $assembly/gen/daverb/Daverb#get:ft
     local.get $d8p
     f32.mul
     f32.add
@@ -34696,7 +34696,7 @@
     i32.and
     local.get $d8p
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_ft
+    call $assembly/gen/daverb/Daverb#get:ft
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d8
     local.get $p
@@ -34726,11 +34726,11 @@
     global.get $assembly/gen/daverb/md10
     i32.and
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_dc
+    call $assembly/gen/daverb/Daverb#get:dc
     local.get $lp3
     f32.mul
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_st
+    call $assembly/gen/daverb/Daverb#get:st
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d10
     local.get $pm
@@ -34752,7 +34752,7 @@
     i32.and
     call $~lib/staticarray/StaticArray<f32>#__get
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_st
+    call $assembly/gen/daverb/Daverb#get:st
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d10
     local.get $p
@@ -34933,7 +34933,7 @@
     call $~lib/staticarray/StaticArray<f32>#__set
     local.get $lp1
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_bw
+    call $assembly/gen/daverb/Daverb#get:bw
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_predelay
     local.get $p
@@ -34955,7 +34955,7 @@
     i32.and
     local.get $lp1
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_fi
+    call $assembly/gen/daverb/Daverb#get:fi
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d0
     local.get $pm
@@ -34971,7 +34971,7 @@
     global.get $assembly/gen/daverb/md1
     i32.and
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_fi
+    call $assembly/gen/daverb/Daverb#get:fi
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d0
     local.get $p
@@ -35000,7 +35000,7 @@
     global.get $assembly/gen/daverb/md2
     i32.and
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_fi
+    call $assembly/gen/daverb/Daverb#get:fi
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d1
     local.get $p
@@ -35016,7 +35016,7 @@
     call $~lib/staticarray/StaticArray<f32>#__get
     f32.add
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_si
+    call $assembly/gen/daverb/Daverb#get:si
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d2
     local.get $pm
@@ -35032,7 +35032,7 @@
     global.get $assembly/gen/daverb/md3
     i32.and
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_si
+    call $assembly/gen/daverb/Daverb#get:si
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d2
     local.get $p
@@ -35056,7 +35056,7 @@
     f32.add
     call $~lib/staticarray/StaticArray<f32>#__set
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_si
+    call $assembly/gen/daverb/Daverb#get:si
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d3
     local.get $p
@@ -35101,7 +35101,7 @@
     i32.and
     local.get $split
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_dc
+    call $assembly/gen/daverb/Daverb#get:dc
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d11
     local.get $pm
@@ -35111,7 +35111,7 @@
     f32.mul
     f32.add
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_ft
+    call $assembly/gen/daverb/Daverb#get:ft
     local.get $d4p
     f32.mul
     f32.add
@@ -35123,7 +35123,7 @@
     i32.and
     local.get $d4p
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_ft
+    call $assembly/gen/daverb/Daverb#get:ft
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d4
     local.get $p
@@ -35153,11 +35153,11 @@
     global.get $assembly/gen/daverb/md6
     i32.and
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_dc
+    call $assembly/gen/daverb/Daverb#get:dc
     local.get $lp2
     f32.mul
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_st
+    call $assembly/gen/daverb/Daverb#get:st
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d6
     local.get $pm
@@ -35179,7 +35179,7 @@
     i32.and
     call $~lib/staticarray/StaticArray<f32>#__get
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_st
+    call $assembly/gen/daverb/Daverb#get:st
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d6
     local.get $p
@@ -35205,7 +35205,7 @@
     i32.and
     local.get $split
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_dc
+    call $assembly/gen/daverb/Daverb#get:dc
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d7
     local.get $pm
@@ -35215,7 +35215,7 @@
     f32.mul
     f32.add
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_ft
+    call $assembly/gen/daverb/Daverb#get:ft
     local.get $d8p
     f32.mul
     f32.add
@@ -35227,7 +35227,7 @@
     i32.and
     local.get $d8p
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_ft
+    call $assembly/gen/daverb/Daverb#get:ft
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d8
     local.get $p
@@ -35257,11 +35257,11 @@
     global.get $assembly/gen/daverb/md10
     i32.and
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_dc
+    call $assembly/gen/daverb/Daverb#get:dc
     local.get $lp3
     f32.mul
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_st
+    call $assembly/gen/daverb/Daverb#get:st
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d10
     local.get $pm
@@ -35283,7 +35283,7 @@
     i32.and
     call $~lib/staticarray/StaticArray<f32>#__get
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_st
+    call $assembly/gen/daverb/Daverb#get:st
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d10
     local.get $p
@@ -35464,7 +35464,7 @@
     call $~lib/staticarray/StaticArray<f32>#__set
     local.get $lp1
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_bw
+    call $assembly/gen/daverb/Daverb#get:bw
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_predelay
     local.get $p
@@ -35486,7 +35486,7 @@
     i32.and
     local.get $lp1
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_fi
+    call $assembly/gen/daverb/Daverb#get:fi
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d0
     local.get $pm
@@ -35502,7 +35502,7 @@
     global.get $assembly/gen/daverb/md1
     i32.and
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_fi
+    call $assembly/gen/daverb/Daverb#get:fi
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d0
     local.get $p
@@ -35531,7 +35531,7 @@
     global.get $assembly/gen/daverb/md2
     i32.and
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_fi
+    call $assembly/gen/daverb/Daverb#get:fi
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d1
     local.get $p
@@ -35547,7 +35547,7 @@
     call $~lib/staticarray/StaticArray<f32>#__get
     f32.add
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_si
+    call $assembly/gen/daverb/Daverb#get:si
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d2
     local.get $pm
@@ -35563,7 +35563,7 @@
     global.get $assembly/gen/daverb/md3
     i32.and
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_si
+    call $assembly/gen/daverb/Daverb#get:si
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d2
     local.get $p
@@ -35587,7 +35587,7 @@
     f32.add
     call $~lib/staticarray/StaticArray<f32>#__set
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_si
+    call $assembly/gen/daverb/Daverb#get:si
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d3
     local.get $p
@@ -35632,7 +35632,7 @@
     i32.and
     local.get $split
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_dc
+    call $assembly/gen/daverb/Daverb#get:dc
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d11
     local.get $pm
@@ -35642,7 +35642,7 @@
     f32.mul
     f32.add
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_ft
+    call $assembly/gen/daverb/Daverb#get:ft
     local.get $d4p
     f32.mul
     f32.add
@@ -35654,7 +35654,7 @@
     i32.and
     local.get $d4p
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_ft
+    call $assembly/gen/daverb/Daverb#get:ft
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d4
     local.get $p
@@ -35684,11 +35684,11 @@
     global.get $assembly/gen/daverb/md6
     i32.and
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_dc
+    call $assembly/gen/daverb/Daverb#get:dc
     local.get $lp2
     f32.mul
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_st
+    call $assembly/gen/daverb/Daverb#get:st
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d6
     local.get $pm
@@ -35710,7 +35710,7 @@
     i32.and
     call $~lib/staticarray/StaticArray<f32>#__get
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_st
+    call $assembly/gen/daverb/Daverb#get:st
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d6
     local.get $p
@@ -35736,7 +35736,7 @@
     i32.and
     local.get $split
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_dc
+    call $assembly/gen/daverb/Daverb#get:dc
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d7
     local.get $pm
@@ -35746,7 +35746,7 @@
     f32.mul
     f32.add
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_ft
+    call $assembly/gen/daverb/Daverb#get:ft
     local.get $d8p
     f32.mul
     f32.add
@@ -35758,7 +35758,7 @@
     i32.and
     local.get $d8p
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_ft
+    call $assembly/gen/daverb/Daverb#get:ft
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d8
     local.get $p
@@ -35788,11 +35788,11 @@
     global.get $assembly/gen/daverb/md10
     i32.and
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_dc
+    call $assembly/gen/daverb/Daverb#get:dc
     local.get $lp3
     f32.mul
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_st
+    call $assembly/gen/daverb/Daverb#get:st
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d10
     local.get $pm
@@ -35814,7 +35814,7 @@
     i32.and
     call $~lib/staticarray/StaticArray<f32>#__get
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_st
+    call $assembly/gen/daverb/Daverb#get:st
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d10
     local.get $p
@@ -35995,7 +35995,7 @@
     call $~lib/staticarray/StaticArray<f32>#__set
     local.get $lp1
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_bw
+    call $assembly/gen/daverb/Daverb#get:bw
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_predelay
     local.get $p
@@ -36017,7 +36017,7 @@
     i32.and
     local.get $lp1
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_fi
+    call $assembly/gen/daverb/Daverb#get:fi
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d0
     local.get $pm
@@ -36033,7 +36033,7 @@
     global.get $assembly/gen/daverb/md1
     i32.and
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_fi
+    call $assembly/gen/daverb/Daverb#get:fi
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d0
     local.get $p
@@ -36062,7 +36062,7 @@
     global.get $assembly/gen/daverb/md2
     i32.and
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_fi
+    call $assembly/gen/daverb/Daverb#get:fi
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d1
     local.get $p
@@ -36078,7 +36078,7 @@
     call $~lib/staticarray/StaticArray<f32>#__get
     f32.add
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_si
+    call $assembly/gen/daverb/Daverb#get:si
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d2
     local.get $pm
@@ -36094,7 +36094,7 @@
     global.get $assembly/gen/daverb/md3
     i32.and
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_si
+    call $assembly/gen/daverb/Daverb#get:si
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d2
     local.get $p
@@ -36118,7 +36118,7 @@
     f32.add
     call $~lib/staticarray/StaticArray<f32>#__set
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_si
+    call $assembly/gen/daverb/Daverb#get:si
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d3
     local.get $p
@@ -36163,7 +36163,7 @@
     i32.and
     local.get $split
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_dc
+    call $assembly/gen/daverb/Daverb#get:dc
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d11
     local.get $pm
@@ -36173,7 +36173,7 @@
     f32.mul
     f32.add
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_ft
+    call $assembly/gen/daverb/Daverb#get:ft
     local.get $d4p
     f32.mul
     f32.add
@@ -36185,7 +36185,7 @@
     i32.and
     local.get $d4p
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_ft
+    call $assembly/gen/daverb/Daverb#get:ft
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d4
     local.get $p
@@ -36215,11 +36215,11 @@
     global.get $assembly/gen/daverb/md6
     i32.and
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_dc
+    call $assembly/gen/daverb/Daverb#get:dc
     local.get $lp2
     f32.mul
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_st
+    call $assembly/gen/daverb/Daverb#get:st
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d6
     local.get $pm
@@ -36241,7 +36241,7 @@
     i32.and
     call $~lib/staticarray/StaticArray<f32>#__get
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_st
+    call $assembly/gen/daverb/Daverb#get:st
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d6
     local.get $p
@@ -36267,7 +36267,7 @@
     i32.and
     local.get $split
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_dc
+    call $assembly/gen/daverb/Daverb#get:dc
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d7
     local.get $pm
@@ -36277,7 +36277,7 @@
     f32.mul
     f32.add
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_ft
+    call $assembly/gen/daverb/Daverb#get:ft
     local.get $d8p
     f32.mul
     f32.add
@@ -36289,7 +36289,7 @@
     i32.and
     local.get $d8p
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_ft
+    call $assembly/gen/daverb/Daverb#get:ft
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d8
     local.get $p
@@ -36319,11 +36319,11 @@
     global.get $assembly/gen/daverb/md10
     i32.and
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_dc
+    call $assembly/gen/daverb/Daverb#get:dc
     local.get $lp3
     f32.mul
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_st
+    call $assembly/gen/daverb/Daverb#get:st
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d10
     local.get $pm
@@ -36345,7 +36345,7 @@
     i32.and
     call $~lib/staticarray/StaticArray<f32>#__get
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_st
+    call $assembly/gen/daverb/Daverb#get:st
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d10
     local.get $p
@@ -36526,7 +36526,7 @@
     call $~lib/staticarray/StaticArray<f32>#__set
     local.get $lp1
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_bw
+    call $assembly/gen/daverb/Daverb#get:bw
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_predelay
     local.get $p
@@ -36548,7 +36548,7 @@
     i32.and
     local.get $lp1
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_fi
+    call $assembly/gen/daverb/Daverb#get:fi
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d0
     local.get $pm
@@ -36564,7 +36564,7 @@
     global.get $assembly/gen/daverb/md1
     i32.and
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_fi
+    call $assembly/gen/daverb/Daverb#get:fi
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d0
     local.get $p
@@ -36593,7 +36593,7 @@
     global.get $assembly/gen/daverb/md2
     i32.and
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_fi
+    call $assembly/gen/daverb/Daverb#get:fi
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d1
     local.get $p
@@ -36609,7 +36609,7 @@
     call $~lib/staticarray/StaticArray<f32>#__get
     f32.add
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_si
+    call $assembly/gen/daverb/Daverb#get:si
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d2
     local.get $pm
@@ -36625,7 +36625,7 @@
     global.get $assembly/gen/daverb/md3
     i32.and
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_si
+    call $assembly/gen/daverb/Daverb#get:si
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d2
     local.get $p
@@ -36649,7 +36649,7 @@
     f32.add
     call $~lib/staticarray/StaticArray<f32>#__set
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_si
+    call $assembly/gen/daverb/Daverb#get:si
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d3
     local.get $p
@@ -36694,7 +36694,7 @@
     i32.and
     local.get $split
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_dc
+    call $assembly/gen/daverb/Daverb#get:dc
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d11
     local.get $pm
@@ -36704,7 +36704,7 @@
     f32.mul
     f32.add
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_ft
+    call $assembly/gen/daverb/Daverb#get:ft
     local.get $d4p
     f32.mul
     f32.add
@@ -36716,7 +36716,7 @@
     i32.and
     local.get $d4p
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_ft
+    call $assembly/gen/daverb/Daverb#get:ft
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d4
     local.get $p
@@ -36746,11 +36746,11 @@
     global.get $assembly/gen/daverb/md6
     i32.and
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_dc
+    call $assembly/gen/daverb/Daverb#get:dc
     local.get $lp2
     f32.mul
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_st
+    call $assembly/gen/daverb/Daverb#get:st
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d6
     local.get $pm
@@ -36772,7 +36772,7 @@
     i32.and
     call $~lib/staticarray/StaticArray<f32>#__get
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_st
+    call $assembly/gen/daverb/Daverb#get:st
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d6
     local.get $p
@@ -36798,7 +36798,7 @@
     i32.and
     local.get $split
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_dc
+    call $assembly/gen/daverb/Daverb#get:dc
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d7
     local.get $pm
@@ -36808,7 +36808,7 @@
     f32.mul
     f32.add
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_ft
+    call $assembly/gen/daverb/Daverb#get:ft
     local.get $d8p
     f32.mul
     f32.add
@@ -36820,7 +36820,7 @@
     i32.and
     local.get $d8p
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_ft
+    call $assembly/gen/daverb/Daverb#get:ft
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d8
     local.get $p
@@ -36850,11 +36850,11 @@
     global.get $assembly/gen/daverb/md10
     i32.and
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_dc
+    call $assembly/gen/daverb/Daverb#get:dc
     local.get $lp3
     f32.mul
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_st
+    call $assembly/gen/daverb/Daverb#get:st
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d10
     local.get $pm
@@ -36876,7 +36876,7 @@
     i32.and
     call $~lib/staticarray/StaticArray<f32>#__get
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_st
+    call $assembly/gen/daverb/Daverb#get:st
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d10
     local.get $p
@@ -37057,7 +37057,7 @@
     call $~lib/staticarray/StaticArray<f32>#__set
     local.get $lp1
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_bw
+    call $assembly/gen/daverb/Daverb#get:bw
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_predelay
     local.get $p
@@ -37079,7 +37079,7 @@
     i32.and
     local.get $lp1
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_fi
+    call $assembly/gen/daverb/Daverb#get:fi
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d0
     local.get $pm
@@ -37095,7 +37095,7 @@
     global.get $assembly/gen/daverb/md1
     i32.and
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_fi
+    call $assembly/gen/daverb/Daverb#get:fi
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d0
     local.get $p
@@ -37124,7 +37124,7 @@
     global.get $assembly/gen/daverb/md2
     i32.and
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_fi
+    call $assembly/gen/daverb/Daverb#get:fi
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d1
     local.get $p
@@ -37140,7 +37140,7 @@
     call $~lib/staticarray/StaticArray<f32>#__get
     f32.add
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_si
+    call $assembly/gen/daverb/Daverb#get:si
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d2
     local.get $pm
@@ -37156,7 +37156,7 @@
     global.get $assembly/gen/daverb/md3
     i32.and
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_si
+    call $assembly/gen/daverb/Daverb#get:si
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d2
     local.get $p
@@ -37180,7 +37180,7 @@
     f32.add
     call $~lib/staticarray/StaticArray<f32>#__set
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_si
+    call $assembly/gen/daverb/Daverb#get:si
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d3
     local.get $p
@@ -37225,7 +37225,7 @@
     i32.and
     local.get $split
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_dc
+    call $assembly/gen/daverb/Daverb#get:dc
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d11
     local.get $pm
@@ -37235,7 +37235,7 @@
     f32.mul
     f32.add
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_ft
+    call $assembly/gen/daverb/Daverb#get:ft
     local.get $d4p
     f32.mul
     f32.add
@@ -37247,7 +37247,7 @@
     i32.and
     local.get $d4p
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_ft
+    call $assembly/gen/daverb/Daverb#get:ft
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d4
     local.get $p
@@ -37277,11 +37277,11 @@
     global.get $assembly/gen/daverb/md6
     i32.and
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_dc
+    call $assembly/gen/daverb/Daverb#get:dc
     local.get $lp2
     f32.mul
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_st
+    call $assembly/gen/daverb/Daverb#get:st
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d6
     local.get $pm
@@ -37303,7 +37303,7 @@
     i32.and
     call $~lib/staticarray/StaticArray<f32>#__get
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_st
+    call $assembly/gen/daverb/Daverb#get:st
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d6
     local.get $p
@@ -37329,7 +37329,7 @@
     i32.and
     local.get $split
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_dc
+    call $assembly/gen/daverb/Daverb#get:dc
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d7
     local.get $pm
@@ -37339,7 +37339,7 @@
     f32.mul
     f32.add
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_ft
+    call $assembly/gen/daverb/Daverb#get:ft
     local.get $d8p
     f32.mul
     f32.add
@@ -37351,7 +37351,7 @@
     i32.and
     local.get $d8p
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_ft
+    call $assembly/gen/daverb/Daverb#get:ft
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d8
     local.get $p
@@ -37381,11 +37381,11 @@
     global.get $assembly/gen/daverb/md10
     i32.and
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_dc
+    call $assembly/gen/daverb/Daverb#get:dc
     local.get $lp3
     f32.mul
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_st
+    call $assembly/gen/daverb/Daverb#get:st
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d10
     local.get $pm
@@ -37407,7 +37407,7 @@
     i32.and
     call $~lib/staticarray/StaticArray<f32>#__get
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_st
+    call $assembly/gen/daverb/Daverb#get:st
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d10
     local.get $p
@@ -37588,7 +37588,7 @@
     call $~lib/staticarray/StaticArray<f32>#__set
     local.get $lp1
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_bw
+    call $assembly/gen/daverb/Daverb#get:bw
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_predelay
     local.get $p
@@ -37610,7 +37610,7 @@
     i32.and
     local.get $lp1
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_fi
+    call $assembly/gen/daverb/Daverb#get:fi
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d0
     local.get $pm
@@ -37626,7 +37626,7 @@
     global.get $assembly/gen/daverb/md1
     i32.and
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_fi
+    call $assembly/gen/daverb/Daverb#get:fi
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d0
     local.get $p
@@ -37655,7 +37655,7 @@
     global.get $assembly/gen/daverb/md2
     i32.and
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_fi
+    call $assembly/gen/daverb/Daverb#get:fi
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d1
     local.get $p
@@ -37671,7 +37671,7 @@
     call $~lib/staticarray/StaticArray<f32>#__get
     f32.add
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_si
+    call $assembly/gen/daverb/Daverb#get:si
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d2
     local.get $pm
@@ -37687,7 +37687,7 @@
     global.get $assembly/gen/daverb/md3
     i32.and
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_si
+    call $assembly/gen/daverb/Daverb#get:si
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d2
     local.get $p
@@ -37711,7 +37711,7 @@
     f32.add
     call $~lib/staticarray/StaticArray<f32>#__set
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_si
+    call $assembly/gen/daverb/Daverb#get:si
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d3
     local.get $p
@@ -37756,7 +37756,7 @@
     i32.and
     local.get $split
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_dc
+    call $assembly/gen/daverb/Daverb#get:dc
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d11
     local.get $pm
@@ -37766,7 +37766,7 @@
     f32.mul
     f32.add
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_ft
+    call $assembly/gen/daverb/Daverb#get:ft
     local.get $d4p
     f32.mul
     f32.add
@@ -37778,7 +37778,7 @@
     i32.and
     local.get $d4p
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_ft
+    call $assembly/gen/daverb/Daverb#get:ft
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d4
     local.get $p
@@ -37808,11 +37808,11 @@
     global.get $assembly/gen/daverb/md6
     i32.and
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_dc
+    call $assembly/gen/daverb/Daverb#get:dc
     local.get $lp2
     f32.mul
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_st
+    call $assembly/gen/daverb/Daverb#get:st
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d6
     local.get $pm
@@ -37834,7 +37834,7 @@
     i32.and
     call $~lib/staticarray/StaticArray<f32>#__get
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_st
+    call $assembly/gen/daverb/Daverb#get:st
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d6
     local.get $p
@@ -37860,7 +37860,7 @@
     i32.and
     local.get $split
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_dc
+    call $assembly/gen/daverb/Daverb#get:dc
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d7
     local.get $pm
@@ -37870,7 +37870,7 @@
     f32.mul
     f32.add
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_ft
+    call $assembly/gen/daverb/Daverb#get:ft
     local.get $d8p
     f32.mul
     f32.add
@@ -37882,7 +37882,7 @@
     i32.and
     local.get $d8p
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_ft
+    call $assembly/gen/daverb/Daverb#get:ft
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d8
     local.get $p
@@ -37912,11 +37912,11 @@
     global.get $assembly/gen/daverb/md10
     i32.and
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_dc
+    call $assembly/gen/daverb/Daverb#get:dc
     local.get $lp3
     f32.mul
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_st
+    call $assembly/gen/daverb/Daverb#get:st
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d10
     local.get $pm
@@ -37938,7 +37938,7 @@
     i32.and
     call $~lib/staticarray/StaticArray<f32>#__get
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_st
+    call $assembly/gen/daverb/Daverb#get:st
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d10
     local.get $p
@@ -38119,7 +38119,7 @@
     call $~lib/staticarray/StaticArray<f32>#__set
     local.get $lp1
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_bw
+    call $assembly/gen/daverb/Daverb#get:bw
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_predelay
     local.get $p
@@ -38141,7 +38141,7 @@
     i32.and
     local.get $lp1
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_fi
+    call $assembly/gen/daverb/Daverb#get:fi
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d0
     local.get $pm
@@ -38157,7 +38157,7 @@
     global.get $assembly/gen/daverb/md1
     i32.and
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_fi
+    call $assembly/gen/daverb/Daverb#get:fi
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d0
     local.get $p
@@ -38186,7 +38186,7 @@
     global.get $assembly/gen/daverb/md2
     i32.and
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_fi
+    call $assembly/gen/daverb/Daverb#get:fi
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d1
     local.get $p
@@ -38202,7 +38202,7 @@
     call $~lib/staticarray/StaticArray<f32>#__get
     f32.add
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_si
+    call $assembly/gen/daverb/Daverb#get:si
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d2
     local.get $pm
@@ -38218,7 +38218,7 @@
     global.get $assembly/gen/daverb/md3
     i32.and
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_si
+    call $assembly/gen/daverb/Daverb#get:si
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d2
     local.get $p
@@ -38242,7 +38242,7 @@
     f32.add
     call $~lib/staticarray/StaticArray<f32>#__set
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_si
+    call $assembly/gen/daverb/Daverb#get:si
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d3
     local.get $p
@@ -38287,7 +38287,7 @@
     i32.and
     local.get $split
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_dc
+    call $assembly/gen/daverb/Daverb#get:dc
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d11
     local.get $pm
@@ -38297,7 +38297,7 @@
     f32.mul
     f32.add
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_ft
+    call $assembly/gen/daverb/Daverb#get:ft
     local.get $d4p
     f32.mul
     f32.add
@@ -38309,7 +38309,7 @@
     i32.and
     local.get $d4p
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_ft
+    call $assembly/gen/daverb/Daverb#get:ft
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d4
     local.get $p
@@ -38339,11 +38339,11 @@
     global.get $assembly/gen/daverb/md6
     i32.and
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_dc
+    call $assembly/gen/daverb/Daverb#get:dc
     local.get $lp2
     f32.mul
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_st
+    call $assembly/gen/daverb/Daverb#get:st
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d6
     local.get $pm
@@ -38365,7 +38365,7 @@
     i32.and
     call $~lib/staticarray/StaticArray<f32>#__get
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_st
+    call $assembly/gen/daverb/Daverb#get:st
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d6
     local.get $p
@@ -38391,7 +38391,7 @@
     i32.and
     local.get $split
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_dc
+    call $assembly/gen/daverb/Daverb#get:dc
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d7
     local.get $pm
@@ -38401,7 +38401,7 @@
     f32.mul
     f32.add
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_ft
+    call $assembly/gen/daverb/Daverb#get:ft
     local.get $d8p
     f32.mul
     f32.add
@@ -38413,7 +38413,7 @@
     i32.and
     local.get $d8p
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_ft
+    call $assembly/gen/daverb/Daverb#get:ft
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d8
     local.get $p
@@ -38443,11 +38443,11 @@
     global.get $assembly/gen/daverb/md10
     i32.and
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_dc
+    call $assembly/gen/daverb/Daverb#get:dc
     local.get $lp3
     f32.mul
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_st
+    call $assembly/gen/daverb/Daverb#get:st
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d10
     local.get $pm
@@ -38469,7 +38469,7 @@
     i32.and
     call $~lib/staticarray/StaticArray<f32>#__get
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_st
+    call $assembly/gen/daverb/Daverb#get:st
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d10
     local.get $p
@@ -38650,7 +38650,7 @@
     call $~lib/staticarray/StaticArray<f32>#__set
     local.get $lp1
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_bw
+    call $assembly/gen/daverb/Daverb#get:bw
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_predelay
     local.get $p
@@ -38672,7 +38672,7 @@
     i32.and
     local.get $lp1
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_fi
+    call $assembly/gen/daverb/Daverb#get:fi
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d0
     local.get $pm
@@ -38688,7 +38688,7 @@
     global.get $assembly/gen/daverb/md1
     i32.and
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_fi
+    call $assembly/gen/daverb/Daverb#get:fi
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d0
     local.get $p
@@ -38717,7 +38717,7 @@
     global.get $assembly/gen/daverb/md2
     i32.and
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_fi
+    call $assembly/gen/daverb/Daverb#get:fi
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d1
     local.get $p
@@ -38733,7 +38733,7 @@
     call $~lib/staticarray/StaticArray<f32>#__get
     f32.add
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_si
+    call $assembly/gen/daverb/Daverb#get:si
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d2
     local.get $pm
@@ -38749,7 +38749,7 @@
     global.get $assembly/gen/daverb/md3
     i32.and
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_si
+    call $assembly/gen/daverb/Daverb#get:si
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d2
     local.get $p
@@ -38773,7 +38773,7 @@
     f32.add
     call $~lib/staticarray/StaticArray<f32>#__set
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_si
+    call $assembly/gen/daverb/Daverb#get:si
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d3
     local.get $p
@@ -38818,7 +38818,7 @@
     i32.and
     local.get $split
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_dc
+    call $assembly/gen/daverb/Daverb#get:dc
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d11
     local.get $pm
@@ -38828,7 +38828,7 @@
     f32.mul
     f32.add
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_ft
+    call $assembly/gen/daverb/Daverb#get:ft
     local.get $d4p
     f32.mul
     f32.add
@@ -38840,7 +38840,7 @@
     i32.and
     local.get $d4p
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_ft
+    call $assembly/gen/daverb/Daverb#get:ft
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d4
     local.get $p
@@ -38870,11 +38870,11 @@
     global.get $assembly/gen/daverb/md6
     i32.and
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_dc
+    call $assembly/gen/daverb/Daverb#get:dc
     local.get $lp2
     f32.mul
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_st
+    call $assembly/gen/daverb/Daverb#get:st
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d6
     local.get $pm
@@ -38896,7 +38896,7 @@
     i32.and
     call $~lib/staticarray/StaticArray<f32>#__get
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_st
+    call $assembly/gen/daverb/Daverb#get:st
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d6
     local.get $p
@@ -38922,7 +38922,7 @@
     i32.and
     local.get $split
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_dc
+    call $assembly/gen/daverb/Daverb#get:dc
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d7
     local.get $pm
@@ -38932,7 +38932,7 @@
     f32.mul
     f32.add
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_ft
+    call $assembly/gen/daverb/Daverb#get:ft
     local.get $d8p
     f32.mul
     f32.add
@@ -38944,7 +38944,7 @@
     i32.and
     local.get $d8p
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_ft
+    call $assembly/gen/daverb/Daverb#get:ft
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d8
     local.get $p
@@ -38974,11 +38974,11 @@
     global.get $assembly/gen/daverb/md10
     i32.and
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_dc
+    call $assembly/gen/daverb/Daverb#get:dc
     local.get $lp3
     f32.mul
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_st
+    call $assembly/gen/daverb/Daverb#get:st
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d10
     local.get $pm
@@ -39000,7 +39000,7 @@
     i32.and
     call $~lib/staticarray/StaticArray<f32>#__get
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_st
+    call $assembly/gen/daverb/Daverb#get:st
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d10
     local.get $p
@@ -39181,7 +39181,7 @@
     call $~lib/staticarray/StaticArray<f32>#__set
     local.get $lp1
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_bw
+    call $assembly/gen/daverb/Daverb#get:bw
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_predelay
     local.get $p
@@ -39203,7 +39203,7 @@
     i32.and
     local.get $lp1
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_fi
+    call $assembly/gen/daverb/Daverb#get:fi
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d0
     local.get $pm
@@ -39219,7 +39219,7 @@
     global.get $assembly/gen/daverb/md1
     i32.and
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_fi
+    call $assembly/gen/daverb/Daverb#get:fi
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d0
     local.get $p
@@ -39248,7 +39248,7 @@
     global.get $assembly/gen/daverb/md2
     i32.and
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_fi
+    call $assembly/gen/daverb/Daverb#get:fi
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d1
     local.get $p
@@ -39264,7 +39264,7 @@
     call $~lib/staticarray/StaticArray<f32>#__get
     f32.add
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_si
+    call $assembly/gen/daverb/Daverb#get:si
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d2
     local.get $pm
@@ -39280,7 +39280,7 @@
     global.get $assembly/gen/daverb/md3
     i32.and
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_si
+    call $assembly/gen/daverb/Daverb#get:si
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d2
     local.get $p
@@ -39304,7 +39304,7 @@
     f32.add
     call $~lib/staticarray/StaticArray<f32>#__set
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_si
+    call $assembly/gen/daverb/Daverb#get:si
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d3
     local.get $p
@@ -39349,7 +39349,7 @@
     i32.and
     local.get $split
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_dc
+    call $assembly/gen/daverb/Daverb#get:dc
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d11
     local.get $pm
@@ -39359,7 +39359,7 @@
     f32.mul
     f32.add
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_ft
+    call $assembly/gen/daverb/Daverb#get:ft
     local.get $d4p
     f32.mul
     f32.add
@@ -39371,7 +39371,7 @@
     i32.and
     local.get $d4p
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_ft
+    call $assembly/gen/daverb/Daverb#get:ft
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d4
     local.get $p
@@ -39401,11 +39401,11 @@
     global.get $assembly/gen/daverb/md6
     i32.and
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_dc
+    call $assembly/gen/daverb/Daverb#get:dc
     local.get $lp2
     f32.mul
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_st
+    call $assembly/gen/daverb/Daverb#get:st
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d6
     local.get $pm
@@ -39427,7 +39427,7 @@
     i32.and
     call $~lib/staticarray/StaticArray<f32>#__get
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_st
+    call $assembly/gen/daverb/Daverb#get:st
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d6
     local.get $p
@@ -39453,7 +39453,7 @@
     i32.and
     local.get $split
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_dc
+    call $assembly/gen/daverb/Daverb#get:dc
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d7
     local.get $pm
@@ -39463,7 +39463,7 @@
     f32.mul
     f32.add
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_ft
+    call $assembly/gen/daverb/Daverb#get:ft
     local.get $d8p
     f32.mul
     f32.add
@@ -39475,7 +39475,7 @@
     i32.and
     local.get $d8p
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_ft
+    call $assembly/gen/daverb/Daverb#get:ft
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d8
     local.get $p
@@ -39505,11 +39505,11 @@
     global.get $assembly/gen/daverb/md10
     i32.and
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_dc
+    call $assembly/gen/daverb/Daverb#get:dc
     local.get $lp3
     f32.mul
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_st
+    call $assembly/gen/daverb/Daverb#get:st
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d10
     local.get $pm
@@ -39531,7 +39531,7 @@
     i32.and
     call $~lib/staticarray/StaticArray<f32>#__get
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_st
+    call $assembly/gen/daverb/Daverb#get:st
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d10
     local.get $p
@@ -39712,7 +39712,7 @@
     call $~lib/staticarray/StaticArray<f32>#__set
     local.get $lp1
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_bw
+    call $assembly/gen/daverb/Daverb#get:bw
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_predelay
     local.get $p
@@ -39734,7 +39734,7 @@
     i32.and
     local.get $lp1
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_fi
+    call $assembly/gen/daverb/Daverb#get:fi
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d0
     local.get $pm
@@ -39750,7 +39750,7 @@
     global.get $assembly/gen/daverb/md1
     i32.and
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_fi
+    call $assembly/gen/daverb/Daverb#get:fi
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d0
     local.get $p
@@ -39779,7 +39779,7 @@
     global.get $assembly/gen/daverb/md2
     i32.and
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_fi
+    call $assembly/gen/daverb/Daverb#get:fi
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d1
     local.get $p
@@ -39795,7 +39795,7 @@
     call $~lib/staticarray/StaticArray<f32>#__get
     f32.add
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_si
+    call $assembly/gen/daverb/Daverb#get:si
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d2
     local.get $pm
@@ -39811,7 +39811,7 @@
     global.get $assembly/gen/daverb/md3
     i32.and
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_si
+    call $assembly/gen/daverb/Daverb#get:si
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d2
     local.get $p
@@ -39835,7 +39835,7 @@
     f32.add
     call $~lib/staticarray/StaticArray<f32>#__set
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_si
+    call $assembly/gen/daverb/Daverb#get:si
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d3
     local.get $p
@@ -39880,7 +39880,7 @@
     i32.and
     local.get $split
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_dc
+    call $assembly/gen/daverb/Daverb#get:dc
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d11
     local.get $pm
@@ -39890,7 +39890,7 @@
     f32.mul
     f32.add
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_ft
+    call $assembly/gen/daverb/Daverb#get:ft
     local.get $d4p
     f32.mul
     f32.add
@@ -39902,7 +39902,7 @@
     i32.and
     local.get $d4p
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_ft
+    call $assembly/gen/daverb/Daverb#get:ft
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d4
     local.get $p
@@ -39932,11 +39932,11 @@
     global.get $assembly/gen/daverb/md6
     i32.and
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_dc
+    call $assembly/gen/daverb/Daverb#get:dc
     local.get $lp2
     f32.mul
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_st
+    call $assembly/gen/daverb/Daverb#get:st
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d6
     local.get $pm
@@ -39958,7 +39958,7 @@
     i32.and
     call $~lib/staticarray/StaticArray<f32>#__get
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_st
+    call $assembly/gen/daverb/Daverb#get:st
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d6
     local.get $p
@@ -39984,7 +39984,7 @@
     i32.and
     local.get $split
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_dc
+    call $assembly/gen/daverb/Daverb#get:dc
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d7
     local.get $pm
@@ -39994,7 +39994,7 @@
     f32.mul
     f32.add
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_ft
+    call $assembly/gen/daverb/Daverb#get:ft
     local.get $d8p
     f32.mul
     f32.add
@@ -40006,7 +40006,7 @@
     i32.and
     local.get $d8p
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_ft
+    call $assembly/gen/daverb/Daverb#get:ft
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d8
     local.get $p
@@ -40036,11 +40036,11 @@
     global.get $assembly/gen/daverb/md10
     i32.and
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_dc
+    call $assembly/gen/daverb/Daverb#get:dc
     local.get $lp3
     f32.mul
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_st
+    call $assembly/gen/daverb/Daverb#get:st
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d10
     local.get $pm
@@ -40062,7 +40062,7 @@
     i32.and
     call $~lib/staticarray/StaticArray<f32>#__get
     local.get $this
-    call $assembly/gen/daverb/Daverb#get:_st
+    call $assembly/gen/daverb/Daverb#get:st
     local.get $this
     call $assembly/gen/daverb/Daverb#get:_d10
     local.get $p
