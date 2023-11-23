@@ -24,8 +24,9 @@ export namespace Build {
     gens: GenRuntime[]
     rms: Block
     lists: Block
-    scalars: Block
+    scalarExports: Block
     literals: Block
+    scalars: Block
     events: Block // TODO: temporary
     pointers: BlockU32
   }
@@ -174,6 +175,7 @@ export class Frontend {
       gens,
       rms: this.getBlock(),
       lists: this.getBlock(),
+      scalarExports: this.getBlock(),
       scalars: this.getBlock(),
       literals: this.getBlock(),
       events: this.getBlock(), // TODO: temporary
@@ -363,8 +365,9 @@ export class Frontend {
       audios: memories.audios.map((b) => b.byteOffset),
       gens: memories.gens.map((g) => g.ptr),
       literals: memories.literals.byteOffset,
-      lists: memories.lists.byteOffset,
       scalars: memories.scalars.byteOffset,
+      scalarExports: memories.scalarExports.byteOffset,
+      lists: memories.lists.byteOffset,
       events: memories.events.byteOffset,
       pointers: memories.pointers.byteOffset,
     }

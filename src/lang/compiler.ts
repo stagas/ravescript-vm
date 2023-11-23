@@ -36,8 +36,9 @@ export namespace Compile {
     gens: number[]
     audios: number[]
     literals: number
-    lists: number
     scalars: number
+    scalarExports: number
+    lists: number
     events: number
     pointers: number
   }
@@ -104,13 +105,16 @@ ${Array.from(info.gens, (gen, i) =>
     `${gen.code}:i32=${meta.gens[i]} // ${gen.kind}${gen.audio ? ` -> ${gen.audio.code}` : ''}`
   ).join('\n')}
 
-// scalars
+// scalars initial
 ${Array.from(info.scalars, (s) =>
     `${s.code}:f32=0.0`
   ).join('\n')}
 
+// scalars
+scalars: ptr f32=${meta.scalars >> 2}
+
 // scalars exported
-scalar_exports: ptr f32=${meta.scalars >> 2}
+scalar_exports: ptr f32=${meta.scalarExports >> 2}
 
 // lists
 lists: ptr f32=${meta.lists >> 2}
@@ -299,6 +303,7 @@ export function test_compiler() {
           clock: 0,
           literals: 0,
           scalars: 0,
+          scalarExports: 0,
           lists: 0,
           events: 0,
           pointers: 0,

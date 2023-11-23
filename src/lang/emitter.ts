@@ -356,6 +356,7 @@ export class Emitter {
           // TODO: if pickItem is not scalar then we need to cast
           codes.push(`list_index=floor(modf(${pickItemValue.code},${length}.0)) // pick`)
           codes.push(`scalar_${scalar.ptr}=literals[${ptr > 0 ? `${ptr} + ` : ''}(to_i32 list_index)]`)
+          // codes.push(`scalars[${scalar.ptr}]=scalar_${scalar.ptr}`)
           codes.push(`scalar_exports[${scalar.ptr}]=list_index`)
 
           if (returnValue.kind === Scope.Value.Scalar.Kind.Audio) {
@@ -450,6 +451,8 @@ export class Emitter {
                   codes.push(`scalar_${scalar.ptr} = ${l.code} ${op.kind} ${r.code}`)
                   break
               }
+
+              codes.push(`scalars[${scalar.ptr}] = scalar_${scalar.ptr}`)
 
               returnValue.info.emitterValue = scalar
 
