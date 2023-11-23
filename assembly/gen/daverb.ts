@@ -77,16 +77,16 @@ const ro6: u32 = u32(0.004065724 * 44100)
 export class Daverb extends Gen {
   in: u32 = 0
 
-  _pd: f32 = 0.03
-  _bw: f32 = 0.1
-  _fi: f32 = 0.5
-  _si: f32 = 0.5
-  _dc: f32 = 0.5
-  _ft: f32 = 0.5
-  _st: f32 = 0.5
-  _dp: f32 = 0.5
-  _ex: f32 = 0.5
-  _ed: f32 = 0.5
+  pd: f32 = 0.03
+  bw: f32 = 0.1
+  fi: f32 = 0.5
+  si: f32 = 0.5
+  dc: f32 = 0.5
+  ft: f32 = 0.5
+  st: f32 = 0.5
+  dp: f32 = 0.5
+  ex: f32 = 0.5
+  ed: f32 = 0.5
 
   _params_pd: f32[] = [0, 1, 0.03]
   _params_bw: f32[] = [0, 1, 0.1]
@@ -128,10 +128,10 @@ export class Daverb extends Gen {
 
   _update(): void {
     const arf: f32 = f32(this._engine.audioRate)
-    this._dpn = 1.0 - this._dp
-    this._exn = this._ex / arf
-    this._edn = this._ed * arf / 1000.0
-    this._pdn = this._pd * arf
+    this._dpn = 1.0 - this.dp
+    this._exn = this.ex / arf
+    this._edn = this.ed * arf / 1000.0
+    this._pdn = this.pd * arf
   }
 
   _audio(begin: u32, end: u32, out: usize): void {
@@ -174,15 +174,15 @@ export class Daverb extends Gen {
         // predelay
         this._predelay[p & mask] = sample * 0.5
 
-        lp1 += this._bw * (cubic(this._predelay, <f32>p - this._pdn, mask) - lp1)
+        lp1 += this.bw * (cubic(this._predelay, <f32>p - this._pdn, mask) - lp1)
 
         // pre-tank
-        this._d0[p & md0] = lp1 - this._fi * this._d0[pm & md0]
-        this._d1[p & md1] = this._fi * (this._d0[p & md0] - this._d1[pm & md1]) + this._d0[pm & md0]
-        this._d2[p & md2] = this._fi * this._d1[p & md1] + this._d1[pm & md1] - this._si * this._d2[pm & md2]
-        this._d3[p & md3] = this._si * (this._d2[p & md2] - this._d3[pm & md3]) + this._d2[pm & md2]
+        this._d0[p & md0] = lp1 - this.fi * this._d0[pm & md0]
+        this._d1[p & md1] = this.fi * (this._d0[p & md0] - this._d1[pm & md1]) + this._d0[pm & md0]
+        this._d2[p & md2] = this.fi * this._d1[p & md1] + this._d1[pm & md1] - this.si * this._d2[pm & md2]
+        this._d3[p & md3] = this.si * (this._d2[p & md2] - this._d3[pm & md3]) + this._d2[pm & md2]
 
-        split = this._si * this._d3[p & md3] + this._d3[pm & md3]
+        split = this.si * this._d3[p & md3] + this._d3[pm & md3]
 
         // excursions
         exc = this._edn * this._engine.wavetable.readAt(this._engine.wavetable.sine, exc_phase)
@@ -190,23 +190,23 @@ export class Daverb extends Gen {
 
         // left loop
         d4p = cubic(this._d4, <f32>p - exc, md4)
-        this._d4[p & md4] = split + this._dc * this._d11[pm & md11] + this._ft * d4p // tank diffuse 1
-        this._d5[p & md5] = d4p - this._ft * this._d4[p & md4] // long delay 1
+        this._d4[p & md4] = split + this.dc * this._d11[pm & md11] + this.ft * d4p // tank diffuse 1
+        this._d5[p & md5] = d4p - this.ft * this._d4[p & md4] // long delay 1
 
         lp2 += this._dpn * (this._d5[pm & md5] - lp2) // damp 1
 
-        this._d6[p & md6] = this._dc * lp2 - this._st * this._d6[pm & md6] // tank diffuse 2
-        this._d7[p & md7] = this._d6[pm & md6] + this._st * this._d6[p & md6] // long delay 2
+        this._d6[p & md6] = this.dc * lp2 - this.st * this._d6[pm & md6] // tank diffuse 2
+        this._d7[p & md7] = this._d6[pm & md6] + this.st * this._d6[p & md6] // long delay 2
 
         // right loop
         d8p = cubic(this._d8, <f32>p - exc, md8)
-        this._d8[p & md8] = split + this._dc * this._d7[pm & md7] + this._ft * d8p // tank diffuse 3
-        this._d9[p & md9] = d8p - this._ft * this._d8[p & md8] // long delay 3
+        this._d8[p & md8] = split + this.dc * this._d7[pm & md7] + this.ft * d8p // tank diffuse 3
+        this._d9[p & md9] = d8p - this.ft * this._d8[p & md8] // long delay 3
 
         lp3 += this._dpn * this._d9[pm & md9] - lp3 // damp 2
 
-        this._d10[p & md10] = this._dc * lp3 - this._st * this._d10[pm & md10]
-        this._d11[p & md11] = this._d10[pm & md10] + this._st * this._d10[p & md10]
+        this._d10[p & md10] = this.dc * lp3 - this.st * this._d10[pm & md10]
+        this._d11[p & md11] = this._d10[pm & md10] + this.st * this._d10[p & md10]
 
         exc_phase += this._engine.rateStep
 
