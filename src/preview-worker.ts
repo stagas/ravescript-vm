@@ -49,6 +49,7 @@ export class PreviewWorker {
     }
     else {
       // this.backend.clearMain()
+      if (!payloads.length) return
       // console.log('WHATTTT', payloads)
       // try {
       // await this.backend.setMain(payload)
