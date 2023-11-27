@@ -7,7 +7,7 @@ import { BarView, CtrlView, SignalView } from './structs.ts'
 import { FixedArray, Ring, toRing } from './util.ts'
 import { Vm, VmInit, initVm } from './vm.ts'
 
-const MAX = 4096
+const MAX = 512
 const MAX_BAR_INSTANCES = MAX
 const MAX_BARS = MAX
 const MAX_CTRL_INSTANCES = MAX
@@ -91,7 +91,7 @@ export class Bar {
     // try to free and maybe reset the ctrls that are not used
     this.ctrls.forEach((ctrl) => {
       let reset = true
-      for (let t = 0; t < endTime; t++) {
+      out: for (let t = 0; t < endTime; t++) {
         const bar = this.backend.bars[t]
         if (bar) {
           for (const other of bar.ctrls) {
@@ -100,7 +100,7 @@ export class Bar {
               reset = false
               // the ctrl is the same in another bar, so we should not free it
               if (ctrl === other) {
-                return
+                break out
               }
             }
           }
@@ -401,12 +401,10 @@ export class Backend {
   }
 
   async setBarAt(barTimes: number[], buildPayloads: Build.Payload[], mainPayload: Build.Payload | null) {
-    if (!this.barPool.size) {
-      if (this.barTrash.size) {
-        const bar = this.barTrash.pop()
-        this.barPool.unshift(bar)
-        bar.clear()
-      }
+    while (!this.barPool.size && this.barTrash.size) {
+      const bar = this.barTrash.pop()
+      this.barPool.unshift(bar)
+      bar.clear()
     }
 
     // const currentBar = this.bars[barTime]
@@ -458,6 +456,7 @@ export class Backend {
     if (mainPayload) {
       const instance = await this.getCtrlInstance(mainPayload)
       const ctrl = this.putCtrl(instance, mainPayload)
+      bar.main = ctrl
       bar.bar.main = ctrl.ptr
     }
 

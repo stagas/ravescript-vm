@@ -89,6 +89,7 @@ export class PreviewService {
       const trashBuild = this.trash.shift()!
       trashBuild.isTrashed = true
       await this.purge(trashBuild.payload.instanceId, sound)
+      console.log('PURGING')
     }
   }
 
