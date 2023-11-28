@@ -46,7 +46,7 @@ export namespace Build {
   export interface Shared {
     info: Emitter.Info
     memories: Memories
-    payload: Omit<Payload, 'ownLiterals'>
+    payload: Payload //Omit<Payload, 'ownLiterals'>
   }
 
   export interface Sound {
@@ -54,7 +54,6 @@ export namespace Build {
     info: Emitter.Info
     shared: Shared
     signal: Signal
-    dirtyLiterals: boolean
     isTrashed?: boolean
     isNew?: boolean
     payload: Payload
@@ -277,36 +276,40 @@ export class Frontend {
   //   return this.main
   // }
 
-  compile(info: Emitter.Info, current?: Build.Sound | null | undefined, immediate = false) {
+  compile(info: Emitter.Info) {
     // console.warn('compile')
-    const hasInstance = this.buildsShared.has(info.id)
+    const currentShared = this.buildsShared.get(info.instanceId)
 
-    let ownLiterals: Block
+    // const hasInstance = this.buildsShared.has(info.instanceId)
 
-    if (!hasInstance || !immediate || !current) {
-      ownLiterals = this.getBlock()
-      if (current) {
-        // Note: we release early but this goes at the end of the pool queue
-        // so it shouldn't be a problem, otherwise we need to use a trash queue.
-        this.freeBlock(current.payload.ownLiterals)
-      }
-    }
-    else {
-      ownLiterals = current.payload.ownLiterals
-    }
+    // let ownLiterals: Block
 
-    if (hasInstance) {
-      const isCurrentSameInstance = immediate && current?.info.id === info.id
+    // if (!currentShared) {
 
-      const shared = this.buildsShared.get(info.id)!
+    //   // if (currentShared) {
+    //   //   // Note: we release early but this goes at the end of the pool queue
+    //   //   // so it shouldn't be a problem, otherwise we need to use a trash queue.
+    //   //   this.freeBlock(currentShared.ownLiterals)
+    //   // }
+    // }
+    // else {
+    //   // console.log('SAME LITERALS')
+    // }
 
-      shared.info.gens.forEach((p, i) => {
+    if (currentShared) {
+      const ownLiterals = currentShared.payload.ownLiterals
+      // const isCurrentSameInstance = current?.info.instanceId === info.instanceId
+      // const isCurrentSameInstance = immediate && current?.info.id === info.id
+
+      // const shared = this.buildsShared.get(info.instanceId)!
+
+      currentShared.info.gens.forEach((p, i) => {
         const n = info.gens[i]!
         n.audio = p.audio!
         n.runtime = p.runtime!
       })
 
-      shared.info.audios.forEach((p, i) => {
+      currentShared.info.audios.forEach((p, i) => {
         const n = info.audios[i]!
         n.floats = p.floats!
       })
@@ -318,20 +321,20 @@ export class Frontend {
       info.writeLiterals(ownLiterals)
 
       // update info for next use
-      shared.info = info
+      currentShared.info = info
 
       const sound: Build.Sound = {
         frontend: this,
         info,
-        shared,
-        signal: shared.payload.signal,
-        dirtyLiterals: true,
-        payload: isCurrentSameInstance
-          ? current.payload
-          : {
-            ...shared.payload,
-            ownLiterals
-          }
+        shared: currentShared,
+        signal: currentShared.payload.signal,
+        payload: currentShared.payload,
+        // isCurrentSameInstance
+        //   ? current.payload
+        //   : {
+        //     ...shared.payload,
+        //     ownLiterals
+        //   }
       }
 
       // if (current && current?.payload.ownLiterals !== ownLiterals) {
@@ -396,11 +399,13 @@ export class Frontend {
       LR: info.LR !== 2 ? memories.audios[info.LR] : null,
     }
 
+    const ownLiterals = this.getBlock()
+
     const shared: Build.Shared = {
       info,
       memories,
       payload: {
-        instanceId: info.id,
+        instanceId: info.instanceId,
         binary: result.binary,
         signal,
         gens: memories.gens.map((g) =>
@@ -408,10 +413,11 @@ export class Frontend {
         ),
         literalsCount: info.literals.length,
         liveLiterals: memories.literals,
+        ownLiterals,
       }
     }
 
-    this.buildsShared.set(info.id, shared)
+    this.buildsShared.set(info.instanceId, shared)
 
     info.writeLiterals(ownLiterals)
 
@@ -420,11 +426,11 @@ export class Frontend {
       info,
       shared,
       signal,
-      dirtyLiterals: true,
-      payload: {
-        ...shared.payload,
-        ownLiterals
-      },
+      payload: shared.payload,
+      // {
+      //   ...shared.payload,
+      //   ownLiterals
+      // },
       isNew: true,
     }
 

@@ -652,14 +652,14 @@ function hashNodes(nodes: Set<AstNode.Item> | undefined) {
       ![AstNode.Type.Literal].includes(node.type)
       && !['M', 'S'].includes((node as AstNode.Keyword)?.info?.token?.text)
     )
-    .map((node) => `${node.type}:${node.kind ?? '-'}${(node as any).info?.token?.text ?? '-'}${(node as any).info?.identifier ?? '-'}`)
+    .map((node) => `${node.type}:${node.kind ?? '-'}${((node as any).info?.token?.text ?? '-').trim()}${(node as any).info?.identifier ?? '-'}`)
     .join(' ')
   return hashId
 }
 
 export namespace Emitter {
   export class Info {
-    id = -1
+    instanceId = -1
     groupId = -1
 
     L = 0
@@ -685,7 +685,7 @@ export namespace Emitter {
     constructor(public scope: Scope) { }
 
     updateId(idModifier = '') {
-      this.id = checksum(
+      this.instanceId = checksum(
         this.literals.length.toString()
         + hashNodes(this.scope.nodes)
         + idModifier

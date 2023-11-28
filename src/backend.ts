@@ -7,11 +7,16 @@ import { BarView, CtrlView, SignalView } from './structs.ts'
 import { FixedArray, Ring, toRing } from './util.ts'
 import { Vm, VmInit, initVm } from './vm.ts'
 
-const MAX = 512
+const MAX = 4096
 const MAX_BAR_INSTANCES = MAX
 const MAX_BARS = MAX
 const MAX_CTRL_INSTANCES = MAX
 const MAX_CTRLS = MAX
+
+export interface BarBuildPtrs {
+  bar: number
+  ctrls: number[]
+}
 
 export interface Buffers {
   signal: Signal
@@ -401,7 +406,11 @@ export class Backend {
     this.runnerBars[barTime] = 0
   }
 
-  async setBarAt(barTimes: number[], buildPayloads: Build.Payload[], mainPayload: Build.Payload | null) {
+  async setBarAt(
+    barTimes: number[],
+    buildPayloads: Build.Payload[],
+    mainPayload: Build.Payload | null,
+  ): Promise<BarBuildPtrs> {
     while (!this.barPool.size && this.barTrash.size) {
       const bar = this.barTrash.pop()
       this.barPool.unshift(bar)
@@ -472,52 +481,55 @@ export class Backend {
     return { bar: bar.ptr, ctrls }
   }
 
-  async trash(data: { bars: number[], ctrls: number[] }) {
+  async trash(data: BarBuildPtrs) {
     // console.log('trashing', data)
-    for (const ptr of data.bars) {
-      const bar = this.barMap.get(ptr)!
-      bar.clear()
+    // for (const ptr of data.bars) {
+    const bar = this.barMap.get(data.bar)
+    if (bar) {
+      // bar.clear()
       this.barTrash.unshift(bar)
     }
-    outer: for (const ptr of data.ctrls) {
+    // }
+    search: for (const ptr of data.ctrls) {
       const ctrl = this.ctrlMap.get(ptr)!
       const { endTime } = this.clock
-      let reset = true
+      // let reset = true
 
-      out: for (let t = 0; t < endTime; t++) {
+      for (let t = 0; t < endTime; t++) {
         const bar = this.bars[t]
         if (bar) {
           if (ctrl.instanceId === bar.main?.instanceId) {
-            reset = false
-            if (ctrl === bar.main) {
-              continue outer
-            }
+            // reset = false
+            continue search
+            // if (ctrl === bar.main) {
+            // }
           }
           for (const other of bar.ctrls) {
             // the ctrl instanceId exists in another bar, we should not reset it
             if (ctrl.instanceId === other.instanceId) {
-              reset = false
+              // reset = false
               // the ctrl is the same in another bar, so we should not free it
-              if (ctrl === other) {
-                continue outer
-              }
+              // if (ctrl === other) {
+              continue search
+              // }
             }
           }
         }
       }
       // ctrl's instanceId isn't used anywhere, so we can reset it
-      if (reset) resetCtrl(ctrl)
+      // if (reset)
+      resetCtrl(ctrl)
       // free the ctrl object
       this.ctrlPool.unshift(ctrl)
     }
   }
 
   putCtrl(instance: Module.Instance, payload: Build.Payload) {
-    while (!this.ctrlPool.size && this.barTrash.size) {
-      const bar = this.barTrash.pop()
-      this.barPool.unshift(bar)
-      bar.clear()
-    }
+    // while (!this.ctrlPool.size && this.barTrash.size) {
+    //   const bar = this.barTrash.pop()
+    //   this.barPool.unshift(bar)
+    //   bar.clear()
+    // }
 
     const ctrl: Ctrl = this.ctrlPool.pop()
     ctrl.instance = instance
