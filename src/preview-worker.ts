@@ -36,8 +36,9 @@ export class PreviewWorker {
       // this.backend.clearMain()
       // // try {
       // while (--tries) {
-      await this.backend.setBarAt([0], [payload], null)
+      const data = await this.backend.setBarAt([0], [payload], null)
       await this.backend.fill(0, this.length)
+      return data
       // if (!(this.backend.signal?.LR ?? this.backend.signal?.L ?? this.backend.signal?.R)?.every((x) => x === 0)) {
       //   break
       // }
@@ -53,13 +54,18 @@ export class PreviewWorker {
       // console.log('WHATTTT', payloads)
       // try {
       // await this.backend.setMain(payload)
-      await this.backend.setBarAt([0], payloads, payload)
+      const data = await this.backend.setBarAt([0], payloads, payload)
       await this.backend.fill(0, this.length)
+      return data
       // }
       // catch (error) {
       //   console.warn(error)
       // }
     }
+  }
+
+  async trash(data: any) {
+    await this.backend.trash(data)
   }
 
   async purge(instanceId: number) {

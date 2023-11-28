@@ -86,6 +86,7 @@ export class RaveNode extends AudioWorkletNode {
   ready = Deferred<void>()
   state: RaveNodeState = RaveNodeState.Idle
   frontend: Frontend
+  // backend?: Backend
   worklet: Agent<Backend, RaveNode>
 
   constructor(context: BaseAudioContext, public options: RaveNodeOptions) {
@@ -99,6 +100,8 @@ export class RaveNode extends AudioWorkletNode {
 
     this.frontend = options.frontend
     this.frontend.debug = DEBUG
+
+    // this.backend = new Backend(options.vm, options.processorOptions.buffers, true)
 
     const [node, worklet] = new Alice<RaveNode, Backend>(
       data => void this.port.postMessage(data),

@@ -86,57 +86,57 @@ export class Bar {
   }
 
   clear() {
-    const endTime = this.backend.clock.endTime
+    // const endTime = this.backend.clock.endTime
 
     // try to free and maybe reset the ctrls that are not used
-    this.ctrls.forEach((ctrl) => {
-      let reset = true
-      out: for (let t = 0; t < endTime; t++) {
-        const bar = this.backend.bars[t]
-        if (bar) {
-          for (const other of bar.ctrls) {
-            // the ctrl instanceId exists in another bar, we should not reset it
-            if (ctrl.instanceId === other.instanceId) {
-              reset = false
-              // the ctrl is the same in another bar, so we should not free it
-              if (ctrl === other) {
-                break out
-              }
-            }
-          }
-        }
-      }
-      // ctrl's instanceId isn't used anywhere, so we can reset it
-      if (reset) resetCtrl(ctrl)
-      // free the ctrl object
-      this.backend.ctrlPool.unshift(ctrl)
-    })
-
-    // try to free main and maybe reset it
     // this.ctrls.forEach((ctrl) => {
-    if (this.main) {
-      out: {
-        const { main } = this
-        let reset = true
-        for (let t = 0; t < endTime; t++) {
-          const bar = this.backend.bars[t]
-          if (bar) {
-            // the ctrl instanceId exists in another bar, we should not reset it
-            if (main.instanceId === bar.main?.instanceId) {
-              reset = false
-              // the ctrl is the same in another bar, so we should not free it
-              if (main === bar.main) {
-                break out
-              }
-            }
-          }
-        }
-        // ctrl's instanceId isn't used anywhere, so we can reset it
-        if (reset) resetCtrl(main)
-        // free the ctrl object
-        this.backend.ctrlPool.unshift(main)
-      }
-    }
+    //   let reset = true
+    //   out: for (let t = 0; t < endTime; t++) {
+    //     const bar = this.backend.bars[t]
+    //     if (bar) {
+    //       for (const other of bar.ctrls) {
+    //         // the ctrl instanceId exists in another bar, we should not reset it
+    //         if (ctrl.instanceId === other.instanceId) {
+    //           reset = false
+    //           // the ctrl is the same in another bar, so we should not free it
+    //           if (ctrl === other) {
+    //             return
+    //           }
+    //         }
+    //       }
+    //     }
+    //   }
+    //   // ctrl's instanceId isn't used anywhere, so we can reset it
+    //   if (reset) resetCtrl(ctrl)
+    //   // free the ctrl object
+    //   this.backend.ctrlPool.unshift(ctrl)
+    // })
+
+    // // try to free main and maybe reset it
+    // // this.ctrls.forEach((ctrl) => {
+    // if (this.main) {
+    //   out: {
+    //     const { main } = this
+    //     let reset = true
+    //     for (let t = 0; t < endTime; t++) {
+    //       const bar = this.backend.bars[t]
+    //       if (bar) {
+    //         // the ctrl instanceId exists in another bar, we should not reset it
+    //         if (main.instanceId === bar.main?.instanceId) {
+    //           reset = false
+    //           // the ctrl is the same in another bar, so we should not free it
+    //           if (main === bar.main) {
+    //             break out
+    //           }
+    //         }
+    //       }
+    //     }
+    //     // ctrl's instanceId isn't used anywhere, so we can reset it
+    //     if (reset) resetCtrl(main)
+    //     // free the ctrl object
+    //     this.backend.ctrlPool.unshift(main)
+    //   }
+    // }
 
     this.bar.size = 0
     this.bar.main = 0
@@ -149,6 +149,7 @@ export class Bar {
     this.barCtrls[this.ctrls.size] = ctrl.ptr
     this.ctrls.push(ctrl)
     this.bar.size = this.ctrls.size
+    return ctrl
   }
 }
 
@@ -189,12 +190,13 @@ export class Backend {
   bars: (Bar | void)[] = Array.from({ length: MAX_BARS })
   ctrl!: CtrlView
 
-  oldBars: FixedArray<Bar> = new FixedArray(16 * 4)
+  // oldBars: FixedArray<Bar> = new FixedArray(16 * 4)
 
   barPool: FixedArray<Bar> = new FixedArray(MAX_BAR_INSTANCES)
   barTrash: FixedArray<Bar> = new FixedArray(MAX_BAR_INSTANCES)
-
+  barMap = new Map<number, Bar>()
   ctrlPool: FixedArray<Ctrl> = new FixedArray(MAX_CTRL_INSTANCES)
+  ctrlMap = new Map<number, Ctrl>()
 
   clock: Clock
 
@@ -388,7 +390,6 @@ export class Backend {
     let instance = this.vm.ctrlInstances.get(payload.instanceId)
 
     if (!instance) {
-      // console.log('INSTANTIATE')
       instance = await instantiate<Module.Instance>(payload.binary, this.env)
       this.vm.ctrlInstances.set(payload.instanceId, instance)
     }
@@ -425,12 +426,12 @@ export class Backend {
     // }
 
     const bar: Bar = this.barPool.pop()
-
-    this.oldBars.clear()
+    this.barMap.set(bar.ptr, bar)
+    // this.oldBars.clear()
 
     for (const barTime of barTimes) {
-      const old = this.bars[barTime]
-      if (old) this.oldBars.push(old)
+      // const old = this.bars[barTime]
+      // if (old) this.oldBars.push(old)
 
       // this.barIndex = (this.barIndex + 1) % MAX_BAR_INSTANCES //& 0xFFF // % 4096
       this.bars[barTime] = bar
@@ -448,22 +449,66 @@ export class Backend {
 
     // add new ctrls
 
+    const ctrls: number[] = []
     for (const payload of buildPayloads) {
       const instance = await this.getCtrlInstance(payload)
-      bar.addCtrl(instance, payload)
+      const ctrl = bar.addCtrl(instance, payload)
+
+      this.ctrlMap.set(ctrl.ptr, ctrl)
+      ctrls.push(ctrl.ptr)
     }
 
     if (mainPayload) {
       const instance = await this.getCtrlInstance(mainPayload)
       const ctrl = this.putCtrl(instance, mainPayload)
+
+      this.ctrlMap.set(ctrl.ptr, ctrl)
+      ctrls.push(ctrl.ptr)
+
       bar.main = ctrl
       bar.bar.main = ctrl.ptr
     }
 
-    if (this.oldBars.size) {
-      for (const old of this.oldBars) {
-        this.barTrash.unshift(old)
+    return { bar: bar.ptr, ctrls }
+  }
+
+  async trash(data: { bars: number[], ctrls: number[] }) {
+    // console.log('trashing', data)
+    for (const ptr of data.bars) {
+      const bar = this.barMap.get(ptr)!
+      bar.clear()
+      this.barTrash.unshift(bar)
+    }
+    outer: for (const ptr of data.ctrls) {
+      const ctrl = this.ctrlMap.get(ptr)!
+      const { endTime } = this.clock
+      let reset = true
+
+      out: for (let t = 0; t < endTime; t++) {
+        const bar = this.bars[t]
+        if (bar) {
+          if (ctrl.instanceId === bar.main?.instanceId) {
+            reset = false
+            if (ctrl === bar.main) {
+              continue outer
+            }
+          }
+          for (const other of bar.ctrls) {
+            // the ctrl instanceId exists in another bar, we should not reset it
+            if (ctrl.instanceId === other.instanceId) {
+              reset = false
+              // the ctrl is the same in another bar, so we should not free it
+              if (ctrl === other) {
+                continue outer
+              }
+            }
+          }
+        }
       }
+      // ctrl's instanceId isn't used anywhere, so we can reset it
+      if (reset) resetCtrl(ctrl)
+      // free the ctrl object
+      this.ctrlPool.unshift(ctrl)
     }
   }
 

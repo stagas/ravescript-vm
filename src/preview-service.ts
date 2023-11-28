@@ -5,6 +5,7 @@ import { Build, Frontend } from './frontend.ts'
 import { PreviewWorker } from './preview-worker.ts'
 import { RaveNode } from './rave-node.ts'
 import { Vm } from './vm.ts'
+import { Backend } from './backend.ts'
 
 type Sound = any
 
@@ -26,7 +27,9 @@ export async function createPreviewService(length: number, vm: Vm) {
 
   frontend.clock.endTime = 1
 
-  const service = new PreviewService(frontend)
+  // const backend = new Backend(vm, frontend.buffers, true)
+
+  const service = new PreviewService(frontend) //, backend)
 
   await service.worker.init({
     vmInit: {
@@ -51,7 +54,8 @@ export class PreviewService {
   trash: Build.Sound[] = []
 
   constructor(
-    public frontend: Frontend
+    public frontend: Frontend,
+    // public backend: Backend,
   ) {
     const url = new URL('./preview-worker.js', import.meta.url).href
     const worker = new Worker(url)
@@ -66,16 +70,44 @@ export class PreviewService {
     this.worker = remote
   }
 
+  usedBars: any[] = []
   render = queue.atomic(async (
     isMain: boolean,
     build: Build.Sound,
     builds: Build.Sound[],
   ) => {
-    await this.worker.render(
+    const res = await this.worker.render(
       isMain,
       build.payload,
       builds.map((build) => build.payload)
     )
+
+    if (!res) return
+
+    this.usedBars.push(res)
+
+    // TODO: queue usedBars and throttle trashing
+    if (this.usedBars.length > 5) {
+      const data: any = this.usedBars.shift()
+      const ctrls: number[] = []
+      for (const ptr of data.ctrls) {
+        let found = false
+        for (const other of this.usedBars) {
+          if (other.ctrls.includes(ptr)) {
+            found = true
+            break
+          }
+        }
+        if (!found) {
+          ctrls.push(ptr)
+        }
+      }
+      this.worker.trash({
+        bars: [data.bar],
+        ctrls: data.ctrls
+      })
+    }
+
   })
 
   async pushTrash(build: Build.Sound, sound: Sound) {
