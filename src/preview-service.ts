@@ -51,7 +51,7 @@ export async function createPreviewService(length: number, vm: Vm) {
 
 export class PreviewService {
   worker: Agent<PreviewWorker, PreviewService>
-  trash: Build.Sound[] = []
+  // trash: Build.Sound[] = []
 
   constructor(
     public frontend: Frontend,
@@ -70,63 +70,72 @@ export class PreviewService {
     this.worker = remote
   }
 
-  usedBars: any[] = []
-  render = queue.atomic(async (
+  // usedBars: any[] = []
+
+  async render(
     isMain: boolean,
     build: Build.Sound,
     builds: Build.Sound[],
-  ) => {
-    const res = await this.worker.render(
+  ) {
+    return await this.worker.render(
       isMain,
       build.payload,
-      builds.map((build) => build.payload)
+      builds.map((build) =>
+        build.payload
+      )
     )
 
-    if (!res) return
+    // if (!res) return
 
-    this.usedBars.push(res)
 
-    // TODO: queue usedBars and throttle trashing
-    if (this.usedBars.length > 5) {
-      const data: any = this.usedBars.shift()
-      const ctrls: number[] = []
-      for (const ptr of data.ctrls) {
-        let found = false
-        for (const other of this.usedBars) {
-          if (other.ctrls.includes(ptr)) {
-            found = true
-            break
-          }
-        }
-        if (!found) {
-          ctrls.push(ptr)
-        }
-      }
-      this.worker.trash({
-        bars: [data.bar],
-        ctrls: data.ctrls
-      })
-    }
+    // TODO: return res to caller so we can manage when to trash.
+    // We should trash when a sound is not visible anywhere and prepare
+    // to trigger rebuild whenever it becomes visible again.
 
-  })
 
-  async pushTrash(build: Build.Sound, sound: Sound) {
-    this.trash = this.trash.filter((b) =>
-      b.payload.instanceId !== build.payload.instanceId
-    )
+    // this.usedBars.push(res)
 
-    this.trash.push(build)
+    // // TODO: queue usedBars and throttle trashing
+    // if (this.usedBars.length > 5) {
+    //   const data: any = this.usedBars.shift()
+    //   const ctrls: number[] = []
+    //   for (const ptr of data.ctrls) {
+    //     let found = false
+    //     for (const other of this.usedBars) {
+    //       if (other.ctrls.includes(ptr)) {
+    //         found = true
+    //         break
+    //       }
+    //     }
+    //     if (!found) {
+    //       ctrls.push(ptr)
+    //     }
+    //   }
+    //   this.worker.trash({
+    //     bars: [data.bar],
+    //     ctrls: data.ctrls
+    //   })
+    // }
 
-    if (this.trash.length > 48) {
-      const trashBuild = this.trash.shift()!
-      trashBuild.isTrashed = true
-      await this.purge(trashBuild.payload.instanceId, sound)
-      console.log('PURGING')
-    }
   }
 
-  purge = async (instanceId: number, sound: Sound) => {
-    this.frontend.purge(instanceId)
-    await this.worker.purge(instanceId)
-  }
+  // async pushTrash(build: Build.Sound, sound: Sound) {
+  //   this.trash = this.trash.filter((b) =>
+  //     b.payload.instanceId !== build.payload.instanceId
+  //   )
+
+  //   this.trash.push(build)
+
+  //   if (this.trash.length > 48) {
+  //     const trashBuild = this.trash.shift()!
+  //     trashBuild.isTrashed = true
+  //     await this.purge(trashBuild.payload.instanceId, sound)
+  //     console.log('PURGING')
+  //   }
+  // }
+
+  // purge = async (instanceId: number, sound: Sound) => {
+  //   this.frontend.purge(instanceId)
+  //   await this.worker.purge(instanceId)
+  // }
 }

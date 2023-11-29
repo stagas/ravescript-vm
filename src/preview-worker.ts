@@ -1,5 +1,5 @@
 import { Agent, Bob } from 'alice-bob'
-import { Backend, BackendInit } from './backend.ts'
+import { Backend, BackendInit, BarBuildPtrs } from './backend.ts'
 import { Build } from './frontend.ts'
 import { PreviewService } from './preview-service.ts'
 
@@ -32,45 +32,25 @@ export class PreviewWorker {
 
   async render(isMain: boolean, payload: Build.Payload, payloads: Build.Payload[]) {
     if (!isMain) {
-      // let tries = 3
-      // this.backend.clearMain()
-      // // try {
-      // while (--tries) {
       const data = await this.backend.setBarAt([0], [payload], null)
       await this.backend.fill(0, this.length)
       return data
-      // if (!(this.backend.signal?.LR ?? this.backend.signal?.L ?? this.backend.signal?.R)?.every((x) => x === 0)) {
-      //   break
-      // }
-      // }
-      // }
-      // catch (error) {
-      //   console.warn(error)
-      // }
     }
     else {
-      // this.backend.clearMain()
       if (!payloads.length) return
-      // console.log('WHATTTT', payloads)
-      // try {
-      // await this.backend.setMain(payload)
       const data = await this.backend.setBarAt([0], payloads, payload)
       await this.backend.fill(0, this.length)
       return data
-      // }
-      // catch (error) {
-      //   console.warn(error)
-      // }
     }
   }
 
-  async trash(data: any) {
-    await this.backend.trash(data)
+  async trash(ptrs: BarBuildPtrs) {
+    await this.backend.trash(ptrs)
   }
 
-  async purge(instanceId: number) {
-    await this.backend.purge(instanceId)
-  }
+  // async purge(instanceId: number) {
+  //   await this.backend.purge(instanceId)
+  // }
 }
 
 new PreviewWorker()
