@@ -30,15 +30,21 @@ export class PreviewWorker {
     })
   }
 
-  async render(isMain: boolean, payload: Build.Payload, payloads: Build.Payload[]) {
+  async render(
+    isMain: boolean,
+    payload: Build.Payload,
+    payloads: Build.Payload[]
+  ) {
     if (!isMain) {
-      const data = await this.backend.setBarAt([0], [payload], null)
+      const data = await this.backend.setBarAt(
+        [0], [payload], null)
       await this.backend.fill(0, this.length)
       return data
     }
     else {
       if (!payloads.length) return
-      const data = await this.backend.setBarAt([0], payloads, payload)
+      const data = await this.backend.setBarAt(
+        [0], payloads, payload)
       await this.backend.fill(0, this.length)
       return data
     }

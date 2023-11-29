@@ -7,7 +7,7 @@ import { BarView, CtrlView, SignalView } from './structs.ts'
 import { FixedArray, Ring, toRing } from './util.ts'
 import { Vm, VmInit, initVm } from './vm.ts'
 
-const MAX = 4096
+const MAX = 512
 const MAX_BAR_INSTANCES = MAX
 const MAX_BARS = MAX
 const MAX_CTRL_INSTANCES = MAX
@@ -202,6 +202,7 @@ export class Backend {
   barMap = new Map<number, Bar>()
   ctrlPool: FixedArray<Ctrl> = new FixedArray(MAX_CTRL_INSTANCES)
   ctrlMap = new Map<number, Ctrl>()
+  ctrlInstanceIdMap = new Map<number, Ctrl>()
 
   clock: Clock
 
@@ -464,6 +465,7 @@ export class Backend {
       const ctrl = bar.addCtrl(instance, payload)
 
       this.ctrlMap.set(ctrl.ptr, ctrl)
+      this.ctrlInstanceIdMap.set(payload.instanceId, ctrl)
       ctrls.push(ctrl.ptr)
     }
 
@@ -472,6 +474,7 @@ export class Backend {
       const ctrl = this.putCtrl(instance, mainPayload)
 
       this.ctrlMap.set(ctrl.ptr, ctrl)
+      this.ctrlInstanceIdMap.set(mainPayload.instanceId, ctrl)
       ctrls.push(ctrl.ptr)
 
       bar.main = ctrl
@@ -482,7 +485,7 @@ export class Backend {
   }
 
   async trash(data: BarBuildPtrs) {
-    // console.log('trashing', data)
+    console.log('trashing', data)
     // for (const ptr of data.bars) {
     const bar = this.barMap.get(data.bar)
     if (bar) {
@@ -491,7 +494,9 @@ export class Backend {
     }
     // }
     search: for (const ptr of data.ctrls) {
-      const ctrl = this.ctrlMap.get(ptr)!
+      const ctrl = this.ctrlMap.get(ptr)
+      if (!ctrl) continue
+
       const { endTime } = this.clock
       // let reset = true
 
@@ -500,6 +505,7 @@ export class Backend {
         if (bar) {
           if (ctrl.instanceId === bar.main?.instanceId) {
             // reset = false
+            console.log('oops exists', ptr)
             continue search
             // if (ctrl === bar.main) {
             // }
@@ -510,6 +516,7 @@ export class Backend {
               // reset = false
               // the ctrl is the same in another bar, so we should not free it
               // if (ctrl === other) {
+                console.log('OOPS EXISTS', ptr)
               continue search
               // }
             }
@@ -520,17 +527,27 @@ export class Backend {
       // if (reset)
       resetCtrl(ctrl)
       // free the ctrl object
+      console.log('TRASH', ptr)
+      this.purge(ctrl.instanceId)
+      this.ctrlInstanceIdMap.delete(ctrl.instanceId)
+      this.ctrlMap.delete(ptr)
       this.ctrlPool.unshift(ctrl)
     }
   }
 
   putCtrl(instance: Module.Instance, payload: Build.Payload) {
+    // TODO: this is probably wrong, we need to allow multiple ctrls for same instance
+    // because of the literals?
+    if (this.ctrlInstanceIdMap.has(payload.instanceId)) {
+      return this.ctrlInstanceIdMap.get(payload.instanceId)!
+    }
     // while (!this.ctrlPool.size && this.barTrash.size) {
     //   const bar = this.barTrash.pop()
     //   this.barPool.unshift(bar)
     //   bar.clear()
     // }
 
+    console.log(this.ctrlPool.size)
     const ctrl: Ctrl = this.ctrlPool.pop()
     ctrl.instance = instance
     Object.assign(ctrl, payload)

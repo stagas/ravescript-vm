@@ -1,16 +1,11 @@
 import { Agent, Alice } from 'alice-bob'
-import { queue } from 'event-toolkit'
 import { Deferred } from 'utils'
 import { Build, Frontend } from './frontend.ts'
 import { PreviewWorker } from './preview-worker.ts'
 import { RaveNode } from './rave-node.ts'
 import { Vm } from './vm.ts'
-import { Backend } from './backend.ts'
-
-type Sound = any
 
 export const previews: Map<string, Deferred<[Float32Array, Float32Array]>> = new Map()
-
 const previewServices: Map<number, Deferred<PreviewService>> = new Map()
 
 export async function createPreviewService(length: number, vm: Vm) {
