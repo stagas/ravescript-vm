@@ -24,40 +24,40 @@ export function post<T>(port: MessagePort | Worker, message: T) {
 
 function sinc(x: number): number {
   if (x === 0) {
-    return 1;
+    return 1
   }
-  const piX = Math.PI * x;
-  return Math.sin(piX) / piX;
+  const piX = Math.PI * x
+  return Math.sin(piX) / piX
 }
 
 function lanczosKernel(x: number, a: number): number {
   if (x === 0) {
-    return 1;
+    return 1
   }
   if (Math.abs(x) >= a) {
-    return 0;
+    return 0
   }
-  return sinc(x) * sinc(x / a);
+  return sinc(x) * sinc(x / a)
 }
 
 export function upsampleBuffer(buffer: Float32Array, a: number): Float32Array {
   const originalLength = buffer.length
-  const targetLength = 65536;
-  const upsampledBuffer = new Float32Array(targetLength);
+  const targetLength = 65536
+  const upsampledBuffer = new Float32Array(targetLength)
   const ratio = originalLength / targetLength
 
   for (let i = 0; i < targetLength; i++) {
-    const position = i * ratio;
-    let value = 0;
+    const position = i * ratio
+    let value = 0
     for (let j = -a + 1; j < a; j++) {
-      const index = Math.round(position + j);
+      const index = Math.round(position + j)
       if (index >= 0 && index < originalLength) {
-        value += (buffer[index] ?? 0) * lanczosKernel(j, a);
+        value += (buffer[index] ?? 0) * lanczosKernel(j, a)
       }
     }
-    upsampledBuffer[i] = value;
+    upsampledBuffer[i] = value
   }
-  return upsampledBuffer;
+  return upsampledBuffer
 }
 
 export type NumberFormat = 'f' | 'd' | 'h' | 'k' | '#'
@@ -118,8 +118,6 @@ export function parseNumber(x: string): NumberInfo {
       }
     }
 
-    // const [, b = ''] = x.split('.')
-    // digits = b.length
     value = Number(x)
   }
 
@@ -127,10 +125,10 @@ export function parseNumber(x: string): NumberInfo {
 }
 
 export function checksum(str: string) {
-  let hash = 0;
+  let hash = 0
   for (let i = 0; i < str.length; i++) {
-    hash = (hash << 6) - hash + str.charCodeAt(i);
-    hash = hash & hash; // Convert to 32-bit integer
+    hash = (hash << 6) - hash + str.charCodeAt(i)
+    hash = hash & hash // Convert to 32-bit integer
   }
   return Math.abs(hash)
 }

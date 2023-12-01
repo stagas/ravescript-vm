@@ -75,7 +75,7 @@ export function preventTreeShaking(gen: Gen): void {
   const ctrl: Ctrl = runner.ctrls[0]
   const signal: Signal = ctrl.signal
   runner.fill(0, 0, 0, signal)
-  runner.process(0, 0, 0, 0, 0, signal)
+  runner.process(0, 0, signal)
   const L: usize = signal.L
   const R: usize = signal.R
   const LR: usize = signal.LR

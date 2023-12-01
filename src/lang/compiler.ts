@@ -133,7 +133,7 @@ run: fn (i: i32, end: i32) void {
   // audio buffer
   audio: ptr f32 = 0
 
-  sample_rate: i32 = to_i32 cast_i64 clock[11]
+  sample_rate: i32 = to_i32 cast_i64 clock[12]
   sample_rate_float: f32 = to_f32 sample_rate
   literal_2 = sample_rate_float
 

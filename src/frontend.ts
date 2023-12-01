@@ -1,6 +1,7 @@
 import { Signal, type Buffers } from './backend.ts'
+import { VmBar, VmCtrl, VmRunner } from './runner.ts'
 import { Clock } from './clock.ts'
-import { BLOCK_SIZE, SAMPLE_RATE } from './constants.ts'
+import { BLOCK_SIZE, MAX_BARS, MAX_BAR_INSTANCES, MAX_CTRLS, MAX_CTRL_INSTANCES, SAMPLE_RATE } from './constants.ts'
 import { defaultMainCode } from './defaults.ts'
 import { envTypes } from './env-types.ts'
 import { GenInfo, GenRuntime } from './gen-runtime.ts'
@@ -73,7 +74,6 @@ export class Frontend {
   debug = false
 
   state: FrontendState = FrontendState.Idle
-  engine: number
   clock: Clock
   buffers: Buffers
   blocks: Block[] = []
@@ -86,47 +86,66 @@ export class Frontend {
 
   buildsShared: Map<number, Build.Shared> = new Map()
 
-  main: Build.Sound | null
+  // main: Build.Sound | null
 
   zero: Block
+
+  vmRunner?: VmRunner
 
   constructor(
     public name = 'default',
     public vm: Vm,
+    public engine: number,
+    public core: number,
+    public runner = true,
     public sampleRate = SAMPLE_RATE,
     public blockSize = BLOCK_SIZE,
   ) {
-    Frontend.core ??= vm.exports.engine_Core_constructor(0, sampleRate)
+    if (engine) {
+      this.engine = engine
+    }
+    else {
+      this.core = core || vm.exports.engine_Core_constructor(0, sampleRate)
+      this.engine = vm.exports.engine_constructor(0, sampleRate, this.core)
+    }
 
-    this.engine = vm.exports.engine_constructor(0, sampleRate, Frontend.core)
-
-    this.clock = Clock(vm.view.buffer, vm.exports.engine_get_clock(this.engine))
+    this.clock = Clock(
+      vm.view.buffer,
+      vm.exports.engine_get_clock(this.engine)
+    )
     this.clock.ringPos = 0
 
     this.zero = this.getBlock()
 
-    this.signal = {
+    const s = this.signal = {
       ptr: vm.exports.engine_get_signal(this.engine),
       L: this.getBlock(),
       R: this.getBlock(),
       LR: this.getBlock(),
     }
-    const signal = SignalView(vm.view.buffer, this.signal.ptr)
-    signal.L = this.signal.L!.byteOffset
-    signal.R = this.signal.R!.byteOffset
-    signal.LR = this.signal.LR!.byteOffset
-
-    const mainInfo = this.produce([...this.tokenize({ code: defaultMainCode })])
-    this.setupMain(mainInfo)
-    this.main = this.compile(mainInfo)
+    const signal = SignalView(
+      vm.view.buffer,
+      s.ptr
+    )
+    signal.L = s.L.byteOffset
+    signal.R = s.R.byteOffset
+    signal.LR = s.LR.byteOffset
 
     this.buffers = {
       clock: this.clock.byteOffset,
       engine: this.engine,
       signal: this.signal
     }
-  }
 
+    if (runner) {
+      this.vmRunner = new VmRunner(
+        this.vm,
+        this.vm.exports.engine_get_runner(
+          this.buffers.engine
+        )
+      )
+    }
+  }
   getBlock = (length = this.blockSize): Block => {
     let block = this.blocks.pop()?.fill(0)
     if (!block) {
@@ -137,7 +156,6 @@ export class Frontend {
     }
     return block
   }
-
   getBlockU32 = (length = this.blockSize): BlockU32 => {
     let block = this.blocksU32.pop()?.fill(0)
     if (!block) {
@@ -148,7 +166,6 @@ export class Frontend {
     }
     return block
   }
-
   getMemories(info: Emitter.Info): Build.Memories {
     const audios = Array.from(info.audios,
       (_, index) =>
@@ -185,7 +202,6 @@ export class Frontend {
 
     return memories
   }
-
   freeBlock = (block: Block) => {
     if (block === this.signal.L
       || block === this.signal.R
@@ -195,12 +211,10 @@ export class Frontend {
     if (this.blocks.includes(block)) return
     this.blocks.unshift(block)
   }
-
   freeBlockU32 = (block: BlockU32) => {
     if (this.blocksU32.includes(block)) return
     this.blocksU32.unshift(block)
   }
-
   free(memories: Partial<Build.Memories>) {
     memories.audios?.forEach(this.freeBlock)
     memories.gens?.forEach(this.freeGen)
@@ -219,7 +233,6 @@ export class Frontend {
       }
     }
   }
-
   createGen(gen: Emitter.Gen, out: Block | null) {
     if (gen.kind in this.gensFree && this.gensFree[gen.kind]!.length) {
       const genRuntime = this.gensFree[gen.kind]!.pop()!
@@ -231,7 +244,6 @@ export class Frontend {
     }
     return new GenRuntime(this, gen, out)
   }
-
   freeGen = (gen: GenRuntime) => {
     if (!(gen.kind in this.gensUsed)) {
       throw new Error(`Attempted to free gen of unknown kind '${gen.kind}'.`)
@@ -245,101 +257,45 @@ export class Frontend {
     this.gensUsed[gen.kind]!.splice(index, 1)
     this.gensFree[gen.kind]!.unshift(gen)
   }
-
   tokenize(source: Source) {
     return tokenize(source)
   }
-
   produce(tokens: Token[], idModifier?: string) {
     const ast = parse(tokens)
     const scope = analyse(ast)
-    return produce(scope, idModifier)
+    return produce(tokens, scope, idModifier)
   }
-
-  setupMain(info: Emitter.Info) {
-    info.overrideAudios.set(0, this.signal.L!)
-    info.overrideAudios.set(1, this.signal.R!)
-    info.overrideAudios.set(2, this.signal.LR!)
-  }
-  // compileMain(mainInfo: Emitter.Info, clear = false): Build.Sound {
-
-  //   //   , namedSignals ?: Map<string, Signal>
-  //   // for (const [name, audio] of mainInfo.withs.entries()) {
-  //   //   const signal = namedSignals?.get(name)
-  //   //   if (signal) {
-  //   //     mainInfo.overrideAudios.set(audio.ptr, signal.LR!)
-  //   //   }
-  //   // }
-  //   // this.mainInfo.overrideAudios.set(this.mainInfo.L, this.mainOuts[0])
-  //   // this.mainInfo.overrideAudios.set(this.mainInfo.R, this.mainOuts[1])
-  //   this.main = this.compile(mainInfo, clear ? null : this.main, true)
-  //   return this.main
-  // }
-
   compile(info: Emitter.Info) {
     // console.warn('compile')
-    const currentShared = this.buildsShared.get(info.instanceId)
+    let shared = this.buildsShared.get(info.instanceId)
 
-    // const hasInstance = this.buildsShared.has(info.instanceId)
+    if (shared) {
+      const ownLiterals = shared.payload.ownLiterals
 
-    // let ownLiterals: Block
-
-    // if (!currentShared) {
-
-    //   // if (currentShared) {
-    //   //   // Note: we release early but this goes at the end of the pool queue
-    //   //   // so it shouldn't be a problem, otherwise we need to use a trash queue.
-    //   //   this.freeBlock(currentShared.ownLiterals)
-    //   // }
-    // }
-    // else {
-    //   // console.log('SAME LITERALS')
-    // }
-
-    if (currentShared) {
-      const ownLiterals = currentShared.payload.ownLiterals
-      // const isCurrentSameInstance = current?.info.instanceId === info.instanceId
-      // const isCurrentSameInstance = immediate && current?.info.id === info.id
-
-      // const shared = this.buildsShared.get(info.instanceId)!
-
-      currentShared.info.gens.forEach((p, i) => {
+      shared.info.gens.forEach((p, i) => {
         const n = info.gens[i]!
         n.audio = p.audio!
         n.runtime = p.runtime!
       })
 
-      currentShared.info.audios.forEach((p, i) => {
+      shared.info.audios.forEach((p, i) => {
         const n = info.audios[i]!
         n.floats = p.floats!
       })
 
-      // if (!isCurrentSameInstance) {
-      //   ownLiterals.set(shared.memories.literals)
-      // }
-
       info.writeLiterals(ownLiterals)
 
       // update info for next use
-      currentShared.info = info
+      shared.info = info
 
-      const sound: Build.Sound = {
+      const build: Build.Sound = {
         frontend: this,
         info,
-        shared: currentShared,
-        signal: currentShared.payload.signal,
-        payload: currentShared.payload,
-        // isCurrentSameInstance
-        //   ? current.payload
-        //   : {
-        //     ...shared.payload,
-        //     ownLiterals
-        //   }
+        shared: shared,
+        signal: shared.payload.signal,
+        payload: shared.payload,
+        isNew: false,
       }
-
-      // if (current && current?.payload.ownLiterals !== ownLiterals) {
-      //   this.freeBlock(current.payload.ownLiterals)
-      // }
 
       // if (this.debug) {
       //   console.groupCollapsed('sound')
@@ -347,7 +303,7 @@ export class Frontend {
       //   console.groupEnd()
       // }
 
-      return sound
+      return build
     }
 
     const code = info.codes.join('\n')
@@ -401,7 +357,7 @@ export class Frontend {
 
     const ownLiterals = this.getBlock()
 
-    const shared: Build.Shared = {
+    shared = {
       info,
       memories,
       payload: {
@@ -421,40 +377,57 @@ export class Frontend {
 
     info.writeLiterals(ownLiterals)
 
-    const sound: Build.Sound = {
+    const build: Build.Sound = {
       frontend: this,
       info,
       shared,
       signal,
       payload: shared.payload,
-      // {
-      //   ...shared.payload,
-      //   ownLiterals
-      // },
       isNew: true,
     }
 
     if (this.debug) {
       console.groupCollapsed('sound')
-      console.log(sound)
+      console.log(build)
       console.groupEnd()
     }
 
-    return sound
+    return build
   }
+  setupMain(info: Emitter.Info) {
+    info.overrideAudios.set(0, this.signal.L!)
+    info.overrideAudios.set(1, this.signal.R!)
+    info.overrideAudios.set(2, this.signal.LR!)
+  }
+  makeFromTokens(tokens: Token[], isMain = false, idModifier?: string) {
+    const info = this.produce(tokens, idModifier)
+    if (isMain) this.setupMain(info)
+    const build = this.compile(info)
+    return build
+  }
+  make(source: Source, isMain = false, idModifier?: string) {
+    const tokens = Array.from(this.tokenize(source))
+    return this.makeFromTokens(tokens, isMain, idModifier)
+  }
+  purge(instanceId: number) {
+    if (this.vmRunner!.hasPayload(instanceId)) {
+      if (this.debug) {
+        console.warn('Attempted to purge build that is currently in use:', instanceId)
+      }
+      return
+    }
 
-  purge(infoId: number) {
-    const shared = this.buildsShared.get(infoId)
+    const shared = this.buildsShared.get(instanceId)
     if (!shared) {
       if (this.debug) {
-        console.log('Attempted to purge non-existent build:', infoId)
+        console.warn('Attempted to purge non-existent build:', instanceId)
       }
       return
     }
     this.free(shared.memories)
-    this.buildsShared.delete(infoId)
+    this.buildsShared.delete(instanceId)
     if (this.debug) {
-      console.log('Purged build:', infoId)
+      console.log('Purged build:', instanceId)
     }
   }
 }

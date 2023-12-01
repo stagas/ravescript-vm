@@ -11,9 +11,10 @@ export class Clock {
   /*6*/ coeff: f64 = 0
   /*7*/ barTime: f64 = 0
   /*8*/ barTimeStep: f64 = 0
-  /*9*/ loopStart: f64 = -Infinity
-  /*10*/ loopEnd: f64 = +Infinity
-  /*11*/ sampleRate: u32 = 48000
+  /*9*/ nextBarTime: f64 = 0
+  /*10*/ loopStart: f64 = -Infinity
+  /*11*/ loopEnd: f64 = +Infinity
+  /*12*/ sampleRate: u32 = 48000
   jumpBar: i32 = -1
   ringPos: u32 = 0
 }

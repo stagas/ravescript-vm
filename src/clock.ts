@@ -12,6 +12,7 @@ export const Clock = defineStruct({
   coeff: 'f64',
   barTime: 'f64',
   barTimeStep: 'f64',
+  nextBarTime: 'f64',
   loopStart: 'f64',
   loopEnd: 'f64',
   sampleRate: 'u32',

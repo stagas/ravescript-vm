@@ -1,6 +1,6 @@
 import { Agent, Alice } from 'alice-bob'
 import { Deferred } from 'utils'
-import { Build, Frontend } from './frontend.ts'
+import { Frontend } from './frontend.ts'
 import { PreviewWorker } from './preview-worker.ts'
 import { RaveNode } from './rave-node.ts'
 import { Vm } from './vm.ts'
@@ -18,7 +18,7 @@ export async function createPreviewService(length: number, vm: Vm) {
   deferred = Deferred()
   previewServices.set(length, deferred)
 
-  const frontend = new Frontend('preview', vm)
+  const frontend = new Frontend('preview', vm, 0, 0)
 
   frontend.clock.endTime = 1
 
@@ -48,10 +48,7 @@ export class PreviewService {
   worker: Agent<PreviewWorker, PreviewService>
   // trash: Build.Sound[] = []
 
-  constructor(
-    public frontend: Frontend,
-    // public backend: Backend,
-  ) {
+  constructor(public frontend: Frontend) {
     const url = new URL('./preview-worker.js', import.meta.url).href
     const worker = new Worker(url)
 
@@ -67,52 +64,52 @@ export class PreviewService {
 
   // usedBars: any[] = []
 
-  async render(
-    isMain: boolean,
-    build: Build.Sound,
-    builds: Build.Sound[],
-  ) {
-    return await this.worker.render(
-      isMain,
-      build.payload,
-      builds.map((build) =>
-        build.payload
-      )
-    )
+  // async render(
+  //   isMain: boolean,
+  //   build: Build.Sound,
+  //   builds: Build.Sound[],
+  // ) {
+  //   return await this.worker.render(
+  //     isMain,
+  //     build.payload,
+  //     builds.map((build) =>
+  //       build.payload
+  //     )
+  //   )
 
-    // if (!res) return
-
-
-    // TODO: return res to caller so we can manage when to trash.
-    // We should trash when a sound is not visible anywhere and prepare
-    // to trigger rebuild whenever it becomes visible again.
+  //   // if (!res) return
 
 
-    // this.usedBars.push(res)
+  //   // TODO: return res to caller so we can manage when to trash.
+  //   // We should trash when a sound is not visible anywhere and prepare
+  //   // to trigger rebuild whenever it becomes visible again.
 
-    // // TODO: queue usedBars and throttle trashing
-    // if (this.usedBars.length > 5) {
-    //   const data: any = this.usedBars.shift()
-    //   const ctrls: number[] = []
-    //   for (const ptr of data.ctrls) {
-    //     let found = false
-    //     for (const other of this.usedBars) {
-    //       if (other.ctrls.includes(ptr)) {
-    //         found = true
-    //         break
-    //       }
-    //     }
-    //     if (!found) {
-    //       ctrls.push(ptr)
-    //     }
-    //   }
-    //   this.worker.trash({
-    //     bars: [data.bar],
-    //     ctrls: data.ctrls
-    //   })
-    // }
 
-  }
+  //   // this.usedBars.push(res)
+
+  //   // // TODO: queue usedBars and throttle trashing
+  //   // if (this.usedBars.length > 5) {
+  //   //   const data: any = this.usedBars.shift()
+  //   //   const ctrls: number[] = []
+  //   //   for (const ptr of data.ctrls) {
+  //   //     let found = false
+  //   //     for (const other of this.usedBars) {
+  //   //       if (other.ctrls.includes(ptr)) {
+  //   //         found = true
+  //   //         break
+  //   //       }
+  //   //     }
+  //   //     if (!found) {
+  //   //       ctrls.push(ptr)
+  //   //     }
+  //   //   }
+  //   //   this.worker.trash({
+  //   //     bars: [data.bar],
+  //   //     ctrls: data.ctrls
+  //   //   })
+  //   // }
+
+  // }
 
   // async pushTrash(build: Build.Sound, sound: Sound) {
   //   this.trash = this.trash.filter((b) =>

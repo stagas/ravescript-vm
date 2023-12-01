@@ -8,3 +8,9 @@ export const VM_MEM_PAGES = 3000
 
 export const FFT_BLOCK_SIZE_TIME_DOMAIN = 512
 export const FFT_BLOCK_SIZE_FREQ_DOMAIN = 2048
+
+const MAX = 512
+export const MAX_BAR_INSTANCES = MAX
+export const MAX_BARS = MAX
+export const MAX_CTRL_INSTANCES = MAX
+export const MAX_CTRLS = MAX

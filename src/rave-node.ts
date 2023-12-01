@@ -1,12 +1,12 @@
 import { Agent, Alice } from 'alice-bob'
-import { Deferred } from 'utils'
+import { Deferred, objectDiff } from 'utils'
 import { fetchPffftBinary } from '../vendor/pffft/pffft.ts'
 import { Backend, BackendInit } from './backend.ts'
-import { Frontend } from './frontend.ts'
+import { Build, Frontend } from './frontend.ts'
 import { Vm, VmInit, createVmMemory, fetchVmBinary, initVm } from './vm.ts'
 
 // import { DEBUG } from '../../web/constants'
-const DEBUG = false
+const DEBUG = true
 const DEV = Boolean(location.port && !location.href.includes('?prod'))
 
 export enum RaveNodeState {
@@ -59,16 +59,16 @@ export class RaveNode extends AudioWorkletNode {
       memory: options.vmMemory,
     }
     const vm: Vm = await initVm(vmInit)
-    const frontend = new Frontend('live', vm, context.sampleRate)
+    const frontend = new Frontend(
+      'live',
+      vm,
+      0,
+      0,
+      true,
+      context.sampleRate
+    )
     const processorOptions: BackendInit = this.processorOptions = {
       vmInit,
-      // vmInit: {
-      //   ...vmInit,
-      //   pffftRunners: {
-      //     timeFFT: vm.timeFFT!.runner,
-      //     freqFFT: vm.freqFFT!.runner,
-      //   }
-      // },
       buffers: frontend.buffers,
       runner: true
     }
@@ -85,9 +85,8 @@ export class RaveNode extends AudioWorkletNode {
 
   ready = Deferred<void>()
   state: RaveNodeState = RaveNodeState.Idle
-  frontend: Frontend
-  // backend?: Backend
   worklet: Agent<Backend, RaveNode>
+  frontend: Frontend
 
   constructor(context: BaseAudioContext, public options: RaveNodeOptions) {
     super(context, 'rave', {
@@ -154,12 +153,25 @@ export class RaveNode extends AudioWorkletNode {
   async reset() {
     await this.worklet.reset()
   }
+
+  sentPayloads: Record<number, Build.Payload> = {}
+  async sync() {
+    const payloads = this.frontend.vmRunner!.getPayloads()
+    const diff = objectDiff(this.sentPayloads, payloads)
+    const toSend = Object.assign(diff.created, diff.updated)
+    if (Object.keys(toSend).length) {
+      Object.assign(this.sentPayloads, toSend)
+      for (const k in diff.deleted) {
+        delete this.sentPayloads[k]
+      }
+      await this.worklet.putPayloads(toSend)
+    }
+  }
 }
 
 export async function test_rave_node() {
   // @env browser
   describe('RaveNode', () => {
-
     it('works', async () => {
       const ctx = new AudioContext()
       await RaveNode.register(ctx)
@@ -168,29 +180,78 @@ export async function test_rave_node() {
       })
       expect(rave).toBeInstanceOf(AudioWorkletNode)
     })
-
     it('can produce output', async () => {
       const ctx = new OfflineAudioContext(1, 2048, 44100)
       await RaveNode.register(ctx)
       const rave = await RaveNode.instantiate(ctx, {
         fetchSample: () => { return Promise.resolve([new Float32Array()]) }
       })
-      const source = { code: `42 LR+=` }
       rave.connect(ctx.destination)
 
       const { frontend } = rave
-      rave.frontend.tokenize(source)
-      const tokens = Array.from(frontend.tokenize(source))
-      const info = frontend.produce(tokens)
-      const sound = frontend.compile(info)
+      frontend.debug = false
+      const runner = frontend.vmRunner!
 
-      await rave.worklet.setBarAt([0], [sound.payload], null)
+      const mainBuild = frontend.make({ code: 'LR L= LR R=' }, true)
+      const main = runner.vmCtrls[0]
+      await main.setPayload(mainBuild.payload)
+
+      const build = frontend.make({ code: `42 LR+=` })
+      const ctrl = runner.vmCtrls[1]
+      await ctrl.setPayload(build.payload)
+
+      const bar = runner.vmBars[0]
+      runner.setBar(0, bar)
+      bar.setMain(main)
+      bar.addCtrl(ctrl)
+
+      await rave.sync()
+      expect(Object.keys(rave.sentPayloads).map(Number))
+        .toEqual([main.ptr, ctrl.ptr])
 
       await rave.start()
-
       const buffer = await ctx.startRendering()
       const data = buffer.getChannelData(0)
       expect(data[128]).toEqual(42)
+    })
+    it('[saw] (wavetable core) works', async () => {
+      const ctx = new OfflineAudioContext(1, 2048, 44100)
+      await RaveNode.register(ctx)
+      const rave = await RaveNode.instantiate(ctx, {
+        fetchSample: () => { return Promise.resolve([new Float32Array()]) }
+      })
+      rave.connect(ctx.destination)
+
+      const { frontend } = rave
+      frontend.debug = false
+      const runner = frontend.vmRunner!
+
+      const mainBuild = frontend.make({ code: 'LR L= LR R=' }, true)
+      const main = runner.vmCtrls[0]
+      await main.setPayload(mainBuild.payload)
+
+      const build = frontend.make({ code: `[saw 330] LR+=` })
+      const ctrl = runner.vmCtrls[1]
+      await ctrl.setPayload(build.payload)
+
+      const bar = runner.vmBars[0]
+      runner.setBar(0, bar)
+      bar.setMain(main)
+      bar.addCtrl(ctrl)
+
+      await rave.sync()
+      expect(Object.keys(rave.sentPayloads).map(Number))
+        .toEqual([main.ptr, ctrl.ptr])
+
+      await rave.start()
+      const buffer = await ctx.startRendering()
+      const data = buffer.getChannelData(0)
+      expect(data.slice(128, 132).join()).toEqual([
+        -0.724669337272644,
+        -0.8175374269485474,
+        -0.9525049328804016,
+        -0.9910984039306641
+      ].join())
     })
   })
 }

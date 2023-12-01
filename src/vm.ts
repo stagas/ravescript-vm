@@ -3,13 +3,27 @@ import { Pffft, initPffft } from '../vendor/pffft/pffft.ts'
 import { FFT_BLOCK_SIZE_FREQ_DOMAIN, FFT_BLOCK_SIZE_TIME_DOMAIN } from './constants.ts'
 import { VM_MEM_PAGES } from './constants.ts'
 import { envTypes } from './env-types.ts'
-import { Module } from './lang/compiler.ts'
+import { Compile, Module } from './lang/compiler.ts'
 import { getMemoryView } from './memory-view.ts'
 import { wasmSourceMap } from './wasm-sourcemap.ts'
 import { Resolved } from './util.ts'
 
 export type VmInstance = Resolved<ReturnType<typeof vmInstantiate>> & Record<string, any>
-export type VmExports = { [K in keyof typeof envTypes]: (...args: any[]) => any }
+export type VmExports = { [K in keyof Omit<typeof envTypes, 'runner_process' | 'runner_fill'>]: (...args: any[]) => any } & {
+  runner_process(
+    runnerPtr: number,
+    begin: number,
+    end: number,
+    signalPtr: number,
+  ): void
+  runner_fill(
+    runnerPtr: number,
+    barIndex: number,
+    begin: number,
+    end: number,
+    signalPtr: number,
+  ): void
+}
 export type Vm = Resolved<ReturnType<typeof initVm>>
 export interface VmInit {
   memory: WebAssembly.Memory
@@ -93,6 +107,14 @@ export async function initVm({
 
   const ctrlInstances: Map<number, Module.Instance> = new Map()
 
+  function vmLog(x: number) {
+    console.log('[vm]', x)
+  }
+
+  function ctrlLog(x: number) {
+    console.log('[ctrl]', x)
+  }
+
   const wasm = await WebAssembly.instantiate(
     vmBinary,
     {
@@ -100,9 +122,9 @@ export async function initVm({
         memory,
         table,
         abort,
-        logi: console.log,
-        logf: console.log,
-        logd: console.log,
+        logi: vmLog,
+        logf: vmLog,
+        logd: vmLog,
         timeFFT: timeFFTRunner,
         freqFFT: freqFFTRunner,
         ...pffft.exports,
@@ -129,7 +151,14 @@ export async function initVm({
       )
   ) as VmExports
 
+  const env: Compile.Env = {
+    memory,
+    log: ctrlLog,
+    ...exports
+  }
+
   return {
+    env,
     view,
     table,
     instance,

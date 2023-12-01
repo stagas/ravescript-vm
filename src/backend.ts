@@ -1,17 +1,9 @@
+import { VmCtrl, VmRunner } from './runner.ts'
 import { Clock } from './clock.ts'
-import { type Block, type Build } from './frontend.ts'
-import type { GenInfo } from './gen-runtime.ts'
-import { instantiate } from './instantiate.ts'
-import type { Compile, Module } from './lang/index.ts'
-import { BarView, CtrlView, SignalView } from './structs.ts'
-import { FixedArray, Ring, toRing } from './util.ts'
+import { Build, type Block } from './frontend.ts'
+import { SignalView } from './structs.ts'
+import { Ring, toRing } from './util.ts'
 import { Vm, VmInit, initVm } from './vm.ts'
-
-const MAX = 512
-const MAX_BAR_INSTANCES = MAX
-const MAX_BARS = MAX
-const MAX_CTRL_INSTANCES = MAX
-const MAX_CTRLS = MAX
 
 export interface BarBuildPtrs {
   bar: number
@@ -38,124 +30,9 @@ export interface Signal<T = Block> {
   LR: T | null
 }
 
-export interface Ctrl {
-  instance: Module.Instance
-  instanceId: number
-  ptr: number
-  signal: Signal
-  gens: GenInfo[]
-  literalsCount: number
-  liveLiterals: Block
-  ownLiterals: Block
-}
-
-const ctrlsById = new Map<number, Ctrl>()
+const ctrlsById = new Map<number, VmCtrl>()
 function resetCtrlById(id: number) {
-  const ctrl = ctrlsById.get(id)
-  if (ctrl) {
-    resetCtrl(ctrl)
-  }
-}
-
-function resetCtrl(ctrl: Ctrl) {
-  // TODO: clear audios?
-  ctrl.gens.forEach((gen) => {
-    gen.mem.set(gen.initial)
-  })
-
-  // TODO: apply initial literals before this update/reset
-  ctrl.instance.exports.update_gens()
-  ctrl.instance.exports.reset_gens()
-  ctrl.signal.L?.fill(0)
-  ctrl.signal.R?.fill(0)
-  ctrl.signal.LR?.fill(0)
-  // ctrl.instance.exports.reset()
-}
-
-const barsByPtr = new Map<number, Bar>()
-export class Bar {
-  bar: BarView
-  barCtrls: Uint32Array
-  ctrls: FixedArray<Ctrl> = new FixedArray(16 * 4)
-  main?: Ctrl
-
-  constructor(public backend: Backend, public ptr: number) {
-    barsByPtr.set(ptr, this)
-    this.bar = BarView(this.backend.vm.view.buffer, this.ptr)
-    this.barCtrls = this.backend.vm.view.getU32(this.bar.ctrls, 16 * 4)
-  }
-
-  reset() {
-    this.ctrls.forEach(resetCtrl)
-    if (this.main) resetCtrl(this.main)
-  }
-
-  clear() {
-    // const endTime = this.backend.clock.endTime
-
-    // try to free and maybe reset the ctrls that are not used
-    // this.ctrls.forEach((ctrl) => {
-    //   let reset = true
-    //   out: for (let t = 0; t < endTime; t++) {
-    //     const bar = this.backend.bars[t]
-    //     if (bar) {
-    //       for (const other of bar.ctrls) {
-    //         // the ctrl instanceId exists in another bar, we should not reset it
-    //         if (ctrl.instanceId === other.instanceId) {
-    //           reset = false
-    //           // the ctrl is the same in another bar, so we should not free it
-    //           if (ctrl === other) {
-    //             return
-    //           }
-    //         }
-    //       }
-    //     }
-    //   }
-    //   // ctrl's instanceId isn't used anywhere, so we can reset it
-    //   if (reset) resetCtrl(ctrl)
-    //   // free the ctrl object
-    //   this.backend.ctrlPool.unshift(ctrl)
-    // })
-
-    // // try to free main and maybe reset it
-    // // this.ctrls.forEach((ctrl) => {
-    // if (this.main) {
-    //   out: {
-    //     const { main } = this
-    //     let reset = true
-    //     for (let t = 0; t < endTime; t++) {
-    //       const bar = this.backend.bars[t]
-    //       if (bar) {
-    //         // the ctrl instanceId exists in another bar, we should not reset it
-    //         if (main.instanceId === bar.main?.instanceId) {
-    //           reset = false
-    //           // the ctrl is the same in another bar, so we should not free it
-    //           if (main === bar.main) {
-    //             break out
-    //           }
-    //         }
-    //       }
-    //     }
-    //     // ctrl's instanceId isn't used anywhere, so we can reset it
-    //     if (reset) resetCtrl(main)
-    //     // free the ctrl object
-    //     this.backend.ctrlPool.unshift(main)
-    //   }
-    // }
-
-    this.bar.size = 0
-    this.bar.main = 0
-    this.ctrls.clear()
-  }
-
-  addCtrl(instance: Module.Instance, payload: Build.Payload) {
-    const ctrl = this.backend.putCtrl(instance, payload)
-
-    this.barCtrls[this.ctrls.size] = ctrl.ptr
-    this.ctrls.push(ctrl)
-    this.bar.size = this.ctrls.size
-    return ctrl
-  }
+  ctrlsById.get(id)?.reset()
 }
 
 export class Backend {
@@ -172,14 +49,8 @@ export class Backend {
     )
   }
 
-  env: Compile.Env
-
-  runnerPtr!: number
-  runnerBars!: Uint32Array
-  runnerCtrls!: Uint32Array
-
+  clock: Clock
   chunkAheadTime = 0
-  nextBarTime = 0
 
   begin = 0
   end = 0
@@ -191,20 +62,7 @@ export class Backend {
   L!: Float32Array
   R!: Float32Array
 
-  main?: Ctrl | null
-  bars: (Bar | void)[] = Array.from({ length: MAX_BARS })
-  ctrl!: CtrlView
-
-  // oldBars: FixedArray<Bar> = new FixedArray(16 * 4)
-
-  barPool: FixedArray<Bar> = new FixedArray(MAX_BAR_INSTANCES)
-  barTrash: FixedArray<Bar> = new FixedArray(MAX_BAR_INSTANCES)
-  barMap = new Map<number, Bar>()
-  ctrlPool: FixedArray<Ctrl> = new FixedArray(MAX_CTRL_INSTANCES)
-  ctrlMap = new Map<number, Ctrl>()
-  ctrlInstanceIdMap = new Map<number, Ctrl>()
-
-  clock: Clock
+  vmRunner?: VmRunner
 
   constructor(
     public vm: Vm,
@@ -223,49 +81,62 @@ export class Backend {
 
     this.signalView = SignalView(this.vm.view.buffer)
 
-    this.env = {
-      memory: vm.view.memory,
-      log: (x: number) => {
-        console.log('[ctrl]', x)
-      },
-      ...this.vm.exports
-    }
-
     if (runner) {
-      this.runnerPtr = this.vm.exports.engine_get_runner(this.buffers.engine)
-      const runnerBarsPtr = this.vm.exports.runner_get_bars(this.runnerPtr)
-
-      this.runnerBars = this.vm.view.getU32(runnerBarsPtr, MAX_BARS)
-
-      const runnerBarInstancesPtr: number = this.vm.exports.runner_get_barInstances(this.runnerPtr)
-      const runnerBarInstancesView = this.vm.view.getU32(runnerBarInstancesPtr, MAX_BAR_INSTANCES)
-      for (let i = 0; i < MAX_BAR_INSTANCES; i++) {
-        this.barPool.push(new Bar(this, runnerBarInstancesView[i]!))
-      }
-
-      const runnerCtrlsPtr = this.vm.exports.runner_get_ctrls(this.runnerPtr)
-      this.runnerCtrls = this.vm.view.getU32(runnerCtrlsPtr, MAX_CTRLS)
-
-      const runnerCtrlInstancesPtr: number = this.vm.exports.runner_get_ctrlInstances(this.runnerPtr)
-      const runnerCtrlInstancesView = this.vm.view.getU32(runnerCtrlInstancesPtr, MAX_CTRL_INSTANCES)
-      for (let i = 0; i < MAX_CTRL_INSTANCES; i++) {
-        this.ctrlPool.push({ ptr: runnerCtrlInstancesView[i] } as Ctrl)
-      }
-
-      this.ctrl = CtrlView(this.vm.view.buffer)
+      this.vmRunner = new VmRunner(
+        this.vm,
+        this.vm.exports.engine_get_runner(
+          this.buffers.engine
+        )
+      )
     }
   }
-
   get bar() {
-    return this.bars[this.clock.internalTime | 0]
+    return this.vmRunner!.barViews[this.clock.internalTime | 0]
   }
-
+  start() {
+    if (this.process === this.doIdle) {
+      this.clock.prevTime = -1
+      this.process = this.doRun
+    }
+  }
+  stop() {
+    if (this.process === this.doRun) {
+      this.process = this.doStop
+    }
+    else {
+      this.resetClock()
+      this.resetThisBar()
+    }
+  }
+  reset() {
+    if (this.process === this.doRun) {
+      this.process = this.doResetting
+    }
+    else {
+      this.resetClock()
+      this.resetThisBar()
+    }
+  }
+  resetClock() {
+    this.clock.prevTime = -1
+    this.clock.barTime = this.clock.internalTime = Math.max(0, this.clock.loopStart)
+    this.clock.time = this.clock.internalTime * this.clock.coeff
+  }
+  resetThisBar() {
+    this.bar?.reset()
+  }
+  clearSignal() {
+    this.signal.L?.fill(0)
+    this.signal.R?.fill(0)
+    this.signal.LR?.fill(0)
+    this.L?.fill(0)
+    this.R?.fill(0)
+  }
   updateTime(): void {
     const c = this.clock
     const coeff = c.coeff = c.bpm / 60 / 4
     c.timeStep = 1 / c.sampleRate
     c.barTimeStep = c.timeStep * coeff
-    // c.barTimeStep = 1 / (coeff * c.sampleRate)
     this.chunkAheadTime = 129 * c.barTimeStep
 
     const jumpBar = c.jumpBar
@@ -306,27 +177,28 @@ export class Backend {
     }
 
     // calculate next bar time (+1 frame for precision error)
-    this.nextBarTime = internalTimeNow + this.chunkAheadTime
+    let nextBarTime = internalTimeNow + this.chunkAheadTime
 
     // jump to bar next bar time
     if (jumpBar >= 0) {
-      if ((this.nextBarTime | 0) !== (internalTimeNow | 0)) {
-        this.nextBarTime = c.jumpBar
+      if ((nextBarTime | 0) !== (internalTimeNow | 0)) {
+        nextBarTime = c.jumpBar
       }
     }
     else {
       // is a loop active?
-      if (internalTimeBefore < loopEnd && this.nextBarTime >= loopEnd) {
-        this.nextBarTime -= (loopEnd - loopStart)
+      if (internalTimeBefore < loopEnd && nextBarTime >= loopEnd) {
+        nextBarTime -= (loopEnd - loopStart)
       }
 
       // wrap nextBarTime on clock.endTime
-      if (this.nextBarTime >= c.endTime) {
-        this.nextBarTime -= c.endTime
+      if (nextBarTime >= c.endTime) {
+        nextBarTime -= c.endTime
       }
     }
 
     c.barTime = c.internalTime = internalTimeNow
+    c.nextBarTime = nextBarTime
 
     // update ringPos
     const ringPos
@@ -338,248 +210,26 @@ export class Backend {
     this.end = (ringPos + 1) << 7 // * 128
 
     // acquire and reset main outs for this turn
-    this.L = this.signalRing.L![ringPos]!.fill(0)
-    this.R = this.signalRing.R![ringPos]!.fill(0)
-    this.signalRing.LR![ringPos]!.fill(0)
+    this.L = this.signalRing.L![ringPos].fill(0)
+    this.R = this.signalRing.R![ringPos].fill(0)
+    this.signalRing.LR![ringPos].fill(0)
   }
-
-  start() {
-    if (this.process === this.doIdle) {
-      this.clock.prevTime = -1
-      this.process = this.doRun
-    }
-  }
-
-  stop() {
-    if (this.process === this.doRun) {
-      this.process = this.doStop
-    }
-    else {
-      this.resetClock()
-      this.resetThisBar()
+  async putPayloads(payloads: Record<number, Build.Payload>) {
+    const vmRunner = this.vmRunner!
+    for (const ptr in payloads) {
+      const payload = payloads[+ptr]
+      const ctrl = vmRunner.vmCtrlsByPtr.get(+ptr)!
+      await ctrl.setPayload(payload)
     }
   }
-
-  reset() {
-    if (this.process === this.doRun) {
-      this.process = this.doResetting
-    }
-    else {
-      this.resetClock()
-      this.resetThisBar()
-    }
-  }
-
-  resetClock() {
-    this.clock.prevTime = -1
-    this.clock.barTime = this.clock.internalTime = Math.max(0, this.clock.loopStart)
-    this.clock.time = this.clock.internalTime * this.clock.coeff
-  }
-
-  resetThisBar() {
-    this.bar?.reset()
-  }
-
-  // this should be called when things have stopped, to free old instances/buffers from memory
-  purgeCtrls() {
-    for (const ctrl of this.runnerCtrls) {
-      // check in bars
-      // should purge old instances here
-    }
-  }
-
-  async purge(instanceId: number) {
-    this.vm.ctrlInstances.delete(instanceId)
-  }
-
-  async getCtrlInstance(payload: Build.Payload) {
-    let instance = this.vm.ctrlInstances.get(payload.instanceId)
-
-    if (!instance) {
-      instance = await instantiate<Module.Instance>(payload.binary, this.env)
-      this.vm.ctrlInstances.set(payload.instanceId, instance)
-    }
-
-    return instance
-  }
-
-  removeBarAt(barTime: number) {
-    this.runnerBars[barTime] = 0
-  }
-
-  async setBarAt(
-    barTimes: number[],
-    buildPayloads: Build.Payload[],
-    mainPayload: Build.Payload | null,
-  ): Promise<BarBuildPtrs> {
-    while (!this.barPool.size && this.barTrash.size) {
-      const bar = this.barTrash.pop()
-      this.barPool.unshift(bar)
-      bar.clear()
-    }
-
-    // const currentBar = this.bars[barTime]
-    // if (currentBar && currentBar.ctrls.size === buildPayloads.length && currentBar.ctrls.every((ctrl) => {
-    //   let found = false
-    //   for (const payload of buildPayloads) {
-    //     if (ctrl.instanceId === payload.instanceId) {
-    //       ctrl.ownLiterals.set(
-    //         payload.ownLiterals.subarray(0, payload.literalsCount)
-    //       )
-    //       found = true
-    //       break
-    //     }
-    //   }
-    //   return found
-    // })) {
-    //   return
-    // }
-
-    const bar: Bar = this.barPool.pop()
-    this.barMap.set(bar.ptr, bar)
-    // this.oldBars.clear()
-
-    for (const barTime of barTimes) {
-      // const old = this.bars[barTime]
-      // if (old) this.oldBars.push(old)
-
-      // this.barIndex = (this.barIndex + 1) % MAX_BAR_INSTANCES //& 0xFFF // % 4096
-      this.bars[barTime] = bar
-      this.runnerBars[barTime] = bar.ptr
-    }
-
-    // TODO: we shouldn't need this anymore, we're setting endTime explicitly from seq.tsx
-    // update end time
-    // if (barTime + 1 > this.clock.endTime) {
-    //   this.clock.endTime = barTime + 1
-    // }
-
-    // clear previous bar ctrls
-    // bar.clear()
-
-    // add new ctrls
-
-    const ctrls: number[] = []
-    for (const payload of buildPayloads) {
-      const instance = await this.getCtrlInstance(payload)
-      const ctrl = bar.addCtrl(instance, payload)
-
-      this.ctrlMap.set(ctrl.ptr, ctrl)
-      this.ctrlInstanceIdMap.set(payload.instanceId, ctrl)
-      ctrls.push(ctrl.ptr)
-    }
-
-    if (mainPayload) {
-      const instance = await this.getCtrlInstance(mainPayload)
-      const ctrl = this.putCtrl(instance, mainPayload)
-
-      this.ctrlMap.set(ctrl.ptr, ctrl)
-      this.ctrlInstanceIdMap.set(mainPayload.instanceId, ctrl)
-      ctrls.push(ctrl.ptr)
-
-      bar.main = ctrl
-      bar.bar.main = ctrl.ptr
-    }
-
-    return { bar: bar.ptr, ctrls }
-  }
-
-  async trash(data: BarBuildPtrs) {
-    console.log('trashing', data)
-    // for (const ptr of data.bars) {
-    const bar = this.barMap.get(data.bar)
-    if (bar) {
-      // bar.clear()
-      this.barTrash.unshift(bar)
-    }
-    // }
-    search: for (const ptr of data.ctrls) {
-      const ctrl = this.ctrlMap.get(ptr)
-      if (!ctrl) continue
-
-      const { endTime } = this.clock
-      // let reset = true
-
-      for (let t = 0; t < endTime; t++) {
-        const bar = this.bars[t]
-        if (bar) {
-          if (ctrl.instanceId === bar.main?.instanceId) {
-            // reset = false
-            console.log('oops exists', ptr)
-            continue search
-            // if (ctrl === bar.main) {
-            // }
-          }
-          for (const other of bar.ctrls) {
-            // the ctrl instanceId exists in another bar, we should not reset it
-            if (ctrl.instanceId === other.instanceId) {
-              // reset = false
-              // the ctrl is the same in another bar, so we should not free it
-              // if (ctrl === other) {
-                console.log('OOPS EXISTS', ptr)
-              continue search
-              // }
-            }
-          }
-        }
-      }
-      // ctrl's instanceId isn't used anywhere, so we can reset it
-      // if (reset)
-      resetCtrl(ctrl)
-      // free the ctrl object
-      console.log('TRASH', ptr)
-      this.purge(ctrl.instanceId)
-      this.ctrlInstanceIdMap.delete(ctrl.instanceId)
-      this.ctrlMap.delete(ptr)
-      this.ctrlPool.unshift(ctrl)
-    }
-  }
-
-  putCtrl(instance: Module.Instance, payload: Build.Payload) {
-    // TODO: this is probably wrong, we need to allow multiple ctrls for same instance
-    // because of the literals?
-    if (this.ctrlInstanceIdMap.has(payload.instanceId)) {
-      return this.ctrlInstanceIdMap.get(payload.instanceId)!
-    }
-    // while (!this.ctrlPool.size && this.barTrash.size) {
-    //   const bar = this.barTrash.pop()
-    //   this.barPool.unshift(bar)
-    //   bar.clear()
-    // }
-
-    console.log(this.ctrlPool.size)
-    const ctrl: Ctrl = this.ctrlPool.pop()
-    ctrl.instance = instance
-    Object.assign(ctrl, payload)
-
-    this.ctrl.byteOffset = ctrl.ptr
-    this.ctrl.id = ctrl.instanceId
-    ctrlsById.set(ctrl.instanceId, ctrl)
-
-    const s = this.signalView
-    s.byteOffset = this.ctrl.signal
-    s.L = ctrl.signal.L?.byteOffset ?? 0
-    s.R = ctrl.signal.R?.byteOffset ?? 0
-    s.LR = ctrl.signal.LR?.byteOffset ?? 0
-
-    this.ctrl.literalsCount = ctrl.literalsCount
-    this.ctrl.liveLiterals = ctrl.liveLiterals.byteOffset
-    this.ctrl.ownLiterals = ctrl.ownLiterals.byteOffset
-
-    return ctrl
-  }
-
   doResetting: Process = (inputs, outputs) => {
     this.updateTime()
 
-    this.vm.exports.runner_process(
-      this.runnerPtr,
-      this.clock.time,
-      this.clock.barTime,
-      -1,
+    this.clock.nextBarTime = -1
+    this.vmRunner!.process(
       this.begin,
       this.end,
-      this.signal.ptr,
+      this.signal
     )
 
     outputs[0].set(this.L)
@@ -587,21 +237,16 @@ export class Backend {
 
     this.process = this.doReset
   }
-
   doReset: Process = (inputs, outputs) => {
     this.updateTime()
 
     this.resetClock()
     this.resetThisBar()
 
-    this.vm.exports.runner_process(
-      this.runnerPtr,
-      this.clock.time,
-      this.clock.barTime,
-      this.nextBarTime,
+    this.vmRunner!.process(
       this.begin,
       this.end,
-      this.signal.ptr,
+      this.signal
     )
 
     outputs[0].set(this.L)
@@ -609,18 +254,14 @@ export class Backend {
 
     this.process = this.doRun
   }
-
   doStop: Process = (inputs, outputs) => {
     this.updateTime()
 
-    this.vm.exports.runner_process(
-      this.runnerPtr,
-      this.clock.time,
-      this.clock.barTime,
-      -1,
+    this.clock.nextBarTime = -1
+    this.vmRunner!.process(
       this.begin,
       this.end,
-      this.signal.ptr,
+      this.signal
     )
 
     outputs[0].set(this.L)
@@ -630,51 +271,33 @@ export class Backend {
 
     this.process = this.doIdle
   }
-
   doRun: Process = (inputs, outputs) => {
     this.updateTime()
 
-    this.vm.exports.runner_process(
-      this.runnerPtr,
-      this.clock.time,
-      this.clock.barTime,
-      this.nextBarTime,
+    this.vmRunner!.process(
       this.begin,
       this.end,
-      this.signal.ptr,
+      this.signal
     )
-
     outputs[0].set(this.L)
     outputs[1].set(this.R)
   }
-
   doIdle: Process = () => { }
-
   process: Process = this.doIdle
-
-  clearSignal() {
-    this.signal.L?.fill(0)
-    this.signal.R?.fill(0)
-    this.signal.LR?.fill(0)
-    this.L?.fill(0)
-    this.R?.fill(0)
-  }
-
   async fill(barIndex: number, length: number) {
-    const bar = this.bars[barIndex]
-    if (!bar) return
+    // const bar = this.bars[barIndex]
+    // if (!bar) return
 
-    bar.reset()
+    // bar.reset()
     this.resetClock()
     this.clearSignal()
 
-    this.vm.exports.runner_clearLastBar(this.runnerPtr)
-    this.vm.exports.runner_fill(
-      this.runnerPtr,
+    this.vmRunner!.clearLastBar()
+    this.vmRunner!.fill(
       barIndex,
       0,
       length,
-      this.signal.ptr
+      this.signal
     )
   }
 }
@@ -697,7 +320,7 @@ export async function test_backend() {
       vmBinary,
       pffftBinary
     })
-    const frontend = new Frontend('test', vm, 44100)
+    const frontend = new Frontend('test', vm, 0, 0, true, 44100)
 
     const processorOptions: BackendInit = {
       vmInit: {
@@ -721,13 +344,20 @@ export async function test_backend() {
       // TODO: this code should fail because it's DC
       //  it should be [zero] 42+ LR+= to convert it to AC
       const source = { code: `42 LR+=` }
-      const tokens = Array.from(frontend.tokenize(source))
-      const info = frontend.produce(tokens)
-      const sound = frontend.compile(info)
-      await backend.setBarAt([0], [sound.payload], null)
+      const build = frontend.make(source)
 
+      const runner = frontend.vmRunner!
+      const ctrl = runner.vmCtrls[0]
+      ctrl.build = build
+      await ctrl.setPayload(build.payload)
+      await backend.putPayloads({ [ctrl.ptr]: ctrl.payload! })
+
+      const bar = runner.vmBars[0]
+      bar.addCtrl(ctrl)
+      runner.setBar(0, bar)
+
+      bar.reset()
       backend.fill(0, 2048)
-      // console.log(backend)
 
       const outs = backend.signal
       expect(outs.LR![0]).toEqual(42)

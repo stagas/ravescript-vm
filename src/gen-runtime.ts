@@ -26,13 +26,18 @@ export class GenRuntime {
   ) {
     const { vm, engine, gensFree, gensUsed, initials } = frontend
     const { kind } = this
+
     // console.log('create', this.kind, gensFree?.[this.kind]?.length, gensUsed?.[this.kind]?.length)
     this.ptr = vm.instance[`gen_${kind}_constructor`](0, engine)
     this.getFloats()
     // this.saveInitial()
 
+    // TODO: currently we copy the initial for every instance, because of
+    // certain gens that have pointers to buffers etc. If we somehow could compact
+    // these or maybe maintain a list of which kinds need this separate getInitial,
+    // then we could avoid this. But usually it's not a lot of memory, so it's fine.
     this.initial = this.getInitial()
-    // this.initial = initials[this.kind]!
+
     this.memLength = this.initial.length
     this.mem = vm.view.getU32(this.ptr, this.memLength)
     this.memf32 = vm.view.getF32(this.ptr, this.memLength)
@@ -45,6 +50,7 @@ export class GenRuntime {
     else {
       gensUsed[kind].push(this)
     }
+
     gen.runtime = this
   }
 
@@ -59,7 +65,8 @@ export class GenRuntime {
     const getFloats = envLookupMethod(kind, 'get__floats')
     if (getFloats && getFloats in vm.instance) {
       const floatsPtr = vm.instance[getFloats](this.ptr)
-      this.floats = vm.view.getF32(floatsPtr, 1 << 16) // TODO: variable length? now it's DELAY_MAX_SIZE
+      // TODO: variable length? now it's DELAY_MAX_SIZE
+      this.floats = vm.view.getF32(floatsPtr, 1 << 16)
     }
   }
 
@@ -70,44 +77,12 @@ export class GenRuntime {
     const getObjectSize = `util_getObjectSize__gen_${this.kind}_${capitalize(kind)}_`
     const cloneI32 = `util_cloneI32`
 
-    // first time creating this generator kind
-    // if (!(kind in gensUsed)) {
     // store initial object memory
     const size = vm.instance[getObjectSize]()
     const length = size >> 2
     const ptr = vm.instance[cloneI32](this.ptr, size)
     return vm.view.getF32(ptr, length)
-    // console.log(kind, initials[kind])
-
-    // create pool
-    // gensFree[kind] = []
-    // gensUsed[kind] = []
-    // }
-
   }
-
-  // saveInitial() {
-  //   const { frontend, kind } = this
-  //   const { vm, engine, gensFree, gensUsed, initials } = frontend
-
-  //   const getObjectSize = `util_getObjectSize__gen_${this.kind}_${capitalize(kind)}_`
-  //   const cloneI32 = `util_cloneI32`
-
-  //   // first time creating this generator kind
-  //   if (!(kind in gensUsed)) {
-  //     // store initial object memory
-  //     const size = vm.instance[getObjectSize]()
-  //     const length = size >> 2
-  //     const ptr = vm.instance[cloneI32](this.ptr, size)
-  //     initials[kind] = vm.view.getF32(ptr, length)
-  //     // console.log(kind, initials[kind])
-
-  //     // create pool
-  //     gensFree[kind] = []
-  //     gensUsed[kind] = []
-  //   }
-
-  // }
 
   getId() {
     const getId = envLookupMethod(this.kind, 'get_id')!

@@ -1,5 +1,3 @@
-// export type MemoryView = ReturnType<typeof getMemoryView>
-
 export interface MemoryView {
   memory: WebAssembly.Memory
   buffer: ArrayBuffer

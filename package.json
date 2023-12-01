@@ -26,6 +26,7 @@
     "alice-bob": "*",
     "annotate-code": "*",
     "event-toolkit": "*",
+    "signal": "file:../signal",
     "utils": "file:../utils",
     "visitor-as": "*"
   }

@@ -138,12 +138,7 @@ export class Runner {
     this.tableIndex = tableIndex
   }
 
-  fill(
-    barIndex: u32,
-    begin: u32,
-    end: u32,
-    out: Signal,
-  ): void {
+  fill(barIndex: u32, begin: u32, end: u32, out: Signal): void {
     const curr: Bar | null = this.bars[barIndex]
     if (!curr) return
 
@@ -168,16 +163,11 @@ export class Runner {
     }
   }
 
-  process(
-    actualTime: f64,
-    barTime: f64,
-    nextBarTime: f64,
-    begin: u32,
-    end: u32,
-    out: Signal,
-  ): void {
+  process(begin: u32, end: u32, out: Signal): void {
+    const actualTime: f64 = this.clock.time
+    const barTime: f64 = this.clock.barTime
     const currBarIndex: u32 = u32(barTime)
-    const nextBarIndex: i32 = i32(nextBarTime)
+    const nextBarIndex: i32 = i32(this.clock.nextBarTime)
 
     // const main: Ctrl | null = this.main
     const curr: Bar | null = this.bars[currBarIndex]

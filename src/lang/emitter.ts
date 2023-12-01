@@ -179,13 +179,13 @@ export class Emitter {
     return item
   }
 
-  produce(idModifier?: string): Emitter.Info {
+  produce(tokens: Token[], idModifier?: string): Emitter.Info {
     // meta
     let listItems = 0
     let updated = 0
 
     // info
-    this.info = new Emitter.Info(this.scope)
+    this.info = new Emitter.Info(this.scope, tokens)
     const { codes, updates, resets, lists, picks, withs, gfx } = this.info
     // TODO: Hardcoding 2 inputs for the time being, but we need to
     //  actually infer the number of inputs from usage.
@@ -682,7 +682,7 @@ export namespace Emitter {
 
     overrideAudios: Map<number, Float32Array> = new Map()
 
-    constructor(public scope: Scope) { }
+    constructor(public scope: Scope, public tokens: Token[]) { }
 
     updateId(idModifier = '') {
       this.instanceId = checksum(
@@ -999,8 +999,8 @@ export namespace Emitter {
   }
 }
 
-export function produce(scope: Scope, idModifier?: string): Emitter.Info {
-  return new Emitter(scope).produce(idModifier)
+export function produce(tokens: Token[], scope: Scope, idModifier?: string): Emitter.Info {
+  return new Emitter(scope).produce(tokens, idModifier)
 }
 
 export function test_emitter() {
@@ -1050,11 +1050,12 @@ export function test_emitter() {
 
     passing.forEach(([code, expected]) => {
       it(code, () => {
-        const ast = parse([...tokenize({ code })])
+        const tokens = [...tokenize({ code })]
+        const ast = parse(tokens)
         // console.log(ast)
         const scope = analyse(ast)
         // console.log(scope)
-        const info = produce(scope)
+        const info = produce(tokens, scope)
         console.log(info)
         expect(info.codes).toMatchObject(expected)
       })
