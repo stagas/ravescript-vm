@@ -1,12 +1,12 @@
 import { Agent, Alice } from 'alice-bob'
-import { Deferred, objectDiff } from 'utils'
+import { Deferred, objectDiff, timeout } from 'utils'
 import { fetchPffftBinary } from '../vendor/pffft/pffft.ts'
 import { Backend, BackendInit } from './backend.ts'
 import { Build, Frontend } from './frontend.ts'
 import { Vm, VmInit, createVmMemory, fetchVmBinary, initVm } from './vm.ts'
 
 // import { DEBUG } from '../../web/constants'
-const DEBUG = true
+const DEBUG = false
 const DEV = Boolean(location.port && !location.href.includes('?prod'))
 
 export enum RaveNodeState {
@@ -165,6 +165,11 @@ export class RaveNode extends AudioWorkletNode {
         delete this.sentPayloads[k]
       }
       await this.worklet.putPayloads(toSend)
+      // There is a case of replacing just what is about to change
+      // even though the payloads have been sent, they've been blocked
+      // but somehow we return? Anyhow, this is probably fixing it.
+      await timeout(10)
+      console.log('SENT', [...Object.values(toSend)].map(x => x.instanceId))
     }
   }
 }
