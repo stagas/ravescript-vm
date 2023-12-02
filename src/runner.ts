@@ -71,8 +71,6 @@ export class VmCtrl extends VmObject {
 }
 
 export class VmBar extends VmObject {
-  hashId?: string
-
   bar: BarView
   barTracks: Uint32Array
 
@@ -112,7 +110,6 @@ export class VmRunner extends VmObject {
   bars: Uint32Array
   vmBars: VmBar[] = []
   vmBarsByPtr = new Map<number, VmBar>()
-  // vmBarsByHashId = new Map<string, VmBar>()
 
   ctrls: Uint32Array
   vmCtrls: VmCtrl[] = []

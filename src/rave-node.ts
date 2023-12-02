@@ -155,29 +155,28 @@ export class RaveNode extends AudioWorkletNode {
   }
 
   sentPayloads: Record<number, Build.Payload> = {}
-  async sync(payloads: Record<number, Build.Payload>, toDelete: number[]) {
-    // const payloads = this.frontend.vmRunner!.getPayloads()
-    const diff = objectDiff(this.sentPayloads, payloads)
-    const toSend = Object.assign(diff.created, diff.updated)
+  async sync(toSend: Record<number, Build.Payload>, toDelete: number[]) {
+    const diff = objectDiff(this.sentPayloads, toSend)
+    const putPayloads = Object.assign(diff.created, diff.updated)
     if (toDelete.length) {
       for (const id of toDelete) {
         this.frontend.purge(id)
       }
       await this.worklet.freePayloads(toDelete)
     }
-    if (Object.keys(toSend).length) {
-      Object.assign(this.sentPayloads, toSend)
+    if (Object.keys(putPayloads).length) {
+      Object.assign(this.sentPayloads, putPayloads)
       for (const k in diff.deleted) {
         delete this.sentPayloads[k]
       }
-      await this.worklet.putPayloads(toSend)
+      await this.worklet.putPayloads(putPayloads)
       // There is a case of replacing just what is about to change
       // even though the payloads have been sent, they've been blocked
       // but somehow we return? Anyhow, this is probably fixing it.
       await timeout(10)
 
       console.log('SENT',
-        [...Object.entries(toSend)]
+        [...Object.entries(putPayloads)]
           .map(([ptr, x]) =>
             `${Number(ptr).toString(36)}:${Number(x.instanceId).toString(36)}`))
     }
