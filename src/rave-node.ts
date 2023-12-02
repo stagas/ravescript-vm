@@ -169,7 +169,11 @@ export class RaveNode extends AudioWorkletNode {
       // even though the payloads have been sent, they've been blocked
       // but somehow we return? Anyhow, this is probably fixing it.
       await timeout(10)
-      console.log('SENT', [...Object.values(toSend)].map(x => x.instanceId))
+
+      console.log('SENT',
+        [...Object.entries(toSend)]
+          .map(([ptr, x]) =>
+            `${Number(ptr).toString(36)}:${Number(x.instanceId).toString(36)}`))
     }
   }
 }

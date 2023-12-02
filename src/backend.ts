@@ -222,6 +222,7 @@ export class Backend {
     for (const ptr in payloads) {
       const payload = payloads[+ptr]
       const ctrl = vmRunner.vmCtrlsByPtr.get(+ptr)!
+
       await ctrl.setPayload(payload)
     }
   }

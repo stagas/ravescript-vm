@@ -283,7 +283,8 @@ export class Frontend {
         n.floats = p.floats!
       })
 
-      info.writeLiterals(ownLiterals)
+      // TODO: only write literals when it is immediate
+      // info.writeLiterals(ownLiterals)
 
       // update info for next use
       shared.info = info
