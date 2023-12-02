@@ -27,21 +27,6 @@ export class VmCtrl extends VmObject {
     this.ctrlView = CtrlView(vm.view.buffer, this.ptr)
     this.signalView = SignalView(vm.view.buffer, this.ctrlView.signal)
   }
-  // purge() {
-  //   const { payload } = of(this)
-  //   this.runner.vmCtrlsByInstanceId.delete(payload.instanceId, this)
-  //   // if no more ctrls are using this instance, delete it entirely
-  //   if (!this.runner.vmCtrlsByInstanceId.get(payload.instanceId)?.size) {
-  //     console.log('TRASH', payload.instanceId)
-  //     this.trash.push(payload.instanceId)
-  //     if (this.trash.length > 64) {
-  //       const id = this.trash.shift()! // FIFO
-  //       this.vm.ctrlInstances.delete(id)
-  //       this.runner.frontend?.purge(id)
-  //     }
-  //   }
-  //   this.instance = this.payload = void 0
-  // }
   async setPayload(payload: Build.Payload) {
     const { ctrlView, signalView } = of(this)
 
@@ -67,25 +52,6 @@ export class VmCtrl extends VmObject {
     }
 
     this.instance = instance
-
-    // let trashIndex = -1
-    // const isNew = !this.vm.ctrlInstances.has(payload.instanceId)
-    // const isTrashed = !isNew && ((trashIndex = this.trash.indexOf(payload.instanceId)) >= 0)
-    // if (isNew || isTrashed) {
-    //   // if the payload is in trash, we purge immediately and remove it
-    //   if (trashIndex >= 0) {
-    //     this.vm.ctrlInstances.delete(payload.instanceId)
-    //     this.runner.frontend?.purge(payload.instanceId)
-    //     this.trash.splice(trashIndex, 1)
-    //   }
-    //   this.instance = await instantiate<Module.Instance>(payload.binary, this.vm.env)
-    //   this.vm.ctrlInstances.set(payload.instanceId, this.instance)
-    // }
-    // else {
-    //   this.instance = this.vm.ctrlInstances.get(payload.instanceId)
-    // }
-
-    // this.runner.vmCtrlsByInstanceId.add(payload.instanceId, this)
   }
   reset() {
     const { instance, payload } = of(this)
@@ -183,42 +149,11 @@ export class VmRunner extends VmObject {
       this.vmCtrlsByPtr.set(ptr, ctrl)
     }
   }
-  // hasPayload(instanceId: number) {
-  //   const payloads = this.getPayloads()
-  //   return Boolean(payloads[instanceId])
-  // }
   getBars() {
     return new Set([...new Set(this.bars)]
       .map(ptr => this.vmBarsByPtr.get(ptr))
       .filter(Boolean))
-    // const payloads: Record<number, Build.Payload> = {}
-    // for (const barPtr of new Set(this.bars)) {
-    //   const bar = this.vmBarsByPtr.get(barPtr)
-    //   if (!bar) continue
-    //   if (bar.main?.payload) {
-    //     payloads[bar.main.payload.instanceId] = bar.main.payload
-    //   }
-    //   for (const track of bar.tracks) {
-    //     if (track.payload) {
-    //       payloads[track.payload.instanceId] = track.payload
-    //     }
-    //   }
-    // }
-    // return payloads
   }
-  // setBarView(barIndex: number, bar: VmBar) {
-  //   this.vmBarViews[barIndex] = bar
-  // }
-  // setBar(barIndex: number, bar: VmBar) {
-  //   this.bars[barIndex] = bar.ptr
-  //   // this.barViews[barIndex] = bar
-  //   // for (let i = 0; i < this.bars.length; i++) {
-  //   //   if (this.bars[i] === 0) {
-  //   //     this.bars[i] = bar.ptr
-  //   //     this.barViews[i] = bar
-  //   //   }
-  //   // }
-  // }
   clearLastBar() {
     this.vm.exports.runner_clearLastBar(this.ptr)
   }

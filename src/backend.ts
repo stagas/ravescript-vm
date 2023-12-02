@@ -226,6 +226,11 @@ export class Backend {
       await ctrl.setPayload(payload)
     }
   }
+  async freePayloads(payloads: number[]) {
+    for (const instanceId of payloads) {
+      this.vm.ctrlInstances.delete(instanceId)
+    }
+  }
   doResetting: Process = (inputs, outputs) => {
     this.updateTime()
 

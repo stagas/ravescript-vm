@@ -155,10 +155,16 @@ export class RaveNode extends AudioWorkletNode {
   }
 
   sentPayloads: Record<number, Build.Payload> = {}
-  async sync(payloads: Record<number, Build.Payload>) {
+  async sync(payloads: Record<number, Build.Payload>, toDelete: number[]) {
     // const payloads = this.frontend.vmRunner!.getPayloads()
     const diff = objectDiff(this.sentPayloads, payloads)
     const toSend = Object.assign(diff.created, diff.updated)
+    if (toDelete.length) {
+      for (const id of toDelete) {
+        this.frontend.purge(id)
+      }
+      await this.worklet.freePayloads(toDelete)
+    }
     if (Object.keys(toSend).length) {
       Object.assign(this.sentPayloads, toSend)
       for (const k in diff.deleted) {

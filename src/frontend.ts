@@ -1,14 +1,13 @@
 import { Signal, type Buffers } from './backend.ts'
-import { VmBar, VmCtrl, VmRunner } from './runner.ts'
 import { Clock } from './clock.ts'
-import { BLOCK_SIZE, MAX_BARS, MAX_BAR_INSTANCES, MAX_CTRLS, MAX_CTRL_INSTANCES, SAMPLE_RATE } from './constants.ts'
-import { defaultMainCode } from './defaults.ts'
+import { BLOCK_SIZE, SAMPLE_RATE } from './constants.ts'
 import { envTypes } from './env-types.ts'
 import { GenInfo, GenRuntime } from './gen-runtime.ts'
 import { analyse } from './lang/analyser.ts'
 import { Compile, compile } from './lang/compiler.ts'
 import { Emitter } from './lang/emitter.ts'
 import { AstNode, Source, Token, parse, produce, tokenize } from './lang/index.ts'
+import { VmRunner } from './runner.ts'
 import { SignalView } from './structs.ts'
 import { Vm } from './vm.ts'
 
@@ -411,13 +410,13 @@ export class Frontend {
     return this.makeFromTokens(tokens, isMain, idModifier)
   }
   purge(instanceId: number) {
-    if (this.vmRunner!.hasPayload(instanceId)) {
-      if (this.debug) {
-        console.warn('Attempted to purge build that is currently in use:', instanceId)
-      }
-      return
-    }
-    console.log('PURGE', instanceId)
+    // if (this.vmRunner!.hasPayload(instanceId)) {
+    //   if (this.debug) {
+    //     console.warn('Attempted to purge build that is currently in use:', instanceId)
+    //   }
+    //   return
+    // }
+    // console.log('PURGE', instanceId)
 
     const shared = this.buildsShared.get(instanceId)
     if (!shared) {
