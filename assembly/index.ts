@@ -85,7 +85,7 @@ export function preventTreeShaking(gen: Gen): void {
   // runner.freeCtrl(ctrl)
   const bar: Bar | null = runner.bars[0]
   if (bar) {
-    bar.ctrls[0] = ctrl
+    bar.tracks[0] = ctrl
     bar.size = 3
     bar.main = 0
   }

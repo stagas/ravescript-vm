@@ -250,7 +250,7 @@
  (export "clock_constructor" (func $assembly/core/clock/Clock#constructor))
  (export "runner_Bar_set_size" (func $assembly/core/runner/Bar#set:size))
  (export "runner_Bar_set_main" (func $assembly/core/runner/Bar#set:main))
- (export "runner_Bar_set_ctrls" (func $assembly/core/runner/Bar#set:ctrls))
+ (export "runner_Bar_set_tracks" (func $assembly/core/runner/Bar#set:tracks))
  (export "runner_Bar_constructor" (func $assembly/core/runner/Bar#constructor))
  (export "runner_get_barInstances" (func $assembly/core/runner/Runner#get:barInstances))
  (export "runner_Ctrl_set_tableIndex" (func $assembly/core/runner/Ctrl#set:tableIndex))
@@ -296,7 +296,7 @@
  (export "runner_get_bars" (func $assembly/core/runner/Runner#get:bars))
  (export "runner_Bar_get_size" (func $assembly/core/runner/Bar#get:size))
  (export "runner_get_clock" (func $assembly/core/runner/Runner#get:clock))
- (export "runner_Bar_get_ctrls" (func $assembly/core/runner/Bar#get:ctrls))
+ (export "runner_Bar_get_tracks" (func $assembly/core/runner/Bar#get:tracks))
  (export "runner_get_tableIndex" (func $assembly/core/runner/Runner#get:tableIndex))
  (export "runner_Ctrl_get_id" (func $assembly/core/runner/Ctrl#get:id))
  (export "env_setCtrlInstanceAt" (func $assembly/env/setCtrlInstanceAt))
@@ -6921,9 +6921,9 @@
   local.get $out
   return
  )
- (func $assembly/core/runner/Bar#set:ctrls (param $this i32) (param $ctrls i32)
+ (func $assembly/core/runner/Bar#set:tracks (param $this i32) (param $tracks i32)
   local.get $this
-  local.get $ctrls
+  local.get $tracks
   i32.store $0 offset=8
  )
  (func $assembly/core/runner/Bar#constructor (param $this i32) (result i32)
@@ -6944,7 +6944,7 @@
   i32.const 0
   i32.const 16
   call $~lib/staticarray/StaticArray<assembly/core/runner/Ctrl>#constructor
-  call $assembly/core/runner/Bar#set:ctrls
+  call $assembly/core/runner/Bar#set:tracks
   local.get $this
  )
  (func $assembly/core/runner/Runner#get:barInstances (param $this i32) (result i32)
@@ -7913,7 +7913,7 @@
   local.get $this
   i32.load $0 offset=28
  )
- (func $assembly/core/runner/Bar#get:ctrls (param $this i32) (result i32)
+ (func $assembly/core/runner/Bar#get:tracks (param $this i32) (result i32)
   local.get $this
   i32.load $0 offset=8
  )
@@ -8483,7 +8483,7 @@
     local.get $barTime
     call $assembly/core/clock/Clock#set:barTime
     local.get $curr
-    call $assembly/core/runner/Bar#get:ctrls
+    call $assembly/core/runner/Bar#get:tracks
     local.get $x
     call $~lib/staticarray/StaticArray<assembly/core/runner/Ctrl>#__get
     local.set $ctrl
@@ -10190,7 +10190,7 @@
         call $assembly/core/clock/Clock#set:barTime
        end
        local.get $curr
-       call $assembly/core/runner/Bar#get:ctrls
+       call $assembly/core/runner/Bar#get:tracks
        local.get $x
        call $~lib/staticarray/StaticArray<assembly/core/runner/Ctrl>#__get
        local.set $ctrl
@@ -10294,7 +10294,7 @@
         call $assembly/core/clock/Clock#set:barTime
        end
        local.get $curr
-       call $assembly/core/runner/Bar#get:ctrls
+       call $assembly/core/runner/Bar#get:tracks
        local.get $x|22
        call $~lib/staticarray/StaticArray<assembly/core/runner/Ctrl>#__get
        local.set $ctrl
@@ -10336,7 +10336,7 @@
            i32.lt_u
            if
             local.get $bar
-            call $assembly/core/runner/Bar#get:ctrls
+            call $assembly/core/runner/Bar#get:tracks
             local.get $y
             call $~lib/staticarray/StaticArray<assembly/core/runner/Ctrl>#__get
             local.set $other
@@ -10493,7 +10493,7 @@
         call $assembly/core/clock/Clock#set:barTime
        end
        local.get $curr
-       call $assembly/core/runner/Bar#get:ctrls
+       call $assembly/core/runner/Bar#get:tracks
        local.get $x|40
        call $~lib/staticarray/StaticArray<assembly/core/runner/Ctrl>#__get
        local.set $ctrl
@@ -10551,7 +10551,7 @@
           i32.lt_u
           if
            local.get $bar|52
-           call $assembly/core/runner/Bar#get:ctrls
+           call $assembly/core/runner/Bar#get:tracks
            local.get $y|55
            call $~lib/staticarray/StaticArray<assembly/core/runner/Ctrl>#__get
            local.set $other|54
@@ -10731,7 +10731,7 @@
         call $assembly/core/clock/Clock#set:barTime
        end
        local.get $curr
-       call $assembly/core/runner/Bar#get:ctrls
+       call $assembly/core/runner/Bar#get:tracks
        local.get $x|66
        call $~lib/staticarray/StaticArray<assembly/core/runner/Ctrl>#__get
        local.set $ctrl
@@ -10789,7 +10789,7 @@
           i32.lt_u
           if
            local.get $bar|78
-           call $assembly/core/runner/Bar#get:ctrls
+           call $assembly/core/runner/Bar#get:tracks
            local.get $y|81
            call $~lib/staticarray/StaticArray<assembly/core/runner/Ctrl>#__get
            local.set $other|80
@@ -10904,7 +10904,7 @@
            i32.lt_u
            if
             local.get $bar|89
-            call $assembly/core/runner/Bar#get:ctrls
+            call $assembly/core/runner/Bar#get:tracks
             local.get $y|92
             call $~lib/staticarray/StaticArray<assembly/core/runner/Ctrl>#__get
             local.set $other|91
@@ -11065,7 +11065,7 @@
        call $assembly/core/clock/Clock#set:barTime
       end
       local.get $curr
-      call $assembly/core/runner/Bar#get:ctrls
+      call $assembly/core/runner/Bar#get:tracks
       local.get $x|101
       call $~lib/staticarray/StaticArray<assembly/core/runner/Ctrl>#__get
       local.set $ctrl
@@ -11244,7 +11244,7 @@
        call $assembly/core/clock/Clock#set:barTime
       end
       local.get $curr
-      call $assembly/core/runner/Bar#get:ctrls
+      call $assembly/core/runner/Bar#get:tracks
       local.get $x|117
       call $~lib/staticarray/StaticArray<assembly/core/runner/Ctrl>#__get
       local.set $ctrl
@@ -11358,7 +11358,7 @@
           i32.lt_u
           if
            local.get $bar|130
-           call $assembly/core/runner/Bar#get:ctrls
+           call $assembly/core/runner/Bar#get:tracks
            local.get $y|133
            call $~lib/staticarray/StaticArray<assembly/core/runner/Ctrl>#__get
            local.set $other|132
@@ -21275,7 +21275,7 @@
   local.get $bar
   if
    local.get $bar
-   call $assembly/core/runner/Bar#get:ctrls
+   call $assembly/core/runner/Bar#get:tracks
    i32.const 0
    local.get $ctrl
    call $~lib/staticarray/StaticArray<assembly/core/runner/Ctrl>#__set

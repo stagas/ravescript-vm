@@ -91,7 +91,10 @@ export class Backend {
     }
   }
   get bar() {
-    return this.vmRunner!.barViews[this.clock.internalTime | 0]
+    const vmRunner = this.vmRunner!
+    const barPtr = vmRunner.bars[this.clock.internalTime | 0]
+    const bar = vmRunner.vmBarsByPtr.get(barPtr)
+    return bar
   }
   start() {
     if (this.process === this.doIdle) {
@@ -353,8 +356,8 @@ export async function test_backend() {
       await backend.putPayloads({ [ctrl.ptr]: ctrl.payload! })
 
       const bar = runner.vmBars[0]
-      bar.addCtrl(ctrl)
-      runner.setBar(0, bar)
+      bar.addTrack(ctrl)
+      // runner.setBar(0, bar)
 
       bar.reset()
       backend.fill(0, 2048)

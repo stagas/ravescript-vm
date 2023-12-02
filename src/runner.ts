@@ -27,24 +27,25 @@ export class VmCtrl extends VmObject {
     this.ctrlView = CtrlView(vm.view.buffer, this.ptr)
     this.signalView = SignalView(vm.view.buffer, this.ctrlView.signal)
   }
-  purge() {
-    const { payload } = of(this)
-    this.runner.vmCtrlsByInstanceId.delete(payload.instanceId, this)
-    // if no more ctrls are using this instance, delete it entirely
-    if (!this.runner.vmCtrlsByInstanceId.get(payload.instanceId)?.size) {
-      this.trash.push(payload.instanceId)
-      if (this.trash.length > 64) {
-        const id = this.trash.shift()! // FIFO
-        this.vm.ctrlInstances.delete(id)
-        this.runner.frontend?.purge(id)
-      }
-    }
-    this.instance = this.payload = void 0
-  }
+  // purge() {
+  //   const { payload } = of(this)
+  //   this.runner.vmCtrlsByInstanceId.delete(payload.instanceId, this)
+  //   // if no more ctrls are using this instance, delete it entirely
+  //   if (!this.runner.vmCtrlsByInstanceId.get(payload.instanceId)?.size) {
+  //     console.log('TRASH', payload.instanceId)
+  //     this.trash.push(payload.instanceId)
+  //     if (this.trash.length > 64) {
+  //       const id = this.trash.shift()! // FIFO
+  //       this.vm.ctrlInstances.delete(id)
+  //       this.runner.frontend?.purge(id)
+  //     }
+  //   }
+  //   this.instance = this.payload = void 0
+  // }
   async setPayload(payload: Build.Payload) {
     const { ctrlView, signalView } = of(this)
 
-    if (this.payload) this.purge()
+    // if (this.payload) this.purge()
 
     this.payload = payload
 
@@ -58,24 +59,33 @@ export class VmCtrl extends VmObject {
     ctrlView.liveLiterals = payload.liveLiterals.byteOffset
     ctrlView.ownLiterals = payload.ownLiterals.byteOffset
 
-    let trashIndex = -1
-    const isNew = !this.vm.ctrlInstances.has(payload.instanceId)
-    const isTrashed = !isNew && ((trashIndex = this.trash.indexOf(payload.instanceId)) >= 0)
-    if (isNew || isTrashed) {
-      // if the payload is in trash, we purge immediately and remove it
-      if (trashIndex >= 0) {
-        this.vm.ctrlInstances.delete(payload.instanceId)
-        this.runner.frontend?.purge(payload.instanceId)
-        this.trash.splice(trashIndex, 1)
-      }
-      this.instance = await instantiate<Module.Instance>(payload.binary, this.vm.env)
-      this.vm.ctrlInstances.set(payload.instanceId, this.instance)
-    }
-    else {
-      this.instance = this.vm.ctrlInstances.get(payload.instanceId)
+    let instance = this.vm.ctrlInstances.get(payload.instanceId)
+
+    if (!instance) {
+      instance = await instantiate<Module.Instance>(payload.binary, this.vm.env)
+      this.vm.ctrlInstances.set(payload.instanceId, instance)
     }
 
-    this.runner.vmCtrlsByInstanceId.add(payload.instanceId, this)
+    this.instance = instance
+
+    // let trashIndex = -1
+    // const isNew = !this.vm.ctrlInstances.has(payload.instanceId)
+    // const isTrashed = !isNew && ((trashIndex = this.trash.indexOf(payload.instanceId)) >= 0)
+    // if (isNew || isTrashed) {
+    //   // if the payload is in trash, we purge immediately and remove it
+    //   if (trashIndex >= 0) {
+    //     this.vm.ctrlInstances.delete(payload.instanceId)
+    //     this.runner.frontend?.purge(payload.instanceId)
+    //     this.trash.splice(trashIndex, 1)
+    //   }
+    //   this.instance = await instantiate<Module.Instance>(payload.binary, this.vm.env)
+    //   this.vm.ctrlInstances.set(payload.instanceId, this.instance)
+    // }
+    // else {
+    //   this.instance = this.vm.ctrlInstances.get(payload.instanceId)
+    // }
+
+    // this.runner.vmCtrlsByInstanceId.add(payload.instanceId, this)
   }
   reset() {
     const { instance, payload } = of(this)
@@ -95,19 +105,23 @@ export class VmCtrl extends VmObject {
 }
 
 export class VmBar extends VmObject {
+  hashId?: string
+
   bar: BarView
-  barCtrls: Uint32Array
-  ctrls: FixedArray<VmCtrl> = new FixedArray(16 * 4)
+  barTracks: Uint32Array
+
   main?: VmCtrl
+  tracks: FixedArray<VmCtrl> = new FixedArray(16 * 4)
 
   constructor(public vm: Vm, public ptr: number) {
     super(vm, ptr)
 
     this.bar = BarView(vm.view.buffer, this.ptr)
-    this.barCtrls = vm.view.getU32(this.bar.ctrls, 16 << 2)
+    this.barTracks = vm.view.getU32(
+      this.bar.tracks, 16 << 2)
   }
   reset() {
-    for (const ctrl of this.ctrls) {
+    for (const ctrl of this.tracks) {
       ctrl.reset()
     }
     this.main?.reset()
@@ -115,29 +129,29 @@ export class VmBar extends VmObject {
   clear() {
     this.bar.size = 0
     this.bar.main = 0
-    this.ctrls.clear()
+    this.tracks.clear()
   }
   setMain(main: VmCtrl) {
     this.main = main
     this.bar.main = main.ptr
   }
-  addCtrl(ctrl: VmCtrl) {
-    this.barCtrls[this.ctrls.size] = ctrl.ptr
-    this.ctrls.push(ctrl)
-    this.bar.size = this.ctrls.size
+  addTrack(track: VmCtrl) {
+    this.barTracks[this.tracks.size] = track.ptr
+    this.tracks.push(track)
+    this.bar.size = this.tracks.size
   }
 }
 
 export class VmRunner extends VmObject {
   bars: Uint32Array
-  ctrls: Uint32Array
-
   vmBars: VmBar[] = []
+  vmBarsByPtr = new Map<number, VmBar>()
+  // vmBarsByHashId = new Map<string, VmBar>()
+
+  ctrls: Uint32Array
   vmCtrls: VmCtrl[] = []
   vmCtrlsByPtr = new Map<number, VmCtrl>()
   vmCtrlsByInstanceId = new MapSet<number, VmCtrl>()
-
-  barViews: VmBar[] = []
 
   frontend?: Frontend
 
@@ -145,7 +159,6 @@ export class VmRunner extends VmObject {
     super(vm, ptr)
 
     const barsPtr = this.vm.exports.runner_get_bars(ptr)
-
     this.bars = this.vm.view.getU32(barsPtr, MAX_BARS)
 
     const barInstancesPtr: number = this.vm.exports.runner_get_barInstances(ptr)
@@ -155,6 +168,7 @@ export class VmRunner extends VmObject {
       const ptr = barInstancesView[i]
       const bar = new VmBar(this.vm, ptr)
       this.vmBars.push(bar)
+      this.vmBarsByPtr.set(ptr, bar)
     }
 
     const ctrlsPtr = this.vm.exports.runner_get_ctrls(ptr)
@@ -169,43 +183,46 @@ export class VmRunner extends VmObject {
       this.vmCtrlsByPtr.set(ptr, ctrl)
     }
   }
-  hasPayload(ptr: number) {
-    const payloads = this.getPayloads()
-    return Boolean(payloads[ptr])
+  // hasPayload(instanceId: number) {
+  //   const payloads = this.getPayloads()
+  //   return Boolean(payloads[instanceId])
+  // }
+  getBars() {
+    return new Set([...new Set(this.bars)]
+      .map(ptr => this.vmBarsByPtr.get(ptr))
+      .filter(Boolean))
+    // const payloads: Record<number, Build.Payload> = {}
+    // for (const barPtr of new Set(this.bars)) {
+    //   const bar = this.vmBarsByPtr.get(barPtr)
+    //   if (!bar) continue
+    //   if (bar.main?.payload) {
+    //     payloads[bar.main.payload.instanceId] = bar.main.payload
+    //   }
+    //   for (const track of bar.tracks) {
+    //     if (track.payload) {
+    //       payloads[track.payload.instanceId] = track.payload
+    //     }
+    //   }
+    // }
+    // return payloads
   }
-  getPayloads() {
-    const payloads: Record<number, Build.Payload> = {}
-    for (const bar of this.barViews) {
-      if (!bar) continue
-      if (bar.main?.payload) {
-        payloads[bar.main.ptr] = bar.main.payload
-      }
-      for (const ctrl of bar.ctrls) {
-        if (ctrl.payload) {
-          payloads[ctrl.ptr] = ctrl.payload
-        }
-      }
-    }
-    return payloads
-  }
-  setBarView(barIndex: number, bar: VmBar) {
-    this.barViews[barIndex] = bar
-  }
-  setBar(barIndex: number, bar: VmBar) {
-    this.bars[barIndex] = bar.ptr
-    this.barViews[barIndex] = bar
-    for (let i = 0; i < this.bars.length; i++) {
-      if (this.bars[i] === 0) {
-        this.bars[i] = bar.ptr
-        this.barViews[i] = bar
-      }
-    }
-  }
+  // setBarView(barIndex: number, bar: VmBar) {
+  //   this.vmBarViews[barIndex] = bar
+  // }
+  // setBar(barIndex: number, bar: VmBar) {
+  //   this.bars[barIndex] = bar.ptr
+  //   // this.barViews[barIndex] = bar
+  //   // for (let i = 0; i < this.bars.length; i++) {
+  //   //   if (this.bars[i] === 0) {
+  //   //     this.bars[i] = bar.ptr
+  //   //     this.barViews[i] = bar
+  //   //   }
+  //   // }
+  // }
   clearLastBar() {
     this.vm.exports.runner_clearLastBar(this.ptr)
   }
   process(begin: number, end: number, signal: Signal) {
-    // console.log('PROCESS', this.ptr, signal.ptr, begin ,end, this)
     this.vm.exports.runner_process(
       this.ptr,
       begin,

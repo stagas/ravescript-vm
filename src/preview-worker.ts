@@ -75,7 +75,7 @@ export class PreviewWorker {
     for (const cid of trackCids) {
       const ctrl = runner.vmCtrls[i++]
       await ctrl.setPayload(this.builds.get(cid)!.payload)
-      bar.addCtrl(ctrl)
+      bar.addTrack(ctrl)
     }
 
     runner.setBar(0, bar)

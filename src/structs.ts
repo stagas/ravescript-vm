@@ -11,7 +11,7 @@ export type BarView = typeof BarView.type
 export const BarView = defineStruct({
   size: 'u32',
   main: 'usize',
-  ctrls: 'usize',
+  tracks: 'usize',
 })
 
 export type CtrlView = typeof CtrlView.type

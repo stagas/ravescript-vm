@@ -26,7 +26,7 @@ export class Beats {
 export class Bar {
   size: u32 = 0
   main: usize = 0
-  ctrls: StaticArray<Ctrl> = new StaticArray<Ctrl>(16)
+  tracks: StaticArray<Ctrl> = new StaticArray<Ctrl>(16)
   // events: StaticArray<Beats> = new StaticArray<Beats>(16)
 }
 
@@ -56,7 +56,7 @@ function exists(ctrl: Ctrl, bar: Bar): bool {
   let found: bool = false
   let other: Ctrl
   for (let y: u32 = 0; y < bar.size; y++) {
-    other = bar.ctrls[y]
+    other = bar.tracks[y]
     if (ctrl.id === other.id) {
       found = true
       break
@@ -145,7 +145,7 @@ export class Runner {
     let ctrl: Ctrl
     for (let x: u32 = 0; x < curr.size; x++) {
       this.setTimes(0, 0)
-      ctrl = curr.ctrls[x]
+      ctrl = curr.tracks[x]
       this.register(ctrl)
       applyLiterals(ctrl)
       call_indirect<void>(ctrl.run, begin, end)
@@ -193,7 +193,7 @@ export class Runner {
           // logi(111)
           for (let x: u32 = 0; x < curr.size; x++) {
             if (x > 0) this.setTimes(actualTime, barTime)
-            ctrl = curr.ctrls[x]
+            ctrl = curr.tracks[x]
 
             // this.register(ctrl)
 
@@ -208,7 +208,7 @@ export class Runner {
           // logi(112)
           for (let x: u32 = 0; x < curr.size; x++) {
             if (x > 0) this.setTimes(actualTime, barTime)
-            ctrl = curr.ctrls[x]
+            ctrl = curr.tracks[x]
 
             // this.register(ctrl)
 
@@ -230,7 +230,7 @@ export class Runner {
           // logi(122)
           for (let x: u32 = 0; x < curr.size; x++) {
             if (x > 0) this.setTimes(actualTime, barTime)
-            ctrl = curr.ctrls[x]
+            ctrl = curr.tracks[x]
             this.register(ctrl)
             mix(last, ctrl, begin, end)
             addSignal(begin, end, ctrl.signal, out)
@@ -245,7 +245,7 @@ export class Runner {
           // logi(123)
           for (let x: u32 = 0; x < curr.size; x++) {
             if (x > 0) this.setTimes(actualTime, barTime)
-            ctrl = curr.ctrls[x]
+            ctrl = curr.tracks[x]
             this.register(ctrl)
             mix(last, ctrl, begin, end)
             if (!next || !exists(ctrl, next)) {
@@ -266,7 +266,7 @@ export class Runner {
         // logi(811)
         for (let x: u32 = 0; x < curr.size; x++) {
           if (x > 0) this.setTimes(actualTime, barTime)
-          ctrl = curr.ctrls[x]
+          ctrl = curr.tracks[x]
           this.register(ctrl)
           resetCtrlInstance(ctrl.id)
           applyLiterals(ctrl)
@@ -284,7 +284,7 @@ export class Runner {
         // logi(812)
         for (let x: u32 = 0; x < curr.size; x++) {
           if (x > 0) this.setTimes(actualTime, barTime)
-          ctrl = curr.ctrls[x]
+          ctrl = curr.tracks[x]
           this.register(ctrl)
           resetCtrlInstance(ctrl.id)
           applyLiterals(ctrl)

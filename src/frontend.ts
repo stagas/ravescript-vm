@@ -270,7 +270,6 @@ export class Frontend {
     let shared = this.buildsShared.get(info.instanceId)
 
     if (shared) {
-      console.log('HAVE IT')
       const ownLiterals = shared.payload.ownLiterals
 
       shared.info.gens.forEach((p, i) => {
@@ -417,6 +416,7 @@ export class Frontend {
       }
       return
     }
+    console.log('PURGE', instanceId)
 
     const shared = this.buildsShared.get(instanceId)
     if (!shared) {
