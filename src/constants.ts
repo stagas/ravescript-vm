@@ -14,3 +14,5 @@ export const MAX_BAR_INSTANCES = MAX
 export const MAX_BARS = MAX
 export const MAX_CTRL_INSTANCES = MAX
 export const MAX_CTRLS = MAX
+
+export const PREVIEW_MEM_PADDING = 1024 * 1024 * 20

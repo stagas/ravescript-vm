@@ -4,6 +4,7 @@ import { fetchPffftBinary } from '../vendor/pffft/pffft.ts'
 import { Backend, BackendInit } from './backend.ts'
 import { Build, Frontend } from './frontend.ts'
 import { Vm, VmInit, createVmMemory, fetchVmBinary, initVm } from './vm.ts'
+import { Engine } from './engine.ts'
 
 // import { DEBUG } from '../../web/constants'
 const DEBUG = true
@@ -62,17 +63,14 @@ export class RaveNode extends AudioWorkletNode {
     const frontend = new Frontend(
       'live',
       vm,
-      0,
-      0,
-      null,
-      null,
-      true,
       context.sampleRate
     )
+    frontend.engine = new Engine(vm, 0, 0, context.sampleRate)
+    frontend.engine.init()
+    frontend.engine.vmRunner = frontend.engine.createRunner()
     const processorOptions: BackendInit = this.processorOptions = {
       vmInit,
       buffers: frontend.buffers,
-      runner: true
     }
     const node = new this(context, {
       fetchSample: options.fetchSample,

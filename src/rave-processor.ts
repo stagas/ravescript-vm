@@ -2,8 +2,7 @@ import { Agent, Bob } from 'alice-bob'
 import { Backend, BackendInit } from './backend.ts'
 import { RaveNode } from './rave-node.ts'
 
-export interface RaveProcessorOptions extends BackendInit {
-}
+export type RaveProcessorOptions = BackendInit
 
 export class RaveProcessor extends AudioWorkletProcessor {
   backend?: Backend
@@ -16,6 +15,7 @@ export class RaveProcessor extends AudioWorkletProcessor {
 
   async init(init: BackendInit) {
     this.backend = await Backend.instantiate(init)
+    this.backend.engine.vmRunner = this.backend.engine.createRunner()
 
     const [worklet, node] = new Bob<Backend, RaveNode>(
       data => this.port.postMessage(data),

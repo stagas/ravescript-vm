@@ -4,6 +4,7 @@ import { Build, type Block } from './frontend.ts'
 import { SignalView } from './structs.ts'
 import { Ring, toRing } from './util.ts'
 import { Vm, VmInit, initVm } from './vm.ts'
+import { Engine } from './engine.ts'
 
 export interface BarBuildPtrs {
   bar: number
@@ -11,16 +12,17 @@ export interface BarBuildPtrs {
 }
 
 export interface Buffers {
-  signal: Signal
+  core: number
   engine: number
   clock: number
+  signal: Signal
+  zero: Block
 }
 
-export interface BackendInit {
-  vmInit: VmInit
-  buffers: Buffers
-  runner: boolean
+export type BackendInit = {
   vm?: Vm
+  vmInit?: VmInit
+  buffers?: Buffers
 }
 
 export interface Signal<T = Block> {
@@ -38,15 +40,11 @@ export function resetCtrlById(id: number) {
 export class Backend {
   static async instantiate(init: BackendInit) {
     const vm = init.vm ?? await initVm({
-      ...init.vmInit,
+      ...init.vmInit!,
       resetCtrlById,
     })
 
-    return new this(
-      vm,
-      init.buffers,
-      init.runner,
-    )
+    return new this(vm, init)
   }
 
   clock: Clock
@@ -62,16 +60,14 @@ export class Backend {
   L!: Float32Array
   R!: Float32Array
 
-  vmRunner?: VmRunner
+  engine: Engine
 
-  constructor(
-    public vm: Vm,
-    public buffers: Buffers,
-    runner: boolean | undefined,
-  ) {
-    this.clock = Clock(vm.view.buffer, buffers.clock)
+  constructor(public vm: Vm, public init: BackendInit) {
+    this.engine = new Engine(vm, init.buffers!.engine)
 
-    this.signal = buffers.signal
+    this.clock = Clock(vm.view.buffer, init.buffers!.clock)
+
+    this.signal = init.buffers!.signal
 
     this.signalRing = {
       L: toRing(this.signal.L!),
@@ -80,18 +76,12 @@ export class Backend {
     }
 
     this.signalView = SignalView(this.vm.view.buffer)
-
-    if (runner) {
-      this.vmRunner = new VmRunner(
-        this.vm,
-        this.vm.exports.engine_get_runner(
-          this.buffers.engine
-        )
-      )
-    }
+  }
+  get vmRunner() {
+    return this.engine!.vmRunner!
   }
   get bar() {
-    const vmRunner = this.vmRunner!
+    const vmRunner = this.vmRunner
     const barPtr = vmRunner.bars[this.clock.internalTime | 0]
     const bar = vmRunner.vmBarsByPtr.get(barPtr)
     return bar
@@ -294,14 +284,8 @@ export class Backend {
   doIdle: Process = () => { }
   process: Process = this.doIdle
   async fill(barIndex: number, length: number) {
-    // const bar = this.bars[barIndex]
-    // if (!bar) return
-
-    // bar.reset()
     this.resetClock()
     this.clearSignal()
-
-    this.vmRunner!.clearLastBar()
     this.vmRunner!.fill(
       barIndex,
       0,
@@ -329,21 +313,19 @@ export async function test_backend() {
       vmBinary,
       pffftBinary
     })
-    const frontend = new Frontend('test', vm, 0, 0, null, null, true, 44100)
+    const frontend = new Frontend('test', vm)
+    // frontend.debug = true
+    frontend.engine = new Engine(vm)
+    frontend.engine.init()
+    frontend.engine.vmRunner = frontend.engine.createRunner()
 
     const processorOptions: BackendInit = {
       vm,
-      vmInit: {
-        memory: vmMemory,
-        vmBinary,
-        pffftBinary,
-      },
-      buffers: frontend.buffers,
-      runner: false
+      buffers: frontend.engine.buffers,
     }
 
     const backend = await Backend.instantiate(processorOptions)
-    backend.vmRunner = frontend.vmRunner!
+    backend.engine = frontend.engine!
 
     return { frontend, backend }
   }
@@ -357,7 +339,7 @@ export async function test_backend() {
       const source = { code: `42 LR+=` }
       const build = frontend.make(source)
 
-      const runner = frontend.vmRunner!
+      const runner = frontend.engine!.vmRunner!
       const ctrl = runner.vmCtrls[0]
       await ctrl.setPayload(build.payload)
 
@@ -384,15 +366,12 @@ export async function test_backend() {
         const source = { code: `42 LR+=` }
         const build = frontend.make(source)
 
-        const runner = frontend.vmRunner!
+        const runner = frontend.engine!.vmRunner!
         const ctrl = runner.vmCtrls[0]
         await ctrl.setPayload(build.payload)
 
-        // await backend.putPayloads({ [ctrl.ptr]: ctrl.payload! })
-
         const bar = runner.vmBars[0]
         bar.addTrack(ctrl)
-        // runner.setBar(0, bar)
 
         bar.reset()
         runner.bars[0] = bar.ptr
@@ -409,16 +388,13 @@ export async function test_backend() {
           build.info.writeLiterals(build.payload.ownLiterals)
         }
 
-        const runner = frontend.vmRunner!
+        const runner = frontend.engine!.vmRunner!
         const ctrl = runner.vmCtrls[0]
         await ctrl.setPayload(build.payload)
-
-        // await backend.putPayloads({ [ctrl.ptr]: ctrl.payload! })
 
         const bar = runner.vmBars[0]
         bar.clear()
         bar.addTrack(ctrl)
-        // runner.setBar(0, bar)
 
         bar.reset()
         runner.bars[0] = bar.ptr

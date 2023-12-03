@@ -1,9 +1,10 @@
 import { Agent, Alice } from 'alice-bob'
 import { Deferred } from 'utils'
-import { Frontend } from './frontend.ts'
 import { PreviewWorker } from './preview-worker.ts'
 import { RaveNode } from './rave-node.ts'
-import { Vm, createVmMemory, initVm } from './vm.ts'
+import { VmInit, createVmMemory, initVm } from './vm.ts'
+import { Engine } from './engine.ts'
+import { Frontend } from './frontend.ts'
 
 export const previews: Map<string, Deferred<[Float32Array, Float32Array]>> = new Map()
 const previewServices: Map<number, Deferred<PreviewService>> = new Map()
@@ -18,31 +19,26 @@ export async function createPreviewService(length: number, rave: RaveNode) {
   deferred = Deferred()
   previewServices.set(length, deferred)
 
-  const vmInit = {
-    ...RaveNode.processorOptions.vmInit,
-    vmMemory: createVmMemory()
+  const vmInit: VmInit = {
+    ...RaveNode.processorOptions.vmInit!,
+    // pffftRunners: {
+    //   timeFFT: rave.frontend.vm.timeFFT!.runner,
+    //   freqFFT: rave.frontend.vm.freqFFT!.runner,
+    // },
+    memory: createVmMemory()
   }
-  // const vm = await initVm(vmInit)
-  // const frontend = new Frontend('preview', vm, 0, 0, null, null)
 
-  // frontend.clock.endTime = 1
+  const vm = await initVm(vmInit)
+  const frontend = new Frontend('preview-service', vm)
+  frontend.engine = new Engine(vm)
+  frontend.engine.init()
+  frontend.engine.vmRunner = frontend.engine.createRunner()
 
-  // const backend = new Backend(vm, frontend.buffers, true)
-
-  const service = new PreviewService() //, backend)
+  const service = new PreviewService(frontend)
 
   await service.worker.init({
-    vmInit: {
-      ...vmInit,
-      pffftRunners: {
-        timeFFT: rave.frontend.vm.timeFFT!.runner,
-        freqFFT: rave.frontend.vm.freqFFT!.runner,
-      }
-    },
-    // buffers: frontend.buffers,
-    // signal: frontend.signal!,
-    // zero: frontend.zero!,
-    runner: true,
+    vmInit,
+    buffers: frontend.buffers,
     length,
   })
 
@@ -55,7 +51,7 @@ export class PreviewService {
   worker: Agent<PreviewWorker, PreviewService>
   // trash: Build.Sound[] = []
 
-  constructor() {
+  constructor(public frontend: Frontend) {
     const url = new URL('./preview-worker.js', import.meta.url).href
     const worker = new Worker(url)
 

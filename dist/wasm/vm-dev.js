@@ -28,41 +28,6 @@ export async function instantiate(module, imports = {}) {
   const { exports } = await WebAssembly.instantiate(module, adaptedImports);
   const memory = exports.memory || imports.env.memory;
   const adaptedExports = Object.setPrototypeOf({
-    offset: {
-      // assembly/asc-runtime/memory-allocator/offset: usize
-      valueOf() { return this.value; },
-      get value() {
-        return exports.offset.value >>> 0;
-      },
-      set value(value) {
-        exports.offset.value = value;
-      }
-    },
-    __alloc(size) {
-      // assembly/asc-runtime/memory-allocator/__alloc(usize) => usize
-      return exports.__alloc(size) >>> 0;
-    },
-    __realloc(ptr, size) {
-      // assembly/asc-runtime/memory-allocator/__realloc(usize, usize) => usize
-      return exports.__realloc(ptr, size) >>> 0;
-    },
-    __new(size, id) {
-      // assembly/asc-runtime/memory-allocator/__new(usize, u32) => usize
-      return exports.__new(size, id) >>> 0;
-    },
-    __renew(oldPtr, size) {
-      // assembly/asc-runtime/memory-allocator/__renew(usize, usize) => usize
-      return exports.__renew(oldPtr, size) >>> 0;
-    },
-    __link(parentPtr, childPtr, expectMultiple) {
-      // assembly/asc-runtime/memory-allocator/__link(usize, usize, bool) => void
-      expectMultiple = expectMultiple ? 1 : 0;
-      exports.__link(parentPtr, childPtr, expectMultiple);
-    },
-    __pin(ptr) {
-      // assembly/asc-runtime/memory-allocator/__pin(usize) => usize
-      return exports.__pin(ptr) >>> 0;
-    },
     preventTreeShaking(gen) {
       // assembly/index/preventTreeShaking(assembly/gen/gen/Gen) => void
       gen = __lowerInternref(gen) || __notnull();

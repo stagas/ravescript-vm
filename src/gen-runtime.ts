@@ -28,7 +28,7 @@ export class GenRuntime {
     const { kind } = this
 
     // console.log('create', this.kind, gensFree?.[this.kind]?.length, gensUsed?.[this.kind]?.length)
-    this.ptr = vm.instance[`gen_${kind}_constructor`](0, engine)
+    this.ptr = vm.instance[`gen_${kind}_constructor`](0, engine!.ptr)
     this.getFloats()
     // this.saveInitial()
 

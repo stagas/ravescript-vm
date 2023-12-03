@@ -1,14 +1,12 @@
-import { Signal, type Buffers } from './backend.ts'
-import { Clock } from './clock.ts'
+import { Signal } from './backend.ts'
 import { BLOCK_SIZE, SAMPLE_RATE } from './constants.ts'
+import { Engine } from './engine.ts'
 import { envTypes } from './env-types.ts'
 import { GenInfo, GenRuntime } from './gen-runtime.ts'
 import { analyse } from './lang/analyser.ts'
 import { Compile, compile } from './lang/compiler.ts'
 import { Emitter } from './lang/emitter.ts'
 import { AstNode, Source, Token, parse, produce, tokenize } from './lang/index.ts'
-import { VmRunner } from './runner.ts'
-import { SignalView } from './structs.ts'
 import { Vm } from './vm.ts'
 
 export type Block = Float32Array
@@ -73,11 +71,8 @@ export class Frontend {
   debug = false
 
   state: FrontendState = FrontendState.Idle
-  clock: Clock
-  buffers: Buffers
-  blocks: Block[] = []
-  blocksU32: BlockU32[] = []
-  // signal: Signal
+
+  engine?: Engine
 
   initials: Record<string, Float32Array> = {}
   gensUsed: Record<string, GenRuntime[]> = {}
@@ -85,92 +80,26 @@ export class Frontend {
 
   buildsShared: Map<number, Build.Shared> = new Map()
 
-  // main: Build.Sound | null
-
-  // zero: Block
-
-  vmRunner?: VmRunner
+  get vmRunner() {
+    return this.engine!.vmRunner!
+  }
+  get clock() {
+    return this.engine!.clock!
+  }
+  get buffers() {
+    return this.engine!.buffers!
+  }
 
   constructor(
     public name = 'default',
     public vm: Vm,
-    public engine: number,
-    public core: number,
-    public signal: Signal | null,
-    public zero: Block | null,
-    public runner = true,
     public sampleRate = SAMPLE_RATE,
     public blockSize = BLOCK_SIZE,
-  ) {
-    if (engine) {
-      this.engine = engine
-    }
-    else {
-      this.core = core || vm.exports.engine_Core_constructor(0, sampleRate)
-      this.engine = vm.exports.engine_constructor(0, sampleRate, this.core)
-    }
-
-    this.clock = Clock(
-      vm.view.buffer,
-      vm.exports.engine_get_clock(this.engine)
-    )
-    this.clock.ringPos = 0
-
-    this.zero = zero ?? this.getBlock()
-
-    const s: Signal = this.signal = signal ?? {
-      ptr: vm.exports.engine_get_signal(this.engine),
-      L: this.getBlock(),
-      R: this.getBlock(),
-      LR: this.getBlock(),
-    }
-    const signalView = SignalView(
-      vm.view.buffer,
-      s.ptr
-    )
-    signalView.L = s.L!.byteOffset
-    signalView.R = s.R!.byteOffset
-    signalView.LR = s.LR!.byteOffset
-
-    this.buffers = {
-      clock: this.clock.byteOffset,
-      engine: this.engine,
-      signal: this.signal
-    }
-
-    if (runner) {
-      this.vmRunner = new VmRunner(
-        this.vm,
-        this.vm.exports.engine_get_runner(
-          this.buffers.engine
-        )
-      )
-    }
-  }
-  getBlock = (length = this.blockSize): Block => {
-    let block = this.blocks.pop()?.fill(0)
-    if (!block) {
-      block = this.vm.view.getF32(
-        this.vm.exports.engine_createBlock(this.engine, length),
-        length
-      )
-    }
-    return block
-  }
-  getBlockU32 = (length = this.blockSize): BlockU32 => {
-    let block = this.blocksU32.pop()?.fill(0)
-    if (!block) {
-      block = this.vm.view.getU32(
-        this.vm.exports.engine_createBlock(this.engine, length),
-        length
-      )
-    }
-    return block
-  }
+  ) {}
   getMemories(info: Emitter.Info): Build.Memories {
     const audios = Array.from(info.audios,
       (_, index) =>
-        info.overrideAudios.get(index) ?? this.getBlock()
+        info.overrideAudios.get(index) ?? this.engine!.getBlock()
     )
 
     const gens = Array.from(info.gens,
@@ -187,45 +116,35 @@ export class Frontend {
       audio.floats = audios[audio.ptr]
     })
 
+    const engine = this.engine!
+
     const memories: Build.Memories = {
       audios,
       gens,
-      rms: this.getBlock(),
-      lists: this.getBlock(),
-      scalarExports: this.getBlock(),
-      scalars: this.getBlock(),
-      literals: this.getBlock(),
-      events: this.getBlock(), // TODO: temporary
-      pointers: this.getBlockU32(),
+      rms: engine.getBlock(),
+      lists: engine.getBlock(),
+      scalarExports: engine.getBlock(),
+      scalars: engine.getBlock(),
+      literals: engine.getBlock(),
+      events: engine.getBlock(), // TODO: temporary
+      pointers: engine.getBlockU32(),
     }
 
-    memories.pointers.fill(this.zero!.byteOffset)
+    memories.pointers.fill(engine.zero!.byteOffset)
 
     return memories
   }
-  freeBlock = (block: Block) => {
-    if (block === this.signal!.L
-      || block === this.signal!.R
-      || block === this.signal!.LR
-    ) return
-
-    if (this.blocks.includes(block)) return
-    this.blocks.unshift(block)
-  }
-  freeBlockU32 = (block: BlockU32) => {
-    if (this.blocksU32.includes(block)) return
-    this.blocksU32.unshift(block)
-  }
   free(memories: Partial<Build.Memories>) {
-    memories.audios?.forEach(this.freeBlock)
+    const engine = this.engine!
+    memories.audios?.forEach(engine.freeBlock)
     memories.gens?.forEach(this.freeGen)
     for (const [key, mem] of Object.entries(memories)) {
       if (key !== 'audios' && key !== 'gens') {
         if (mem instanceof Float32Array) {
-          this.freeBlock(mem as Block)
+          engine.freeBlock(mem as Block)
         }
         else if (mem instanceof Uint32Array) {
-          this.freeBlockU32(mem as BlockU32)
+          engine.freeBlockU32(mem as BlockU32)
         }
         else {
           console.error(key, mem)
@@ -268,6 +187,8 @@ export class Frontend {
   }
   compile(info: Emitter.Info) {
     // console.warn('compile')
+    const engine = this.engine!
+
     let shared = this.buildsShared.get(info.instanceId)
 
     if (shared) {
@@ -321,8 +242,8 @@ export class Frontend {
     const memories = this.getMemories(info)
 
     const ptrs: Compile.Ptrs = {
-      engine: this.engine,
-      clock: this.clock.byteOffset,
+      engine: engine.ptr,
+      clock: engine.clock!.byteOffset,
       audios: memories.audios.map((b) => b.byteOffset),
       gens: memories.gens.map((g) => g.ptr),
       literals: memories.literals.byteOffset,
@@ -357,7 +278,7 @@ export class Frontend {
       LR: info.LR !== 2 ? memories.audios[info.LR] : null,
     }
 
-    const ownLiterals = this.getBlock()
+    const ownLiterals = engine.getBlock()
 
     shared = {
       info,
@@ -397,9 +318,10 @@ export class Frontend {
     return build
   }
   setupMain(info: Emitter.Info) {
-    info.overrideAudios.set(0, this.signal!.L!)
-    info.overrideAudios.set(1, this.signal!.R!)
-    info.overrideAudios.set(2, this.signal!.LR!)
+    const signal = this.engine!.signal!
+    info.overrideAudios.set(0, signal.L!)
+    info.overrideAudios.set(1, signal.R!)
+    info.overrideAudios.set(2, signal.LR!)
   }
   makeFromTokens(tokens: Token[], isMain = false, idModifier?: string) {
     const info = this.produce(tokens, idModifier)

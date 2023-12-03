@@ -61,6 +61,7 @@ export class VmCtrl extends VmObject {
     })
 
     // TODO: apply initial literals before this update/reset?
+    payload.liveLiterals.set(payload.ownLiterals)
     instance.exports.update_gens()
     instance.exports.reset_gens()
 
@@ -97,10 +98,16 @@ export class VmBar extends VmObject {
     this.tracks.clear()
   }
   setMain(main: VmCtrl) {
+    if (!main.ptr) {
+      throw new Error('setMain failed: main.ptr is null(0)')
+    }
     this.main = main
     this.bar.main = main.ptr
   }
   addTrack(track: VmCtrl) {
+    if (!track.ptr) {
+      throw new Error('addTrack failed: track.ptr is null(0)')
+    }
     this.barTracks[this.tracks.size] = track.ptr
     this.tracks.push(track)
     this.bar.size = this.tracks.size
