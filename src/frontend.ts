@@ -77,7 +77,7 @@ export class Frontend {
   buffers: Buffers
   blocks: Block[] = []
   blocksU32: BlockU32[] = []
-  signal: Signal
+  // signal: Signal
 
   initials: Record<string, Float32Array> = {}
   gensUsed: Record<string, GenRuntime[]> = {}
@@ -87,7 +87,7 @@ export class Frontend {
 
   // main: Build.Sound | null
 
-  zero: Block
+  // zero: Block
 
   vmRunner?: VmRunner
 
@@ -96,6 +96,8 @@ export class Frontend {
     public vm: Vm,
     public engine: number,
     public core: number,
+    public signal: Signal | null,
+    public zero: Block | null,
     public runner = true,
     public sampleRate = SAMPLE_RATE,
     public blockSize = BLOCK_SIZE,
@@ -114,21 +116,21 @@ export class Frontend {
     )
     this.clock.ringPos = 0
 
-    this.zero = this.getBlock()
+    this.zero = zero ?? this.getBlock()
 
-    const s = this.signal = {
+    const s: Signal = this.signal = signal ?? {
       ptr: vm.exports.engine_get_signal(this.engine),
       L: this.getBlock(),
       R: this.getBlock(),
       LR: this.getBlock(),
     }
-    const signal = SignalView(
+    const signalView = SignalView(
       vm.view.buffer,
       s.ptr
     )
-    signal.L = s.L.byteOffset
-    signal.R = s.R.byteOffset
-    signal.LR = s.LR.byteOffset
+    signalView.L = s.L!.byteOffset
+    signalView.R = s.R!.byteOffset
+    signalView.LR = s.LR!.byteOffset
 
     this.buffers = {
       clock: this.clock.byteOffset,
@@ -197,14 +199,14 @@ export class Frontend {
       pointers: this.getBlockU32(),
     }
 
-    memories.pointers.fill(this.zero.byteOffset)
+    memories.pointers.fill(this.zero!.byteOffset)
 
     return memories
   }
   freeBlock = (block: Block) => {
-    if (block === this.signal.L
-      || block === this.signal.R
-      || block === this.signal.LR
+    if (block === this.signal!.L
+      || block === this.signal!.R
+      || block === this.signal!.LR
     ) return
 
     if (this.blocks.includes(block)) return
@@ -395,9 +397,9 @@ export class Frontend {
     return build
   }
   setupMain(info: Emitter.Info) {
-    info.overrideAudios.set(0, this.signal.L!)
-    info.overrideAudios.set(1, this.signal.R!)
-    info.overrideAudios.set(2, this.signal.LR!)
+    info.overrideAudios.set(0, this.signal!.L!)
+    info.overrideAudios.set(1, this.signal!.R!)
+    info.overrideAudios.set(2, this.signal!.LR!)
   }
   makeFromTokens(tokens: Token[], isMain = false, idModifier?: string) {
     const info = this.produce(tokens, idModifier)

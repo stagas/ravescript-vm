@@ -64,6 +64,8 @@ export class RaveNode extends AudioWorkletNode {
       vm,
       0,
       0,
+      null,
+      null,
       true,
       context.sampleRate
     )

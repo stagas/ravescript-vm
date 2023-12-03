@@ -93,10 +93,10 @@ function mix(last: Bar, ctrl: Ctrl, begin: u32, end: u32): void {
   }
 }
 
-const MAX_BAR_INSTANCES: i32 = 4096
-const MAX_BARS: i32 = 4096
-const MAX_CTRL_INSTANCES: i32 = 4096
-const MAX_CTRLS: i32 = 4096
+const MAX_BAR_INSTANCES: i32 = 512
+const MAX_BARS: i32 = 512
+const MAX_CTRL_INSTANCES: i32 = 512
+const MAX_CTRLS: i32 = 512
 
 export class Runner {
   barInstances: StaticArray<Bar> = new StaticArray<Bar>(MAX_BAR_INSTANCES)

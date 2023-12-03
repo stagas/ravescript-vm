@@ -3,12 +3,12 @@ import { Deferred } from 'utils'
 import { Frontend } from './frontend.ts'
 import { PreviewWorker } from './preview-worker.ts'
 import { RaveNode } from './rave-node.ts'
-import { Vm } from './vm.ts'
+import { Vm, createVmMemory, initVm } from './vm.ts'
 
 export const previews: Map<string, Deferred<[Float32Array, Float32Array]>> = new Map()
 const previewServices: Map<number, Deferred<PreviewService>> = new Map()
 
-export async function createPreviewService(length: number, vm: Vm) {
+export async function createPreviewService(length: number, rave: RaveNode) {
   let deferred = previewServices.get(length)
 
   if (deferred) {
@@ -18,23 +18,30 @@ export async function createPreviewService(length: number, vm: Vm) {
   deferred = Deferred()
   previewServices.set(length, deferred)
 
-  const frontend = new Frontend('preview', vm, 0, 0)
+  const vmInit = {
+    ...RaveNode.processorOptions.vmInit,
+    vmMemory: createVmMemory()
+  }
+  // const vm = await initVm(vmInit)
+  // const frontend = new Frontend('preview', vm, 0, 0, null, null)
 
-  frontend.clock.endTime = 1
+  // frontend.clock.endTime = 1
 
   // const backend = new Backend(vm, frontend.buffers, true)
 
-  const service = new PreviewService(frontend) //, backend)
+  const service = new PreviewService() //, backend)
 
   await service.worker.init({
     vmInit: {
-      ...RaveNode.processorOptions.vmInit,
+      ...vmInit,
       pffftRunners: {
-        timeFFT: vm.timeFFT!.runner,
-        freqFFT: vm.freqFFT!.runner,
+        timeFFT: rave.frontend.vm.timeFFT!.runner,
+        freqFFT: rave.frontend.vm.freqFFT!.runner,
       }
     },
-    buffers: frontend.buffers,
+    // buffers: frontend.buffers,
+    // signal: frontend.signal!,
+    // zero: frontend.zero!,
     runner: true,
     length,
   })
@@ -48,7 +55,7 @@ export class PreviewService {
   worker: Agent<PreviewWorker, PreviewService>
   // trash: Build.Sound[] = []
 
-  constructor(public frontend: Frontend) {
+  constructor() {
     const url = new URL('./preview-worker.js', import.meta.url).href
     const worker = new Worker(url)
 

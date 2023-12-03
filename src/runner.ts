@@ -74,7 +74,7 @@ export class VmBar extends VmObject {
   bar: BarView
   barTracks: Uint32Array
 
-  main?: VmCtrl
+  main?: VmCtrl | null
   tracks: FixedArray<VmCtrl> = new FixedArray(16 * 4)
 
   constructor(public vm: Vm, public ptr: number) {
@@ -91,6 +91,7 @@ export class VmBar extends VmObject {
     this.main?.reset()
   }
   clear() {
+    this.main = null
     this.bar.size = 0
     this.bar.main = 0
     this.tracks.clear()

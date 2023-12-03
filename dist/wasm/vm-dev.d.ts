@@ -1,6 +1,70 @@
 declare namespace __AdaptedExports {
   /** Exported memory */
   export const memory: WebAssembly.Memory;
+  /** assembly/asc-runtime/memory-allocator/offset */
+  export const offset: {
+    /** @type `usize` */
+    get value(): number;
+    set value(value: number);
+  };
+  /**
+   * assembly/asc-runtime/memory-allocator/__alloc
+   * @param size `usize`
+   * @returns `usize`
+   */
+  export function __alloc(size: number): number;
+  /**
+   * assembly/asc-runtime/memory-allocator/__realloc
+   * @param ptr `usize`
+   * @param size `usize`
+   * @returns `usize`
+   */
+  export function __realloc(ptr: number, size: number): number;
+  /**
+   * assembly/asc-runtime/memory-allocator/__free
+   * @param ptr `usize`
+   */
+  export function __free(ptr: number): void;
+  /**
+   * assembly/asc-runtime/memory-allocator/__reset
+   */
+  export function __reset(): void;
+  /**
+   * assembly/asc-runtime/memory-allocator/__new
+   * @param size `usize`
+   * @param id `u32`
+   * @returns `usize`
+   */
+  export function __new(size: number, id: number): number;
+  /**
+   * assembly/asc-runtime/memory-allocator/__renew
+   * @param oldPtr `usize`
+   * @param size `usize`
+   * @returns `usize`
+   */
+  export function __renew(oldPtr: number, size: number): number;
+  /**
+   * assembly/asc-runtime/memory-allocator/__link
+   * @param parentPtr `usize`
+   * @param childPtr `usize`
+   * @param expectMultiple `bool`
+   */
+  export function __link(parentPtr: number, childPtr: number, expectMultiple: boolean): void;
+  /**
+   * assembly/asc-runtime/memory-allocator/__pin
+   * @param ptr `usize`
+   * @returns `usize`
+   */
+  export function __pin(ptr: number): number;
+  /**
+   * assembly/asc-runtime/memory-allocator/__unpin
+   * @param ptr `usize`
+   */
+  export function __unpin(ptr: number): void;
+  /**
+   * assembly/asc-runtime/memory-allocator/__collect
+   */
+  export function __collect(): void;
   /**
    * assembly/index/preventTreeShaking
    * @param gen `assembly/gen/gen/Gen`

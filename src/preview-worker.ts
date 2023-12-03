@@ -1,13 +1,15 @@
 import { Agent, Bob } from 'alice-bob'
-import { Backend, BackendInit, BarBuildPtrs } from './backend.ts'
-import { Build, Frontend } from './frontend.ts'
+import { checksum, objectDiff } from 'utils'
+import { Backend, BackendInit, Signal, resetCtrlById } from './backend.ts'
+import { Block, Build, Frontend } from './frontend.ts'
+import { Source } from './lang/tokenizer.ts'
 import { PreviewService } from './preview-service.ts'
 import { initVm } from './vm.ts'
-import { Source } from './lang/tokenizer.ts'
-import { checksum, objectDiff } from 'utils'
 
-export interface PreviewWorkerInit extends BackendInit {
+export interface PreviewWorkerInit extends Omit<BackendInit, 'buffers'> {
   length: number
+  // signal: Signal
+  // zero: Block
 }
 
 export class PreviewWorker {
@@ -25,15 +27,23 @@ export class PreviewWorker {
     self.onmessage = ({ data }) => worker.receive(data)
   }
 
-  async init({ vmInit, buffers, length }: PreviewWorkerInit) {
+  async init({ vmInit, length }: PreviewWorkerInit) {
     this.length = length
-    const vm = await initVm(vmInit)
-    this.frontend = new Frontend('preview-worker', vm, buffers.engine, false)
+    const vm = await initVm({ ...vmInit, resetCtrlById })
+    // @ts-ignore
+
+    // console.log(vm.instance['$~lib/rt/stub/startOffset'])
+    this.frontend = new Frontend('preview-worker', vm, 0, 0, null, null)
+    // const b = this.frontend.vm.exports.engine_createBlock(this.frontend.engine, 1024 * 1024 * 8)
+    // console.log(b)
+    // vm.instance.__pin(b)
     this.backend = await Backend.instantiate({
+      vm,
       vmInit,
-      buffers,
-      runner: true
+      buffers: this.frontend.buffers,
+      runner: false
     })
+    this.backend.vmRunner = this.frontend.vmRunner!
   }
 
   builds = new Map<number, Build.Sound>()
@@ -48,39 +58,70 @@ export class PreviewWorker {
     }
   }
 
-  sentPayloads: Record<number, Build.Payload> = {}
-  async sync() {
-    const payloads = this.backend.vmRunner!.getPayloads()
-    const diff = objectDiff(this.sentPayloads, payloads)
-    const toSend = Object.assign(diff.created, diff.updated)
-    await this.backend.putPayloads(toSend)
-    Object.assign(this.sentPayloads, toSend)
-    for (const k in diff.deleted) {
-      delete this.sentPayloads[k]
-    }
-  }
+  // sentPayloads: Record<number, Build.Payload> = {}
+  // async sync(payloads: Record<number, Build.Payload>) {
+  //   const diff = objectDiff(this.sentPayloads, payloads)
+  //   const toSend = Object.assign(diff.created, diff.updated)
+  //   await this.backend.putPayloads(toSend)
+  //   Object.assign(this.sentPayloads, toSend)
+  //   for (const k in diff.deleted) {
+  //     delete this.sentPayloads[k]
+  //   }
+  // }
 
   async render(mainCid: number, trackCids: number[]) {
     const runner = this.backend.vmRunner!
     const bar = runner.vmBars[0]
     bar.clear()
 
-    if (mainCid) {
+    // const toSend: Record<number, Build.Payload> = {}
+
+    if (mainCid >= 0) {
+      const build = this.builds.get(mainCid)
+      if (!build) {
+        console.warn('Aborting, Build not found for main cid:', mainCid)
+        return
+      }
+      if (!build.isNew) {
+        build.info.writeLiterals(build.payload.ownLiterals)
+      }
+
       const main = runner.vmCtrls[0]
-      await main.setPayload(this.builds.get(mainCid)!.payload)
+      await main.setPayload(build.payload)
+      main.reset()
       bar.setMain(main)
+      // toSend[main.ptr] = main.payload!
     }
 
     let i = 1
-    for (const cid of trackCids) {
-      const ctrl = runner.vmCtrls[i++]
-      await ctrl.setPayload(this.builds.get(cid)!.payload)
-      bar.addTrack(ctrl)
-    }
+    for (const trackCid of trackCids) {
+      const build = this.builds.get(trackCid)
+      if (!build) {
+        console.warn('Aborting, Build not found for cid:', trackCid)
+        return
+      }
+      if (!build.isNew) {
+        build.info.writeLiterals(build.payload.ownLiterals)
+      }
 
-    runner.setBar(0, bar)
-    await this.sync()
+      const ctrl = runner.vmCtrls[i++]
+      await ctrl.setPayload(build.payload)
+      ctrl.reset()
+      bar.addTrack(ctrl)
+      // toSend[ctrl.ptr] = ctrl.payload!
+    }
+    console.log(bar, mainCid, trackCids)
+
+    // await this.sync(toSend)
+    bar.reset()
+    runner.bars[0] = bar.ptr
     await this.backend.fill(0, this.length)
+
+    const build = mainCid >= 0
+      ? this.builds.get(mainCid)
+      : this.builds.get(trackCids[0])
+
+    return build?.signal.LR ?? build?.signal.L ?? build?.signal.R
   }
 
   // async render(

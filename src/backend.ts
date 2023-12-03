@@ -31,7 +31,7 @@ export interface Signal<T = Block> {
 }
 
 const ctrlsById = new Map<number, VmCtrl>()
-function resetCtrlById(id: number) {
+export function resetCtrlById(id: number) {
   ctrlsById.get(id)?.reset()
 }
 
@@ -329,19 +329,21 @@ export async function test_backend() {
       vmBinary,
       pffftBinary
     })
-    const frontend = new Frontend('test', vm, 0, 0, true, 44100)
+    const frontend = new Frontend('test', vm, 0, 0, null, null, true, 44100)
 
     const processorOptions: BackendInit = {
+      vm,
       vmInit: {
         memory: vmMemory,
         vmBinary,
         pffftBinary,
       },
       buffers: frontend.buffers,
-      runner: true
+      runner: false
     }
 
     const backend = await Backend.instantiate(processorOptions)
+    backend.vmRunner = frontend.vmRunner!
 
     return { frontend, backend }
   }
@@ -357,19 +359,74 @@ export async function test_backend() {
 
       const runner = frontend.vmRunner!
       const ctrl = runner.vmCtrls[0]
-      ctrl.build = build
       await ctrl.setPayload(build.payload)
-      await backend.putPayloads({ [ctrl.ptr]: ctrl.payload! })
+
+      // await backend.putPayloads({ [ctrl.ptr]: ctrl.payload! })
 
       const bar = runner.vmBars[0]
       bar.addTrack(ctrl)
       // runner.setBar(0, bar)
 
       bar.reset()
+      runner.bars[0] = bar.ptr
       backend.fill(0, 2048)
 
       const outs = backend.signal
       expect(outs.LR![0]).toEqual(42)
+    })
+
+    it('change', async () => {
+      const { frontend, backend } = await prepare()
+
+      // TODO: this code should fail because it's DC
+      //  it should be [zero] 42+ LR+= to convert it to AC
+      {
+        const source = { code: `42 LR+=` }
+        const build = frontend.make(source)
+
+        const runner = frontend.vmRunner!
+        const ctrl = runner.vmCtrls[0]
+        await ctrl.setPayload(build.payload)
+
+        // await backend.putPayloads({ [ctrl.ptr]: ctrl.payload! })
+
+        const bar = runner.vmBars[0]
+        bar.addTrack(ctrl)
+        // runner.setBar(0, bar)
+
+        bar.reset()
+        runner.bars[0] = bar.ptr
+        backend.fill(0, 2048)
+
+        const outs = backend.signal
+        expect(outs.LR![0]).toEqual(42)
+      }
+
+      {
+        const source = { code: `33 LR+=` }
+        const build = frontend.make(source)
+        if (!build.isNew) {
+          build.info.writeLiterals(build.payload.ownLiterals)
+        }
+
+        const runner = frontend.vmRunner!
+        const ctrl = runner.vmCtrls[0]
+        await ctrl.setPayload(build.payload)
+
+        // await backend.putPayloads({ [ctrl.ptr]: ctrl.payload! })
+
+        const bar = runner.vmBars[0]
+        bar.clear()
+        bar.addTrack(ctrl)
+        // runner.setBar(0, bar)
+
+        bar.reset()
+        runner.bars[0] = bar.ptr
+        backend.fill(0, 2048)
+
+        const outs = backend.signal
+        expect(outs.LR![0]).toEqual(33)
+      }
     })
   })
 

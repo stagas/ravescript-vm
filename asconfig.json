@@ -27,6 +27,6 @@
     "maximumMemory": 3000,
     "memoryBase": 1048576,
     "bindings": "raw",
-    "runtime": "stub"
+    "runtime": "./assembly/asc-runtime/memory-allocator"
   }
 }
