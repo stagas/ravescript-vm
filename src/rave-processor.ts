@@ -5,17 +5,17 @@ import { RaveNode } from './rave-node.ts'
 export type RaveProcessorOptions = BackendInit
 
 export class RaveProcessor extends AudioWorkletProcessor {
-  backend?: Backend
+  backend: Backend
   node?: Agent<RaveNode, Backend>
 
   constructor(options: { processorOptions: RaveProcessorOptions }) {
     super()
+    this.backend = new Backend()
     this.init(options.processorOptions)
   }
 
   async init(init: BackendInit) {
-    this.backend = await Backend.instantiate(init)
-    this.backend.engine.vmRunner = this.backend.engine.createRunner()
+    await this.backend.init(init)
 
     const [worklet, node] = new Bob<Backend, RaveNode>(
       data => this.port.postMessage(data),
@@ -28,7 +28,7 @@ export class RaveProcessor extends AudioWorkletProcessor {
   }
 
   process(inputs: Float32Array[][], outputs: Float32Array[][]) {
-    this.backend?.process(inputs[0], outputs[0])
+    this.backend.process(inputs[0], outputs[0])
     return true
   }
 }

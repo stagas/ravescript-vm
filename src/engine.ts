@@ -4,7 +4,7 @@ import { BLOCK_SIZE, SAMPLE_RATE } from './constants.ts'
 import { Block, BlockU32 } from './frontend.ts'
 import { VmObject, VmRunner } from './runner.ts'
 import { SignalView } from './structs.ts'
-import { Vm, VmInit, initVm } from './vm.ts'
+import { Vm } from './vm.ts'
 
 export class Engine extends VmObject {
   clock?: Clock

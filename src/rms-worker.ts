@@ -22,7 +22,8 @@ class RmsWorker {
         this.run(...e.data.run)
       }
       else if ('init' in e.data) {
-        this.backend = await Backend.instantiate(e.data.init)
+        this.backend = new Backend()
+        await this.backend.init(e.data.init)
         post<RmsServiceMessagePayload>(self as any, { onReady: true })
       }
       else if ('setPayload' in e.data) {
@@ -30,7 +31,7 @@ class RmsWorker {
         if (!this.ctrls.has(payload.instanceId)) {
           this.ctrls.set(
             payload.instanceId,
-            await instantiate<Module.Instance>(payload.binary, this.backend!.env)
+            await instantiate<Module.Instance>(payload.binary, this.backend!.vm.env)
           )
         }
       }

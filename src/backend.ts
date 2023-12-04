@@ -38,32 +38,33 @@ export function resetCtrlById(id: number) {
 }
 
 export class Backend {
-  static async instantiate(init: BackendInit) {
-    const vm = init.vm ?? await initVm({
-      ...init.vmInit!,
-      resetCtrlById,
-    })
-
-    return new this(vm, init)
-  }
-
-  clock: Clock
+  clock!: Clock
   chunkAheadTime = 0
 
   begin = 0
   end = 0
 
-  signal: Signal
-  signalRing: Signal<Ring>
-  signalView: SignalView
+  signal!: Signal
+  signalRing!: Signal<Ring>
+  signalView!: SignalView
 
   L!: Float32Array
   R!: Float32Array
 
-  engine: Engine
+  engine!: Engine
+  vmRunner!: VmRunner
 
-  constructor(public vm: Vm, public init: BackendInit) {
+  get vm() {
+    return this.engine.vm!
+  }
+  async init(init: BackendInit) {
+    const vm = init.vm ?? await initVm({
+      ...init.vmInit!,
+      resetCtrlById,
+    })
+
     this.engine = new Engine(vm, init.buffers!.engine)
+    this.vmRunner = this.engine.createRunner()
 
     this.clock = Clock(vm.view.buffer, init.buffers!.clock)
 
@@ -75,10 +76,7 @@ export class Backend {
       LR: toRing(this.signal.LR!)
     }
 
-    this.signalView = SignalView(this.vm.view.buffer)
-  }
-  get vmRunner() {
-    return this.engine!.vmRunner!
+    this.signalView = SignalView(vm.view.buffer)
   }
   get bar() {
     const vmRunner = this.vmRunner
@@ -324,7 +322,8 @@ export async function test_backend() {
       buffers: frontend.engine.buffers,
     }
 
-    const backend = await Backend.instantiate(processorOptions)
+    const backend = new Backend()
+    await backend.init(processorOptions)
     backend.engine = frontend.engine!
 
     return { frontend, backend }
