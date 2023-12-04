@@ -1,3 +1,4 @@
+import { MapSet } from 'utils'
 import { Signal } from './backend.ts'
 import { BLOCK_SIZE, SAMPLE_RATE } from './constants.ts'
 import { Engine } from './engine.ts'
@@ -79,7 +80,7 @@ export class Frontend {
   gensFree: Record<string, GenRuntime[]> = {}
 
   buildsShared: Map<number, Build.Shared> = new Map()
-
+  usedMemories = new MapSet<number, Float32Array>()
   get vmRunner() {
     return this.engine!.vmRunner!
   }
@@ -218,7 +219,7 @@ export class Frontend {
         info,
         shared: shared,
         signal: shared.payload.signal,
-        payload: shared.payload,
+        payload: { ...shared.payload },
         isNew: false,
       }
 
@@ -287,6 +288,8 @@ export class Frontend {
     }
 
     const ownLiterals = engine.getBlock()
+
+    this.usedMemories.add(info.instanceId, ownLiterals)
 
     shared = {
       info,
@@ -359,6 +362,9 @@ export class Frontend {
     }
     this.free(shared.memories)
     this.buildsShared.delete(instanceId)
+    const memories = this.usedMemories.get(instanceId)
+    memories?.forEach(this.engine!.freeBlock)
+    memories?.clear()
     if (this.debug) {
       console.log('Purged build:', instanceId)
     }
