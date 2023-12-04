@@ -44,7 +44,7 @@ export namespace Token {
     [Type.Newline, /(\n)/],
     [Type.Whitespace, /(\s+?)/],
     [Type.Native, /(`[a-z]+`)/],
-    [Type.String, /('[^'\n]*')/],
+    [Type.String, /('[^'\n]*['\n])/],
     [Type.Keyword, /(M|S|\\|@|,)/],
     [Type.Op, /(floor|pick|slide|to_audio)/],
     [Type.Id, /([a-zA-Z]+[a-zA-Z0-9_]*)/],

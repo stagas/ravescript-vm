@@ -357,6 +357,9 @@ export namespace AstNode {
   }
 
   export function String(token: Token): AstNode.String {
+    if (token.text[0] !== "'" || token.text.at(-1) !== "'") {
+      throw new Error('String not terminated.', { cause: { nodes: [token] } })
+    }
     const info: String.Info = { token, value: token.text.slice(1, -1) }
     return new AstNode(AstNode.Type.String, null, info)
   }
@@ -387,10 +390,11 @@ export function parse(inputTokens: Token[]): AstNode.Prog {
     const tokens: Token[] = []
     capturing.push(tokens)
     if (token) tokens.push(token)
-    let node: AstNode.Item
+    let node: AstNode.Item | undefined
     while (i < end) {
       const tokens: Token[] = []
       capturing.push(tokens)
+      let err: any
       try {
         next()
         if (until != null && token.text.charCodeAt(0) === until) {
@@ -398,9 +402,17 @@ export function parse(inputTokens: Token[]): AstNode.Prog {
         }
         node = process(body)
         node.source = token.source
-      } finally {
+      }
+      catch (error) {
+        err = error
+      }
+      finally {
+        if (err) throw err
         if (capturing.pop() !== tokens) {
           throw new Error('Capturing group did not match.', { cause: { nodes: [token] } })
+        }
+        if (!node) {
+          throw new Error('No node parsed.')
         }
       }
       Object.assign(node, Token.bounds(tokens))

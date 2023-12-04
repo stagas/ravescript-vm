@@ -1,6 +1,5 @@
 import { Agent, Bob } from 'alice-bob'
 import { Backend, BackendInit, Buffers } from './backend.ts'
-import { Build } from './frontend.ts'
 import { PreviewService } from './preview-service.ts'
 
 export type PreviewWorkerInit = BackendInit & { length: number, buffers: Buffers }

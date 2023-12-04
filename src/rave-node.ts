@@ -100,8 +100,6 @@ export class RaveNode extends AudioWorkletNode {
     this.frontend = options.frontend
     this.frontend.debug = DEBUG
 
-    // this.backend = new Backend(options.vm, options.processorOptions.buffers, true)
-
     const [node, worklet] = new Alice<RaveNode, Backend>(
       data => void this.port.postMessage(data),
       this
@@ -115,7 +113,6 @@ export class RaveNode extends AudioWorkletNode {
   }
 
   async onProcessorReady() {
-    // await this.worklet.setMain(this.frontend.main!.payload)
     this.ready.resolve()
   }
 
@@ -152,34 +149,6 @@ export class RaveNode extends AudioWorkletNode {
 
   async reset() {
     await this.worklet.reset()
-  }
-
-  sentPayloads: Record<number, Build.Payload> = {}
-  async sync(toSend: Record<number, Build.Payload>, toDelete: number[]) {
-    const diff = objectDiff(this.sentPayloads, toSend)
-    const putPayloads = Object.assign(diff.created, diff.updated)
-    if (toDelete.length) {
-      for (const id of toDelete) {
-        this.frontend.purge(id)
-      }
-      await this.worklet.freePayloads(toDelete)
-    }
-    if (Object.keys(putPayloads).length) {
-      Object.assign(this.sentPayloads, putPayloads)
-      for (const k in diff.deleted) {
-        delete this.sentPayloads[k]
-      }
-      await this.worklet.putPayloads(putPayloads)
-      // There is a case of replacing just what is about to change
-      // even though the payloads have been sent, they've been blocked
-      // but somehow we return? Anyhow, this is probably fixing it.
-      await timeout(10)
-
-      console.log('SENT',
-        [...Object.entries(putPayloads)]
-          .map(([ptr, x]) =>
-            `${Number(ptr).toString(36)}:${Number(x.instanceId).toString(36)}`))
-    }
   }
 }
 

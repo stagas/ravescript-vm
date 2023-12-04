@@ -52,10 +52,12 @@ export class Backend {
   R!: Float32Array
 
   engine!: Engine
-  vmRunner!: VmRunner
 
   get vm() {
     return this.engine.vm!
+  }
+  get vmRunner() {
+    return this.engine.vmRunner!
   }
   async init(init: BackendInit) {
     const vm = init.vm ?? await initVm({
@@ -64,7 +66,9 @@ export class Backend {
     })
 
     this.engine = new Engine(vm, init.buffers!.engine)
-    this.vmRunner = this.engine.createRunner()
+    // TODO: we need this maybe instead of the below
+    // this.engine.init(init.buffers!)
+    this.engine.vmRunner = this.engine.createRunner()
 
     this.clock = Clock(vm.view.buffer, init.buffers!.clock)
 
@@ -210,8 +214,7 @@ export class Backend {
     for (const ptr in payloads) {
       const payload = payloads[+ptr]
       const ctrl = vmRunner.vmCtrlsByPtr.get(+ptr)!
-
-      await ctrl.setPayload(payload)
+      await ctrl.setPayload(payload, true)
     }
   }
   async freePayloads(payloads: number[]) {
@@ -282,6 +285,8 @@ export class Backend {
   doIdle: Process = () => { }
   process: Process = this.doIdle
   async fill(barIndex: number, length: number) {
+    // const ptr = this.vmRunner?.bars[0]
+    // const bar = this.vmRunner?.vmBarsByPtr.get(ptr)!
     this.resetClock()
     this.clearSignal()
     this.vmRunner!.fill(
@@ -340,7 +345,7 @@ export async function test_backend() {
 
       const runner = frontend.engine!.vmRunner!
       const ctrl = runner.vmCtrls[0]
-      await ctrl.setPayload(build.payload)
+      await ctrl.setPayload(build.payload, true)
 
       // await backend.putPayloads({ [ctrl.ptr]: ctrl.payload! })
 
@@ -367,7 +372,7 @@ export async function test_backend() {
 
         const runner = frontend.engine!.vmRunner!
         const ctrl = runner.vmCtrls[0]
-        await ctrl.setPayload(build.payload)
+        await ctrl.setPayload(build.payload, true)
 
         const bar = runner.vmBars[0]
         bar.addTrack(ctrl)
@@ -389,7 +394,7 @@ export async function test_backend() {
 
         const runner = frontend.engine!.vmRunner!
         const ctrl = runner.vmCtrls[0]
-        await ctrl.setPayload(build.payload)
+        await ctrl.setPayload(build.payload, true)
 
         const bar = runner.vmBars[0]
         bar.clear()

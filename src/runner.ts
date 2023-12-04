@@ -27,7 +27,7 @@ export class VmCtrl extends VmObject {
     this.ctrlView = CtrlView(vm.view.buffer, this.ptr)
     this.signalView = SignalView(vm.view.buffer, this.ctrlView.signal)
   }
-  async setPayload(payload: Build.Payload) {
+  async setPayload(payload: Build.Payload, withInstance: boolean) {
     const { ctrlView, signalView } = of(this)
 
     // if (this.payload) this.purge()
@@ -44,14 +44,16 @@ export class VmCtrl extends VmObject {
     ctrlView.liveLiterals = payload.liveLiterals.byteOffset
     ctrlView.ownLiterals = payload.ownLiterals.byteOffset
 
-    let instance = this.vm.ctrlInstances.get(payload.instanceId)
+    if (withInstance) {
+      let instance = this.vm.ctrlInstances.get(payload.instanceId)
 
-    if (!instance) {
-      instance = await instantiate<Module.Instance>(payload.binary, this.vm.env)
-      this.vm.ctrlInstances.set(payload.instanceId, instance)
+      if (!instance) {
+        instance = await instantiate<Module.Instance>(payload.binary, this.vm.env)
+        this.vm.ctrlInstances.set(payload.instanceId, instance)
+      }
+
+      this.instance = instance
     }
-
-    this.instance = instance
   }
   reset() {
     const { instance, payload } = of(this)
@@ -61,7 +63,7 @@ export class VmCtrl extends VmObject {
     })
 
     // TODO: apply initial literals before this update/reset?
-    payload.liveLiterals.set(payload.ownLiterals)
+    // payload.liveLiterals.set(payload.ownLiterals)
     instance.exports.update_gens()
     instance.exports.reset_gens()
 
@@ -86,6 +88,7 @@ export class VmBar extends VmObject {
       this.bar.tracks, 16 << 2)
   }
   reset() {
+    // TODO: get the ctrls using the pointers instead
     for (const ctrl of this.tracks) {
       ctrl.reset()
     }

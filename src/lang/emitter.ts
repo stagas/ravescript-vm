@@ -649,10 +649,24 @@ function hashNodes(nodes: Set<AstNode.Item> | undefined) {
   const nodeItems = [...(nodes ?? [])]
   const hashId = nodeItems
     .filter((node) =>
-      ![AstNode.Type.Literal].includes(node.type)
-      && !['M', 'S'].includes((node as AstNode.Keyword)?.info?.token?.text)
+      ![
+        AstNode.Type.Literal,
+        AstNode.Type.String, // TODO: live update data that use the strings
+      ].includes(node.type)
+      && !(node.type === AstNode.Type.Keyword
+        && [
+          AstNode.Keyword.Kind.Param,
+          AstNode.Keyword.Kind.Mute,
+          AstNode.Keyword.Kind.Solo,
+        ].includes(node.kind)
+      )
     )
-    .map((node) => `${node.type}:${node.kind ?? '-'}${((node as any).info?.token?.text ?? '-').trim()}${(node as any).info?.identifier ?? '-'}`)
+    .map((node) => [
+      node.type,
+      node.kind ?? '-',
+      ((node as any).info?.token?.text ?? '-').trim(),
+      (node as any).info?.identifier ?? '-'
+    ].join())
     .join(' ')
   return hashId
 }
@@ -685,11 +699,13 @@ export namespace Emitter {
     constructor(public scope: Scope, public tokens: Token[]) { }
 
     updateId(idModifier = '') {
-      this.instanceId = checksum(
-        this.literals.length.toString()
-        + hashNodes(this.scope.nodes)
-        + idModifier
-      )
+      this.instanceId = checksum([
+        this.literals.length.toString(),
+        this.audios.length.toString(),
+        this.gens.length.toString(),
+        hashNodes(this.scope.nodes),
+        idModifier,
+      ].join())
       this.groupId = checksum(
         hashNodes(new Set([...this.scope.nodes].filter((node) =>
           ![...this.scope.propsNodes.keys()]

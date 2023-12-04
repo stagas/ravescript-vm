@@ -96,6 +96,7 @@ export class Frontend {
     public sampleRate = SAMPLE_RATE,
     public blockSize = BLOCK_SIZE,
   ) {}
+
   getMemories(info: Emitter.Info): Build.Memories {
     const audios = Array.from(info.audios,
       (_, index) =>
@@ -192,7 +193,7 @@ export class Frontend {
     let shared = this.buildsShared.get(info.instanceId)
 
     if (shared) {
-      const ownLiterals = shared.payload.ownLiterals
+      // const ownLiterals = shared.payload.ownLiterals
 
       shared.info.gens.forEach((p, i) => {
         const n = info.gens[i]!
@@ -200,6 +201,7 @@ export class Frontend {
         n.runtime = p.runtime!
       })
 
+// console.log(shared.info, info)
       shared.info.audios.forEach((p, i) => {
         const n = info.audios[i]!
         n.floats = p.floats!
@@ -269,6 +271,12 @@ export class Frontend {
       this.free(memories)
       throw error
     }
+
+
+
+    // TODO: copy memories when compatible gens
+
+
 
     // We check if either channels have been used otherwise we pass null.
     // When a channel is used it will have moved from its default index.
