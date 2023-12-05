@@ -56,20 +56,20 @@ export class VmCtrl extends VmObject {
     }
   }
   reset() {
-    const { instance, payload } = of(this)
+    const { instance, payload } = this
 
-    payload.gens.forEach((gen) => {
+    payload?.gens.forEach((gen) => {
       gen.mem.set(gen.initial)
     })
 
     // TODO: apply initial literals before this update/reset?
     // payload.liveLiterals.set(payload.ownLiterals)
-    instance.exports.update_gens()
-    instance.exports.reset_gens()
+    instance?.exports.update_gens()
+    instance?.exports.reset_gens()
 
-    payload.signal.L?.fill(0)
-    payload.signal.R?.fill(0)
-    payload.signal.LR?.fill(0)
+    payload?.signal.L?.fill(0)
+    payload?.signal.R?.fill(0)
+    payload?.signal.LR?.fill(0)
   }
 }
 
