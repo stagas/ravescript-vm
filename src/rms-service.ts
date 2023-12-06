@@ -20,15 +20,15 @@ export function createRms(rave: RaveNode) {
   post<RmsWorkerMessagePayload>(worker, {
     init: {
       vmInit: {
-        ...RaveNode.processorOptions.vmInit,
+        ...RaveNode.processorOptions.vmInit!,
         pffftRunners: {
           timeFFT: rave.frontend.vm.timeFFT!.runner,
           freqFFT: rave.frontend.vm.freqFFT!.runner,
         }
       },
       buffers: rave.frontend.buffers,
-      runner: false,
-    }
+      // runner: false,
+    } //as any
   })
 
   const all: Map<number, Build.Shared> = new Map()
@@ -54,6 +54,7 @@ export function createRms(rave: RaveNode) {
   worker.onmessage = (e: MessageEvent<RmsServiceMessagePayload>) => {
     if ('onReady' in e.data) {
       // print('ready')
+      console.log('[rms] ready')
       deferred.resolve()
       service.onReady?.()
     }
