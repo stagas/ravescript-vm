@@ -7,8 +7,8 @@
  (type $i32_=>_f32 (func (param i32) (result f32)))
  (type $i32_=>_none (func (param i32)))
  (type $none_=>_i32 (func (result i32)))
- (type $i32_i32_i32_=>_none (func (param i32 i32 i32)))
  (type $i32_=>_f64 (func (param i32) (result f64)))
+ (type $i32_i32_i32_=>_none (func (param i32 i32 i32)))
  (type $i32_f64_=>_none (func (param i32 f64)))
  (type $f64_=>_f64 (func (param f64) (result f64)))
  (type $i32_i32_i32_i32_i32_=>_none (func (param i32 i32 i32 i32 i32)))
@@ -22,7 +22,6 @@
  (type $i32_i32_i32_=>_f32 (func (param i32 i32 i32) (result f32)))
  (type $i32_i32_f32_=>_none (func (param i32 i32 f32)))
  (type $i64_=>_i32 (func (param i64) (result i32)))
- (type $i32_f64_f64_f64_i32_i32_i32_=>_none (func (param i32 f64 f64 f64 i32 i32 i32)))
  (type $i32_v128_=>_none (func (param i32 v128)))
  (type $f32_=>_none (func (param f32)))
  (type $f32_i32_i32_i32_=>_none (func (param f32 i32 i32 i32)))
@@ -205,6 +204,7 @@
  (export "clock_set_coeff" (func $assembly/core/clock/Clock#set:coeff))
  (export "clock_set_barTime" (func $assembly/core/clock/Clock#set:barTime))
  (export "clock_set_barTimeStep" (func $assembly/core/clock/Clock#set:barTimeStep))
+ (export "clock_set_nextBarTime" (func $assembly/core/clock/Clock#set:nextBarTime))
  (export "clock_set_loopStart" (func $assembly/core/clock/Clock#set:loopStart))
  (export "clock_set_loopEnd" (func $assembly/core/clock/Clock#set:loopEnd))
  (export "clock_set_sampleRate" (func $assembly/core/clock/Clock#set:sampleRate))
@@ -213,7 +213,7 @@
  (export "clock_constructor" (func $assembly/core/clock/Clock#constructor))
  (export "runner_Bar_set_size" (func $assembly/core/wavetable/Wavetable#set:length))
  (export "runner_Bar_set_main" (func $assembly/core/wavetable/Wavetable#set:mask))
- (export "runner_Bar_set_ctrls" (func $~lib/rt/common/OBJECT#set:gcInfo2))
+ (export "runner_Bar_set_tracks" (func $~lib/rt/common/OBJECT#set:gcInfo2))
  (export "runner_Bar_constructor" (func $assembly/core/runner/Bar#constructor))
  (export "runner_get_barInstances" (func $assembly/core/antialias-wavetable/AntialiasWavetable#get:real))
  (export "runner_Ctrl_set_tableIndex" (func $assembly/core/wavetable/Wavetable#set:length))
@@ -259,7 +259,7 @@
  (export "runner_get_bars" (func $assembly/core/antialias-wavetable/AntialiasWavetable#get:imag))
  (export "runner_Bar_get_size" (func $assembly/core/antialias-wavetable/AntialiasWavetable#get:real))
  (export "runner_get_clock" (func $assembly/core/runner/Runner#get:clock))
- (export "runner_Bar_get_ctrls" (func $assembly/core/antialias-wavetable/AntialiasWavetable#get:freqs))
+ (export "runner_Bar_get_tracks" (func $assembly/core/antialias-wavetable/AntialiasWavetable#get:freqs))
  (export "runner_get_tableIndex" (func $assembly/core/antialias-wavetable/AntialiasWavetable#get:maxHarms))
  (export "runner_Ctrl_get_id" (func $assembly/core/antialias-wavetable/AntialiasWavetable#get:imag))
  (export "env_setCtrlInstanceAt" (func $assembly/env/setCtrlInstanceAt))
@@ -276,6 +276,9 @@
  (export "runner_Bar_get_main" (func $assembly/core/antialias-wavetable/AntialiasWavetable#get:imag))
  (export "copy_copyInto" (func $assembly/graph/copy/copyInto))
  (export "runner_fill" (func $assembly/core/runner/Runner#fill))
+ (export "clock_get_time" (func $assembly/core/clock/Clock#get:time))
+ (export "clock_get_barTime" (func $assembly/core/clock/Clock#get:barTime))
+ (export "clock_get_nextBarTime" (func $assembly/core/clock/Clock#get:nextBarTime))
  (export "clock_get_timeStep" (func $assembly/core/clock/Clock#get:timeStep))
  (export "runner_get_last" (func $assembly/core/wavetable/Wavetable#get:exp))
  (export "fade_fadeOut" (func $assembly/graph/fade/fadeOut))
@@ -357,12 +360,12 @@
  (export "gen_biquad_set__a0" (func $assembly/core/clock/Clock#set:coeff))
  (export "gen_biquad_set__a1" (func $assembly/core/clock/Clock#set:barTime))
  (export "gen_biquad_set__a2" (func $assembly/core/clock/Clock#set:barTimeStep))
- (export "gen_biquad_set__b0" (func $assembly/core/clock/Clock#set:loopStart))
- (export "gen_biquad_set__b1" (func $assembly/core/clock/Clock#set:loopEnd))
- (export "gen_biquad_set__b2" (func $assembly/gen/biquad/Biquad#set:_b2))
- (export "gen_biquad_set__params_freq" (func $assembly/core/clock/Clock#set:ringPos))
- (export "gen_biquad_set__params_Q" (func $assembly/gen/biquad/Biquad#set:_params_Q))
- (export "gen_biquad_set__params_gain" (func $assembly/gen/biquad/Biquad#set:_params_gain))
+ (export "gen_biquad_set__b0" (func $assembly/core/clock/Clock#set:nextBarTime))
+ (export "gen_biquad_set__b1" (func $assembly/core/clock/Clock#set:loopStart))
+ (export "gen_biquad_set__b2" (func $assembly/core/clock/Clock#set:loopEnd))
+ (export "gen_biquad_set__params_freq" (func $assembly/core/clock/Clock#set:sampleRate))
+ (export "gen_biquad_set__params_Q" (func $assembly/core/clock/Clock#set:jumpBar))
+ (export "gen_biquad_set__params_gain" (func $assembly/core/clock/Clock#set:ringPos))
  (export "gen_biquad_constructor" (func $assembly/gen/biquad/Biquad#constructor))
  (export "gen_blp_set_cut" (func $assembly/gen/blp/Blp#set:cut))
  (export "gen_blp_set_q" (func $assembly/gen/blp/Blp#set:q))
@@ -407,11 +410,11 @@
  (export "gen_svf_set__a3" (func $assembly/core/clock/Clock#set:coeff))
  (export "gen_svf_set__v0" (func $assembly/core/clock/Clock#set:barTime))
  (export "gen_svf_set__v1" (func $assembly/core/clock/Clock#set:barTimeStep))
- (export "gen_svf_set__v2" (func $assembly/core/clock/Clock#set:loopStart))
- (export "gen_svf_set__v3" (func $assembly/core/clock/Clock#set:loopEnd))
- (export "gen_svf_set__k" (func $assembly/gen/biquad/Biquad#set:_b2))
- (export "gen_svf_set__params_freq" (func $assembly/core/clock/Clock#set:ringPos))
- (export "gen_svf_set__params_Q" (func $assembly/gen/biquad/Biquad#set:_params_Q))
+ (export "gen_svf_set__v2" (func $assembly/core/clock/Clock#set:nextBarTime))
+ (export "gen_svf_set__v3" (func $assembly/core/clock/Clock#set:loopStart))
+ (export "gen_svf_set__k" (func $assembly/core/clock/Clock#set:loopEnd))
+ (export "gen_svf_set__params_freq" (func $assembly/core/clock/Clock#set:sampleRate))
+ (export "gen_svf_set__params_Q" (func $assembly/core/clock/Clock#set:jumpBar))
  (export "gen_svf_constructor" (func $assembly/gen/svf/Svf#constructor))
  (export "gen_slp_set_cut" (func $assembly/gen/slp/Slp#set:cut))
  (export "gen_slp_set_q" (func $assembly/gen/blp/Blp#set:cut))
@@ -484,7 +487,7 @@
  (export "gen_daverb_set__params_st" (func $assembly/gen/moog/Moog#set:_params_Q))
  (export "gen_daverb_set__params_dp" (func $assembly/gen/daverb/Daverb#set:_params_dp))
  (export "gen_daverb_set__params_ex" (func $assembly/gen/daverb/Daverb#set:_params_ex))
- (export "gen_daverb_set__params_ed" (func $assembly/core/clock/Clock#set:sampleRate))
+ (export "gen_daverb_set__params_ed" (func $assembly/gen/daverb/Daverb#set:_params_ed))
  (export "gen_daverb_set__dpn" (func $assembly/gen/daverb/Daverb#set:_dpn))
  (export "gen_daverb_set__exn" (func $assembly/gen/daverb/Daverb#set:_exn))
  (export "gen_daverb_set__edn" (func $assembly/gen/daverb/Daverb#set:_edn))
@@ -620,10 +623,10 @@
  (export "gen_biquad_get__params_Q" (func $assembly/gen/biquad/Biquad#get:_params_Q))
  (export "gen_gen_get__engine" (func $assembly/core/antialias-wavetable/AntialiasWavetable#get:imag))
  (export "gen_biquad_get__a0" (func $assembly/gen/biquad/Biquad#get:_a0))
- (export "gen_biquad_get__b0" (func $assembly/gen/biquad/Biquad#get:_b0))
+ (export "gen_biquad_get__b0" (func $assembly/core/clock/Clock#get:nextBarTime))
  (export "gen_biquad_get__b1" (func $assembly/gen/biquad/Biquad#get:_b1))
  (export "gen_biquad_get__b2" (func $assembly/gen/biquad/Biquad#get:_b2))
- (export "gen_biquad_get__a1" (func $assembly/gen/biquad/Biquad#get:_a1))
+ (export "gen_biquad_get__a1" (func $assembly/core/clock/Clock#get:barTime))
  (export "gen_biquad_get__a2" (func $assembly/gen/biquad/Biquad#get:_a2))
  (export "gen_bap__update" (func $assembly/gen/bap/Bap#_update))
  (export "gen_bbp_get_cut" (func $assembly/gen/bap/Bap#get:cut))
@@ -844,8 +847,8 @@
  (export "gen_svf_get__v3" (func $assembly/gen/biquad/Biquad#get:_b1))
  (export "gen_svf_get__a3" (func $assembly/gen/biquad/Biquad#get:_a0))
  (export "gen_svf_get__v1" (func $assembly/gen/biquad/Biquad#get:_a2))
- (export "gen_svf_get__v2" (func $assembly/gen/biquad/Biquad#get:_b0))
- (export "gen_svf_get__v0" (func $assembly/gen/biquad/Biquad#get:_a1))
+ (export "gen_svf_get__v2" (func $assembly/core/clock/Clock#get:nextBarTime))
+ (export "gen_svf_get__v0" (func $assembly/core/clock/Clock#get:barTime))
  (export "gen_sap__audio" (func $assembly/gen/sap/Sap#_audio))
  (export "gen_sbp__audio" (func $assembly/gen/sbp/Sbp#_audio))
  (export "gen_shp__audio" (func $assembly/gen/shp/Shp#_audio))
@@ -5419,36 +5422,41 @@
   local.get $1
   f64.store $0 offset=64
  )
- (func $assembly/core/clock/Clock#set:loopStart (param $0 i32) (param $1 f64)
+ (func $assembly/core/clock/Clock#set:nextBarTime (param $0 i32) (param $1 f64)
   local.get $0
   local.get $1
   f64.store $0 offset=72
  )
- (func $assembly/core/clock/Clock#set:loopEnd (param $0 i32) (param $1 f64)
+ (func $assembly/core/clock/Clock#set:loopStart (param $0 i32) (param $1 f64)
   local.get $0
   local.get $1
   f64.store $0 offset=80
  )
+ (func $assembly/core/clock/Clock#set:loopEnd (param $0 i32) (param $1 f64)
+  local.get $0
+  local.get $1
+  f64.store $0 offset=88
+ )
  (func $assembly/core/clock/Clock#set:sampleRate (param $0 i32) (param $1 i32)
   local.get $0
   local.get $1
-  i32.store $0 offset=88
+  i32.store $0 offset=96
  )
  (func $assembly/core/clock/Clock#set:jumpBar (param $0 i32) (param $1 i32)
   local.get $0
   local.get $1
-  i32.store $0 offset=92
+  i32.store $0 offset=100
  )
  (func $assembly/core/clock/Clock#set:ringPos (param $0 i32) (param $1 i32)
   local.get $0
   local.get $1
-  i32.store $0 offset=96
+  i32.store $0 offset=104
  )
  (func $assembly/core/clock/Clock#constructor (param $0 i32) (result i32)
   local.get $0
   i32.eqz
   if
-   i32.const 100
+   i32.const 108
    call $~lib/rt/stub/__alloc
    local.set $0
   end
@@ -5462,7 +5470,7 @@
   f64.const -1
   f64.store $0 offset=16
   local.get $0
-  f64.const 0
+  f64.const 1
   f64.store $0 offset=24
   local.get $0
   f64.const 0
@@ -5480,20 +5488,23 @@
   f64.const 0
   f64.store $0 offset=64
   local.get $0
-  f64.const -inf
+  f64.const 0
   f64.store $0 offset=72
   local.get $0
-  f64.const inf
+  f64.const -inf
   f64.store $0 offset=80
   local.get $0
-  i32.const 48000
-  i32.store $0 offset=88
+  f64.const inf
+  f64.store $0 offset=88
+  local.get $0
+  i32.const 44100
+  i32.store $0 offset=96
   local.get $0
   i32.const -1
-  i32.store $0 offset=92
+  i32.store $0 offset=100
   local.get $0
   i32.const 0
-  i32.store $0 offset=96
+  i32.store $0 offset=104
   local.get $0
  )
  (func $~lib/staticarray/StaticArray<assembly/core/runner/Ctrl>#constructor (param $0 i32) (result i32)
@@ -5601,32 +5612,32 @@
   local.get $0
   local.get $1
   i32.store $0 offset=28
-  i32.const 16384
+  i32.const 2048
   i32.const 16
   call $~lib/rt/stub/__new
   local.tee $1
   i32.const 0
-  i32.const 16384
+  i32.const 2048
   memory.fill $0
   local.get $0
   local.get $1
   i32.store $0
-  i32.const 16384
+  i32.const 2048
   i32.const 17
   call $~lib/rt/stub/__new
   local.tee $1
   i32.const 0
-  i32.const 16384
+  i32.const 2048
   memory.fill $0
   local.get $0
   local.get $1
   i32.store $0 offset=4
   local.get $0
-  i32.const 4096
+  i32.const 512
   call $~lib/staticarray/StaticArray<assembly/core/runner/Ctrl>#constructor
   i32.store $0 offset=8
   local.get $0
-  i32.const 4096
+  i32.const 512
   call $~lib/staticarray/StaticArray<assembly/core/runner/Ctrl>#constructor
   i32.store $0 offset=12
   local.get $0
@@ -5642,7 +5653,7 @@
   local.set $1
   loop $for-loop|0
    local.get $1
-   i32.const 4096
+   i32.const 512
    i32.lt_s
    if
     local.get $0
@@ -5662,7 +5673,7 @@
   local.set $1
   loop $for-loop|1
    local.get $1
-   i32.const 4096
+   i32.const 512
    i32.lt_s
    if
     local.get $0
@@ -5740,7 +5751,7 @@
   local.get $0
   i32.load $0 offset=12
   local.get $1
-  i32.store $0 offset=88
+  i32.store $0 offset=96
   local.get $0
  )
  (func $~lib/array/Array<~lib/staticarray/StaticArray<f32>>#push (param $0 i32) (param $1 i32)
@@ -6547,6 +6558,18 @@
    memory.copy $0 $0
   end
  )
+ (func $assembly/core/clock/Clock#get:time (param $0 i32) (result f64)
+  local.get $0
+  f64.load $0
+ )
+ (func $assembly/core/clock/Clock#get:barTime (param $0 i32) (result f64)
+  local.get $0
+  f64.load $0 offset=56
+ )
+ (func $assembly/core/clock/Clock#get:nextBarTime (param $0 i32) (result f64)
+  local.get $0
+  f64.load $0 offset=72
+ )
  (func $assembly/core/clock/Clock#get:timeStep (param $0 i32) (result f64)
   local.get $0
   f64.load $0 offset=8
@@ -7211,24 +7234,37 @@
    end
   end
  )
- (func $assembly/core/runner/Runner#process (param $0 i32) (param $1 f64) (param $2 f64) (param $3 f64) (param $4 i32) (param $5 i32) (param $6 i32)
+ (func $assembly/core/runner/Runner#process (param $0 i32) (param $1 i32) (param $2 i32) (param $3 i32)
+  (local $4 i32)
+  (local $5 i32)
+  (local $6 i32)
   (local $7 i32)
   (local $8 i32)
-  (local $9 i32)
-  (local $10 i32)
+  (local $9 f64)
+  (local $10 f64)
   (local $11 i32)
   (local $12 i32)
   (local $13 i32)
   (local $14 i32)
-  (local $15 i32)
+  local.get $0
+  i32.load $0 offset=28
+  local.tee $6
+  f64.load $0
+  local.set $9
+  local.get $6
+  f64.load $0 offset=72
+  i32.trunc_sat_f64_s
+  local.set $12
   local.get $0
   i32.load $0 offset=4
-  local.get $2
+  local.get $6
+  f64.load $0 offset=56
+  local.tee $10
   i32.trunc_sat_f64_u
   call $~lib/staticarray/StaticArray<assembly/core/runner/Bar|null>#__get
-  local.tee $10
+  local.tee $11
   if (result i32)
-   local.get $10
+   local.get $11
    i32.load $0
   else
    i32.const 0
@@ -7238,7 +7274,7 @@
    local.get $0
    i32.load $0 offset=28
    local.tee $0
-   local.get $1
+   local.get $9
    local.get $0
    f64.load $0 offset=8
    f64.const 128
@@ -7247,12 +7283,10 @@
    f64.store $0
    return
   end
-  local.get $10
+  local.get $11
   i32.load $0 offset=4
-  local.set $12
-  local.get $3
-  i32.trunc_sat_f64_s
-  local.tee $9
+  local.set $8
+  local.get $12
   i32.const 0
   i32.lt_s
   if (result i32)
@@ -7260,707 +7294,707 @@
   else
    local.get $0
    i32.load $0 offset=4
-   local.get $9
+   local.get $12
    call $~lib/staticarray/StaticArray<assembly/core/runner/Bar|null>#__get
   end
-  local.set $14
+  local.set $13
   local.get $0
   i32.load $0 offset=20
-  local.tee $15
+  local.tee $14
   if
-   local.get $10
-   local.get $15
+   local.get $11
+   local.get $14
    i32.eq
    if
-    local.get $10
-    local.get $14
+    local.get $11
+    local.get $13
     i32.eq
     if
      loop $for-loop|0
-      local.get $8
-      local.get $10
+      local.get $5
+      local.get $11
       i32.load $0
       i32.lt_u
       if
-       local.get $8
+       local.get $5
        if
         local.get $0
         i32.load $0 offset=28
-        local.get $1
+        local.get $9
         f64.store $0
         local.get $0
         i32.load $0 offset=28
-        local.get $2
+        local.get $10
         f64.store $0 offset=56
        end
-       local.get $10
+       local.get $11
        i32.load $0 offset=8
-       local.get $8
+       local.get $5
        call $~lib/staticarray/StaticArray<~lib/staticarray/StaticArray<f32>>#__get
-       local.tee $7
+       local.tee $4
        i32.load $0 offset=16
-       local.get $7
+       local.get $4
        i32.load $0 offset=20
-       local.get $7
+       local.get $4
        i32.load $0 offset=12
        i32.const 2
        i32.shl
        memory.copy $0 $0
+       local.get $1
+       local.get $2
        local.get $4
-       local.get $5
-       local.get $7
        i32.load $0
        call_indirect $0 (type $i32_i32_=>_none)
-       local.get $7
+       local.get $4
        i32.load $0 offset=8
-       local.tee $7
+       local.tee $4
        i32.load $0
        if
-        local.get $7
-        i32.load $0
-        local.get $6
-        i32.load $0
-        local.tee $9
         local.get $4
-        local.get $5
-        local.get $9
+        i32.load $0
+        local.get $3
+        i32.load $0
+        local.tee $6
+        local.get $1
+        local.get $2
+        local.get $6
         call $assembly/math/add_audio_audio
        end
-       local.get $7
+       local.get $4
        i32.load $0 offset=4
        if
-        local.get $7
-        i32.load $0 offset=4
-        local.get $6
-        i32.load $0 offset=4
-        local.tee $9
         local.get $4
-        local.get $5
-        local.get $9
+        i32.load $0 offset=4
+        local.get $3
+        i32.load $0 offset=4
+        local.tee $6
+        local.get $1
+        local.get $2
+        local.get $6
         call $assembly/math/add_audio_audio
        end
-       local.get $7
+       local.get $4
        i32.load $0 offset=8
        if
-        local.get $7
-        i32.load $0 offset=8
-        local.get $6
-        i32.load $0 offset=8
-        local.tee $7
         local.get $4
-        local.get $5
-        local.get $7
+        i32.load $0 offset=8
+        local.get $3
+        i32.load $0 offset=8
+        local.tee $4
+        local.get $1
+        local.get $2
+        local.get $4
         call $assembly/math/add_audio_audio
        end
-       local.get $8
+       local.get $5
        i32.const 1
        i32.add
-       local.set $8
+       local.set $5
        br $for-loop|0
       end
      end
     else
      loop $for-loop|1
-      local.get $7
-      local.get $10
+      local.get $4
+      local.get $11
       i32.load $0
       i32.lt_u
       if
-       local.get $7
+       local.get $4
        if
         local.get $0
         i32.load $0 offset=28
-        local.get $1
+        local.get $9
         f64.store $0
         local.get $0
         i32.load $0 offset=28
-        local.get $2
+        local.get $10
         f64.store $0 offset=56
        end
-       local.get $10
+       local.get $11
        i32.load $0 offset=8
-       local.get $7
+       local.get $4
        call $~lib/staticarray/StaticArray<~lib/staticarray/StaticArray<f32>>#__get
-       local.tee $11
+       local.tee $7
        i32.load $0 offset=16
-       local.get $11
+       local.get $7
        i32.load $0 offset=20
-       local.get $11
+       local.get $7
        i32.load $0 offset=12
        i32.const 2
        i32.shl
        memory.copy $0 $0
-       local.get $4
-       local.get $5
-       local.get $11
+       local.get $1
+       local.get $2
+       local.get $7
        i32.load $0
        call_indirect $0 (type $i32_i32_=>_none)
-       local.get $14
+       local.get $13
        if (result i32)
         i32.const 0
-        local.set $8
+        local.set $6
         i32.const 0
-        local.set $9
+        local.set $5
         loop $for-loop|2
-         local.get $9
-         local.get $14
+         local.get $5
+         local.get $13
          i32.load $0
          i32.lt_u
          if
           block $for-break2
-           local.get $14
-           i32.load $0 offset=8
-           local.get $9
-           call $~lib/staticarray/StaticArray<~lib/staticarray/StaticArray<f32>>#__get
-           local.set $13
-           local.get $11
-           i32.load $0 offset=4
            local.get $13
+           i32.load $0 offset=8
+           local.get $5
+           call $~lib/staticarray/StaticArray<~lib/staticarray/StaticArray<f32>>#__get
+           local.set $12
+           local.get $7
+           i32.load $0 offset=4
+           local.get $12
            i32.load $0 offset=4
            i32.eq
            if
             i32.const 1
-            local.set $8
+            local.set $6
             br $for-break2
            end
-           local.get $9
+           local.get $5
            i32.const 1
            i32.add
-           local.set $9
+           local.set $5
            br $for-loop|2
           end
          end
         end
-        local.get $8
+        local.get $6
         i32.eqz
        else
         i32.const 1
        end
        if
-        local.get $11
+        local.get $7
         i32.load $0 offset=8
-        local.tee $8
+        local.tee $5
         i32.load $0
         if
          i32.const 128
-         local.get $4
+         local.get $1
+         local.get $2
          local.get $5
-         local.get $8
          i32.load $0
          call $assembly/graph/fade/fadeOut
         end
-        local.get $8
+        local.get $5
         i32.load $0 offset=4
         if
          i32.const 128
-         local.get $4
+         local.get $1
+         local.get $2
          local.get $5
-         local.get $8
          i32.load $0 offset=4
          call $assembly/graph/fade/fadeOut
         end
-        local.get $8
+        local.get $5
         i32.load $0 offset=8
         if
          i32.const 128
-         local.get $4
+         local.get $1
+         local.get $2
          local.get $5
-         local.get $8
          i32.load $0 offset=8
          call $assembly/graph/fade/fadeOut
         end
        end
-       local.get $11
+       local.get $7
        i32.load $0 offset=8
-       local.tee $8
+       local.tee $5
        i32.load $0
        if
-        local.get $8
-        i32.load $0
-        local.get $6
-        i32.load $0
-        local.tee $9
-        local.get $4
         local.get $5
-        local.get $9
+        i32.load $0
+        local.get $3
+        i32.load $0
+        local.tee $6
+        local.get $1
+        local.get $2
+        local.get $6
         call $assembly/math/add_audio_audio
        end
-       local.get $8
+       local.get $5
        i32.load $0 offset=4
        if
-        local.get $8
-        i32.load $0 offset=4
-        local.get $6
-        i32.load $0 offset=4
-        local.tee $9
-        local.get $4
         local.get $5
-        local.get $9
+        i32.load $0 offset=4
+        local.get $3
+        i32.load $0 offset=4
+        local.tee $6
+        local.get $1
+        local.get $2
+        local.get $6
         call $assembly/math/add_audio_audio
        end
-       local.get $8
+       local.get $5
        i32.load $0 offset=8
        if
-        local.get $8
-        i32.load $0 offset=8
-        local.get $6
-        i32.load $0 offset=8
-        local.tee $8
-        local.get $4
         local.get $5
-        local.get $8
+        i32.load $0 offset=8
+        local.get $3
+        i32.load $0 offset=8
+        local.tee $5
+        local.get $1
+        local.get $2
+        local.get $5
         call $assembly/math/add_audio_audio
        end
-       local.get $7
+       local.get $4
        i32.const 1
        i32.add
-       local.set $7
+       local.set $4
        br $for-loop|1
       end
      end
     end
    else
-    local.get $10
-    local.get $14
+    local.get $11
+    local.get $13
     i32.eq
     if
      loop $for-loop|3
+      local.get $7
       local.get $11
-      local.get $10
       i32.load $0
       i32.lt_u
       if
-       local.get $11
+       local.get $7
        if
         local.get $0
         i32.load $0 offset=28
-        local.get $1
+        local.get $9
         f64.store $0
         local.get $0
         i32.load $0 offset=28
-        local.get $2
+        local.get $10
         f64.store $0 offset=56
        end
-       local.get $10
-       i32.load $0 offset=8
        local.get $11
+       i32.load $0 offset=8
+       local.get $7
        call $~lib/staticarray/StaticArray<~lib/staticarray/StaticArray<f32>>#__get
-       local.tee $9
+       local.tee $5
        i32.load $0 offset=4
        local.get $0
        i32.load $0 offset=24
-       local.tee $7
+       local.tee $4
        call $assembly/env/setCtrlInstanceAt
        drop
-       local.get $9
-       local.get $7
+       local.get $5
+       local.get $4
        i32.store $0
        local.get $0
-       local.get $7
+       local.get $4
        i32.const 2
        i32.add
-       local.tee $7
+       local.tee $4
        i32.const 0
-       local.get $7
+       local.get $4
        i32.const 128
        i32.ne
        select
        i32.store $0 offset=24
        i32.const 0
-       local.set $8
+       local.set $6
        i32.const 0
-       local.set $7
+       local.set $4
        loop $for-loop|4
-        local.get $7
-        local.get $15
+        local.get $4
+        local.get $14
         i32.load $0
         i32.lt_u
         if
          block $for-break4
-          local.get $15
+          local.get $14
           i32.load $0 offset=8
-          local.get $7
+          local.get $4
           call $~lib/staticarray/StaticArray<~lib/staticarray/StaticArray<f32>>#__get
-          local.set $13
-          local.get $9
+          local.set $12
+          local.get $5
           i32.load $0 offset=4
-          local.get $13
+          local.get $12
           i32.load $0 offset=4
           i32.eq
           if
            i32.const 1
-           local.set $8
+           local.set $6
            br $for-break4
           end
-          local.get $7
+          local.get $4
           i32.const 1
           i32.add
-          local.set $7
+          local.set $4
           br $for-loop|4
          end
         end
        end
-       local.get $8
+       local.get $6
        i32.eqz
        if
-        local.get $9
+        local.get $5
         i32.load $0 offset=4
         call $assembly/env/resetCtrlInstance
         drop
        end
-       local.get $9
+       local.get $5
        i32.load $0 offset=16
-       local.get $9
+       local.get $5
        i32.load $0 offset=20
-       local.get $9
+       local.get $5
        i32.load $0 offset=12
        i32.const 2
        i32.shl
        memory.copy $0 $0
-       local.get $4
+       local.get $1
+       local.get $2
        local.get $5
-       local.get $9
        i32.load $0
        call_indirect $0 (type $i32_i32_=>_none)
-       local.get $8
+       local.get $6
        i32.eqz
        if
-        local.get $9
+        local.get $5
         i32.load $0 offset=8
-        local.tee $7
+        local.tee $4
         i32.load $0
         if
          i32.const 8
+         local.get $1
+         local.get $2
          local.get $4
-         local.get $5
-         local.get $7
          i32.load $0
          call $assembly/graph/fade/fadeIn
         end
-        local.get $7
+        local.get $4
         i32.load $0 offset=4
         if
          i32.const 8
+         local.get $1
+         local.get $2
          local.get $4
-         local.get $5
-         local.get $7
          i32.load $0 offset=4
          call $assembly/graph/fade/fadeIn
         end
-        local.get $7
+        local.get $4
         i32.load $0 offset=8
         if
          i32.const 8
+         local.get $1
+         local.get $2
          local.get $4
-         local.get $5
-         local.get $7
          i32.load $0 offset=8
          call $assembly/graph/fade/fadeIn
         end
        end
-       local.get $9
+       local.get $5
        i32.load $0 offset=8
-       local.tee $7
+       local.tee $4
        i32.load $0
        if
-        local.get $7
-        i32.load $0
-        local.get $6
-        i32.load $0
-        local.tee $8
         local.get $4
+        i32.load $0
+        local.get $3
+        i32.load $0
+        local.tee $5
+        local.get $1
+        local.get $2
         local.get $5
-        local.get $8
         call $assembly/math/add_audio_audio
        end
-       local.get $7
+       local.get $4
        i32.load $0 offset=4
        if
-        local.get $7
-        i32.load $0 offset=4
-        local.get $6
-        i32.load $0 offset=4
-        local.tee $8
         local.get $4
+        i32.load $0 offset=4
+        local.get $3
+        i32.load $0 offset=4
+        local.tee $5
+        local.get $1
+        local.get $2
         local.get $5
-        local.get $8
+        call $assembly/math/add_audio_audio
+       end
+       local.get $4
+       i32.load $0 offset=8
+       if
+        local.get $4
+        i32.load $0 offset=8
+        local.get $3
+        i32.load $0 offset=8
+        local.tee $4
+        local.get $1
+        local.get $2
+        local.get $4
         call $assembly/math/add_audio_audio
        end
        local.get $7
-       i32.load $0 offset=8
-       if
-        local.get $7
-        i32.load $0 offset=8
-        local.get $6
-        i32.load $0 offset=8
-        local.tee $7
-        local.get $4
-        local.get $5
-        local.get $7
-        call $assembly/math/add_audio_audio
-       end
-       local.get $11
        i32.const 1
        i32.add
-       local.set $11
+       local.set $7
        br $for-loop|3
       end
      end
     else
      loop $for-loop|5
+      local.get $7
       local.get $11
-      local.get $10
       i32.load $0
       i32.lt_u
       if
-       local.get $11
+       local.get $7
        if
         local.get $0
         i32.load $0 offset=28
-        local.get $1
+        local.get $9
         f64.store $0
         local.get $0
         i32.load $0 offset=28
-        local.get $2
+        local.get $10
         f64.store $0 offset=56
        end
-       local.get $10
-       i32.load $0 offset=8
        local.get $11
+       i32.load $0 offset=8
+       local.get $7
        call $~lib/staticarray/StaticArray<~lib/staticarray/StaticArray<f32>>#__get
-       local.tee $13
+       local.tee $12
        i32.load $0 offset=4
        local.get $0
        i32.load $0 offset=24
-       local.tee $7
+       local.tee $4
        call $assembly/env/setCtrlInstanceAt
        drop
-       local.get $13
-       local.get $7
+       local.get $12
+       local.get $4
        i32.store $0
        local.get $0
-       local.get $7
+       local.get $4
        i32.const 2
        i32.add
-       local.tee $7
+       local.tee $4
        i32.const 0
-       local.get $7
+       local.get $4
        i32.const 128
        i32.ne
        select
        i32.store $0 offset=24
        i32.const 0
-       local.set $8
+       local.set $6
        i32.const 0
-       local.set $7
+       local.set $4
        loop $for-loop|6
-        local.get $7
-        local.get $15
+        local.get $4
+        local.get $14
         i32.load $0
         i32.lt_u
         if
          block $for-break6
-          local.get $15
+          local.get $14
           i32.load $0 offset=8
-          local.get $7
+          local.get $4
           call $~lib/staticarray/StaticArray<~lib/staticarray/StaticArray<f32>>#__get
-          local.set $9
-          local.get $13
+          local.set $5
+          local.get $12
           i32.load $0 offset=4
-          local.get $9
+          local.get $5
           i32.load $0 offset=4
           i32.eq
           if
            i32.const 1
-           local.set $8
+           local.set $6
            br $for-break6
           end
-          local.get $7
+          local.get $4
           i32.const 1
           i32.add
-          local.set $7
+          local.set $4
           br $for-loop|6
          end
         end
        end
-       local.get $8
+       local.get $6
        i32.eqz
        if
-        local.get $13
+        local.get $12
         i32.load $0 offset=4
         call $assembly/env/resetCtrlInstance
         drop
        end
-       local.get $13
+       local.get $12
        i32.load $0 offset=16
-       local.get $13
+       local.get $12
        i32.load $0 offset=20
-       local.get $13
+       local.get $12
        i32.load $0 offset=12
        i32.const 2
        i32.shl
        memory.copy $0 $0
-       local.get $4
-       local.get $5
-       local.get $13
+       local.get $1
+       local.get $2
+       local.get $12
        i32.load $0
        call_indirect $0 (type $i32_i32_=>_none)
-       local.get $8
+       local.get $6
        i32.eqz
        if
-        local.get $13
+        local.get $12
         i32.load $0 offset=8
-        local.tee $7
+        local.tee $4
         i32.load $0
         if
          i32.const 8
+         local.get $1
+         local.get $2
          local.get $4
-         local.get $5
-         local.get $7
          i32.load $0
          call $assembly/graph/fade/fadeIn
         end
-        local.get $7
+        local.get $4
         i32.load $0 offset=4
         if
          i32.const 8
+         local.get $1
+         local.get $2
          local.get $4
-         local.get $5
-         local.get $7
          i32.load $0 offset=4
          call $assembly/graph/fade/fadeIn
         end
-        local.get $7
+        local.get $4
         i32.load $0 offset=8
         if
          i32.const 8
+         local.get $1
+         local.get $2
          local.get $4
-         local.get $5
-         local.get $7
          i32.load $0 offset=8
          call $assembly/graph/fade/fadeIn
         end
        end
-       local.get $14
+       local.get $13
        if (result i32)
         i32.const 0
-        local.set $9
+        local.set $5
         i32.const 0
-        local.set $7
+        local.set $4
         loop $for-loop|7
-         local.get $7
-         local.get $14
+         local.get $4
+         local.get $13
          i32.load $0
          i32.lt_u
          if
           block $for-break7
-           local.get $14
-           i32.load $0 offset=8
-           local.get $7
-           call $~lib/staticarray/StaticArray<~lib/staticarray/StaticArray<f32>>#__get
-           local.set $8
            local.get $13
+           i32.load $0 offset=8
+           local.get $4
+           call $~lib/staticarray/StaticArray<~lib/staticarray/StaticArray<f32>>#__get
+           local.set $6
+           local.get $12
            i32.load $0 offset=4
-           local.get $8
+           local.get $6
            i32.load $0 offset=4
            i32.eq
            if
             i32.const 1
-            local.set $9
+            local.set $5
             br $for-break7
            end
-           local.get $7
+           local.get $4
            i32.const 1
            i32.add
-           local.set $7
+           local.set $4
            br $for-loop|7
           end
          end
         end
-        local.get $9
+        local.get $5
         i32.eqz
        else
         i32.const 1
        end
        if
-        local.get $13
+        local.get $12
         i32.load $0 offset=8
-        local.tee $7
+        local.tee $4
         i32.load $0
         if
          i32.const 128
+         local.get $1
+         local.get $2
          local.get $4
-         local.get $5
-         local.get $7
          i32.load $0
          call $assembly/graph/fade/fadeOut
         end
-        local.get $7
+        local.get $4
         i32.load $0 offset=4
         if
          i32.const 128
+         local.get $1
+         local.get $2
          local.get $4
-         local.get $5
-         local.get $7
          i32.load $0 offset=4
          call $assembly/graph/fade/fadeOut
         end
-        local.get $7
+        local.get $4
         i32.load $0 offset=8
         if
          i32.const 128
+         local.get $1
+         local.get $2
          local.get $4
-         local.get $5
-         local.get $7
          i32.load $0 offset=8
          call $assembly/graph/fade/fadeOut
         end
        end
-       local.get $13
+       local.get $12
        i32.load $0 offset=8
-       local.tee $7
+       local.tee $4
        i32.load $0
        if
-        local.get $7
-        i32.load $0
-        local.get $6
-        i32.load $0
-        local.tee $8
         local.get $4
+        i32.load $0
+        local.get $3
+        i32.load $0
+        local.tee $5
+        local.get $1
+        local.get $2
         local.get $5
-        local.get $8
         call $assembly/math/add_audio_audio
        end
-       local.get $7
+       local.get $4
        i32.load $0 offset=4
        if
-        local.get $7
-        i32.load $0 offset=4
-        local.get $6
-        i32.load $0 offset=4
-        local.tee $8
         local.get $4
+        i32.load $0 offset=4
+        local.get $3
+        i32.load $0 offset=4
+        local.tee $5
+        local.get $1
+        local.get $2
         local.get $5
-        local.get $8
+        call $assembly/math/add_audio_audio
+       end
+       local.get $4
+       i32.load $0 offset=8
+       if
+        local.get $4
+        i32.load $0 offset=8
+        local.get $3
+        i32.load $0 offset=8
+        local.tee $4
+        local.get $1
+        local.get $2
+        local.get $4
         call $assembly/math/add_audio_audio
        end
        local.get $7
-       i32.load $0 offset=8
-       if
-        local.get $7
-        i32.load $0 offset=8
-        local.get $6
-        i32.load $0 offset=8
-        local.tee $7
-        local.get $4
-        local.get $5
-        local.get $7
-        call $assembly/math/add_audio_audio
-       end
-       local.get $11
        i32.const 1
        i32.add
-       local.set $11
+       local.set $7
        br $for-loop|5
       end
      end
@@ -7970,363 +8004,363 @@
     i32.store $0 offset=16
    end
   else
-   local.get $10
-   local.get $14
+   local.get $11
+   local.get $13
    i32.eq
    if
     loop $for-loop|8
-     local.get $8
-     local.get $10
+     local.get $5
+     local.get $11
      i32.load $0
      i32.lt_u
      if
-      local.get $8
+      local.get $5
       if
        local.get $0
        i32.load $0 offset=28
-       local.get $1
+       local.get $9
        f64.store $0
        local.get $0
        i32.load $0 offset=28
-       local.get $2
+       local.get $10
        f64.store $0 offset=56
       end
-      local.get $10
+      local.get $11
       i32.load $0 offset=8
-      local.get $8
+      local.get $5
       call $~lib/staticarray/StaticArray<~lib/staticarray/StaticArray<f32>>#__get
-      local.tee $7
+      local.tee $4
       i32.load $0 offset=4
       local.get $0
       i32.load $0 offset=24
-      local.tee $9
+      local.tee $6
       call $assembly/env/setCtrlInstanceAt
       drop
-      local.get $7
-      local.get $9
+      local.get $4
+      local.get $6
       i32.store $0
       local.get $0
-      local.get $9
+      local.get $6
       i32.const 2
       i32.add
-      local.tee $9
+      local.tee $6
       i32.const 0
-      local.get $9
+      local.get $6
       i32.const 128
       i32.ne
       select
       i32.store $0 offset=24
-      local.get $7
+      local.get $4
       i32.load $0 offset=4
       call $assembly/env/resetCtrlInstance
       drop
-      local.get $7
+      local.get $4
       i32.load $0 offset=16
-      local.get $7
+      local.get $4
       i32.load $0 offset=20
-      local.get $7
+      local.get $4
       i32.load $0 offset=12
       i32.const 2
       i32.shl
       memory.copy $0 $0
+      local.get $1
+      local.get $2
       local.get $4
-      local.get $5
-      local.get $7
       i32.load $0
       call_indirect $0 (type $i32_i32_=>_none)
-      local.get $7
+      local.get $4
       i32.load $0 offset=8
-      local.tee $9
+      local.tee $6
       i32.load $0
       if
        i32.const 32
-       local.get $4
-       local.get $5
-       local.get $9
+       local.get $1
+       local.get $2
+       local.get $6
        i32.load $0
        call $assembly/graph/fade/fadeIn
       end
-      local.get $9
+      local.get $6
       i32.load $0 offset=4
       if
        i32.const 32
-       local.get $4
-       local.get $5
-       local.get $9
+       local.get $1
+       local.get $2
+       local.get $6
        i32.load $0 offset=4
        call $assembly/graph/fade/fadeIn
       end
-      local.get $9
+      local.get $6
       i32.load $0 offset=8
       if
        i32.const 32
-       local.get $4
-       local.get $5
-       local.get $9
+       local.get $1
+       local.get $2
+       local.get $6
        i32.load $0 offset=8
        call $assembly/graph/fade/fadeIn
       end
-      local.get $7
+      local.get $4
       i32.load $0 offset=8
-      local.tee $7
+      local.tee $4
       i32.load $0
       if
-       local.get $7
-       i32.load $0
-       local.get $6
-       i32.load $0
-       local.tee $9
        local.get $4
-       local.get $5
-       local.get $9
+       i32.load $0
+       local.get $3
+       i32.load $0
+       local.tee $6
+       local.get $1
+       local.get $2
+       local.get $6
        call $assembly/math/add_audio_audio
       end
-      local.get $7
+      local.get $4
       i32.load $0 offset=4
       if
-       local.get $7
-       i32.load $0 offset=4
-       local.get $6
-       i32.load $0 offset=4
-       local.tee $9
        local.get $4
-       local.get $5
-       local.get $9
+       i32.load $0 offset=4
+       local.get $3
+       i32.load $0 offset=4
+       local.tee $6
+       local.get $1
+       local.get $2
+       local.get $6
        call $assembly/math/add_audio_audio
       end
-      local.get $7
+      local.get $4
       i32.load $0 offset=8
       if
-       local.get $7
-       i32.load $0 offset=8
-       local.get $6
-       i32.load $0 offset=8
-       local.tee $7
        local.get $4
-       local.get $5
-       local.get $7
+       i32.load $0 offset=8
+       local.get $3
+       i32.load $0 offset=8
+       local.tee $4
+       local.get $1
+       local.get $2
+       local.get $4
        call $assembly/math/add_audio_audio
       end
-      local.get $8
+      local.get $5
       i32.const 1
       i32.add
-      local.set $8
+      local.set $5
       br $for-loop|8
      end
     end
    else
     loop $for-loop|9
-     local.get $7
-     local.get $10
+     local.get $4
+     local.get $11
      i32.load $0
      i32.lt_u
      if
-      local.get $7
+      local.get $4
       if
        local.get $0
        i32.load $0 offset=28
-       local.get $1
+       local.get $9
        f64.store $0
        local.get $0
        i32.load $0 offset=28
-       local.get $2
+       local.get $10
        f64.store $0 offset=56
       end
-      local.get $10
+      local.get $11
       i32.load $0 offset=8
-      local.get $7
+      local.get $4
       call $~lib/staticarray/StaticArray<~lib/staticarray/StaticArray<f32>>#__get
-      local.tee $11
+      local.tee $7
       i32.load $0 offset=4
       local.get $0
       i32.load $0 offset=24
-      local.tee $8
+      local.tee $5
       call $assembly/env/setCtrlInstanceAt
       drop
-      local.get $11
-      local.get $8
+      local.get $7
+      local.get $5
       i32.store $0
       local.get $0
-      local.get $8
+      local.get $5
       i32.const 2
       i32.add
-      local.tee $8
+      local.tee $5
       i32.const 0
-      local.get $8
+      local.get $5
       i32.const 128
       i32.ne
       select
       i32.store $0 offset=24
-      local.get $11
+      local.get $7
       i32.load $0 offset=4
       call $assembly/env/resetCtrlInstance
       drop
-      local.get $11
+      local.get $7
       i32.load $0 offset=16
-      local.get $11
+      local.get $7
       i32.load $0 offset=20
-      local.get $11
+      local.get $7
       i32.load $0 offset=12
       i32.const 2
       i32.shl
       memory.copy $0 $0
-      local.get $4
-      local.get $5
-      local.get $11
+      local.get $1
+      local.get $2
+      local.get $7
       i32.load $0
       call_indirect $0 (type $i32_i32_=>_none)
-      local.get $11
+      local.get $7
       i32.load $0 offset=8
-      local.tee $8
+      local.tee $5
       i32.load $0
       if
        i32.const 32
-       local.get $4
+       local.get $1
+       local.get $2
        local.get $5
-       local.get $8
        i32.load $0
        call $assembly/graph/fade/fadeIn
       end
-      local.get $8
+      local.get $5
       i32.load $0 offset=4
       if
        i32.const 32
-       local.get $4
+       local.get $1
+       local.get $2
        local.get $5
-       local.get $8
        i32.load $0 offset=4
        call $assembly/graph/fade/fadeIn
       end
-      local.get $8
+      local.get $5
       i32.load $0 offset=8
       if
        i32.const 32
-       local.get $4
+       local.get $1
+       local.get $2
        local.get $5
-       local.get $8
        i32.load $0 offset=8
        call $assembly/graph/fade/fadeIn
       end
-      local.get $14
+      local.get $13
       if (result i32)
        i32.const 0
-       local.set $8
+       local.set $6
        i32.const 0
-       local.set $9
+       local.set $5
        loop $for-loop|10
-        local.get $9
-        local.get $14
+        local.get $5
+        local.get $13
         i32.load $0
         i32.lt_u
         if
          block $for-break10
-          local.get $14
-          i32.load $0 offset=8
-          local.get $9
-          call $~lib/staticarray/StaticArray<~lib/staticarray/StaticArray<f32>>#__get
-          local.set $13
-          local.get $11
-          i32.load $0 offset=4
           local.get $13
+          i32.load $0 offset=8
+          local.get $5
+          call $~lib/staticarray/StaticArray<~lib/staticarray/StaticArray<f32>>#__get
+          local.set $12
+          local.get $7
+          i32.load $0 offset=4
+          local.get $12
           i32.load $0 offset=4
           i32.eq
           if
            i32.const 1
-           local.set $8
+           local.set $6
            br $for-break10
           end
-          local.get $9
+          local.get $5
           i32.const 1
           i32.add
-          local.set $9
+          local.set $5
           br $for-loop|10
          end
         end
        end
-       local.get $8
+       local.get $6
        i32.eqz
       else
        i32.const 1
       end
       if
-       local.get $11
+       local.get $7
        i32.load $0 offset=8
-       local.tee $8
+       local.tee $5
        i32.load $0
        if
         i32.const 128
-        local.get $4
+        local.get $1
+        local.get $2
         local.get $5
-        local.get $8
         i32.load $0
         call $assembly/graph/fade/fadeOut
        end
-       local.get $8
+       local.get $5
        i32.load $0 offset=4
        if
         i32.const 128
-        local.get $4
+        local.get $1
+        local.get $2
         local.get $5
-        local.get $8
         i32.load $0 offset=4
         call $assembly/graph/fade/fadeOut
        end
-       local.get $8
+       local.get $5
        i32.load $0 offset=8
        if
         i32.const 128
-        local.get $4
+        local.get $1
+        local.get $2
         local.get $5
-        local.get $8
         i32.load $0 offset=8
         call $assembly/graph/fade/fadeOut
        end
       end
-      local.get $11
+      local.get $7
       i32.load $0 offset=8
-      local.tee $8
+      local.tee $5
       i32.load $0
       if
-       local.get $8
-       i32.load $0
-       local.get $6
-       i32.load $0
-       local.tee $9
-       local.get $4
        local.get $5
-       local.get $9
+       i32.load $0
+       local.get $3
+       i32.load $0
+       local.tee $6
+       local.get $1
+       local.get $2
+       local.get $6
        call $assembly/math/add_audio_audio
       end
-      local.get $8
+      local.get $5
       i32.load $0 offset=4
       if
-       local.get $8
-       i32.load $0 offset=4
-       local.get $6
-       i32.load $0 offset=4
-       local.tee $9
-       local.get $4
        local.get $5
-       local.get $9
+       i32.load $0 offset=4
+       local.get $3
+       i32.load $0 offset=4
+       local.tee $6
+       local.get $1
+       local.get $2
+       local.get $6
        call $assembly/math/add_audio_audio
       end
-      local.get $8
+      local.get $5
       i32.load $0 offset=8
       if
-       local.get $8
-       i32.load $0 offset=8
-       local.get $6
-       i32.load $0 offset=8
-       local.tee $8
-       local.get $4
        local.get $5
-       local.get $8
+       i32.load $0 offset=8
+       local.get $3
+       i32.load $0 offset=8
+       local.tee $5
+       local.get $1
+       local.get $2
+       local.get $5
        call $assembly/math/add_audio_audio
       end
-      local.get $7
+      local.get $4
       i32.const 1
       i32.add
-      local.set $7
+      local.set $4
       br $for-loop|9
      end
     end
@@ -8335,33 +8369,33 @@
    i32.const 0
    i32.store $0 offset=16
   end
-  local.get $12
+  local.get $8
   local.get $0
   i32.load $0 offset=16
   i32.ne
   if
    local.get $0
-   local.get $12
+   local.get $8
    i32.store $0 offset=16
-   local.get $12
+   local.get $8
    if
-    local.get $12
+    local.get $8
     i32.load $0 offset=4
     local.get $0
     i32.load $0 offset=24
-    local.tee $7
+    local.tee $4
     call $assembly/env/setCtrlInstanceAt
     drop
-    local.get $12
-    local.get $7
+    local.get $8
+    local.get $4
     i32.store $0
     local.get $0
-    local.get $7
+    local.get $4
     i32.const 2
     i32.add
-    local.tee $7
+    local.tee $4
     i32.const 0
-    local.get $7
+    local.get $4
     i32.const 128
     i32.ne
     select
@@ -8370,58 +8404,58 @@
   end
   local.get $0
   i32.load $0 offset=28
-  local.get $1
+  local.get $9
   f64.store $0
   local.get $0
   i32.load $0 offset=28
-  local.get $2
+  local.get $10
   f64.store $0 offset=56
-  local.get $12
+  local.get $8
   i32.load $0 offset=16
-  local.get $12
+  local.get $8
   i32.load $0 offset=20
-  local.get $12
+  local.get $8
   i32.load $0 offset=12
   i32.const 2
   i32.shl
   memory.copy $0 $0
-  local.get $4
-  local.get $5
-  local.get $12
+  local.get $1
+  local.get $2
+  local.get $8
   i32.load $0
   call_indirect $0 (type $i32_i32_=>_none)
-  local.get $4
-  i32.const 2
-  i32.shl
-  local.tee $7
-  local.get $6
-  i32.load $0
-  i32.add
-  local.get $12
-  i32.load $0 offset=8
-  i32.load $0
-  local.get $7
-  i32.add
-  local.get $5
-  local.get $4
-  i32.sub
+  local.get $1
   i32.const 2
   i32.shl
   local.tee $4
-  memory.copy $0 $0
-  local.get $6
-  i32.load $0 offset=4
-  local.get $7
+  local.get $3
+  i32.load $0
   i32.add
-  local.get $12
+  local.get $8
+  i32.load $0 offset=8
+  i32.load $0
+  local.get $4
+  i32.add
+  local.get $2
+  local.get $1
+  i32.sub
+  i32.const 2
+  i32.shl
+  local.tee $1
+  memory.copy $0 $0
+  local.get $3
+  i32.load $0 offset=4
+  local.get $4
+  i32.add
+  local.get $8
   i32.load $0 offset=8
   i32.load $0 offset=4
-  local.get $7
-  i32.add
   local.get $4
+  i32.add
+  local.get $1
   memory.copy $0 $0
   local.get $0
-  local.get $10
+  local.get $11
   i32.store $0 offset=20
  )
  (func $assembly/gen/gen/Gen#set:gain (param $0 i32) (param $1 f32)
@@ -8829,11 +8863,6 @@
  (func $assembly/util/getObjectSize<assembly/gen/rate/Rate> (result i32)
   i32.const 12
  )
- (func $assembly/gen/biquad/Biquad#set:_b2 (param $0 i32) (param $1 f64)
-  local.get $0
-  local.get $1
-  f64.store $0 offset=88
- )
  (func $~lib/rt/__newArray (param $0 i32) (result i32)
   (local $1 i32)
   i32.const 12
@@ -8863,16 +8892,6 @@
   i32.const 3
   i32.store $0 offset=12
   local.get $0
- )
- (func $assembly/gen/biquad/Biquad#set:_params_Q (param $0 i32) (param $1 i32)
-  local.get $0
-  local.get $1
-  i32.store $0 offset=100
- )
- (func $assembly/gen/biquad/Biquad#set:_params_gain (param $0 i32) (param $1 i32)
-  local.get $0
-  local.get $1
-  i32.store $0 offset=104
  )
  (func $assembly/gen/biquad/Biquad#constructor (param $0 i32) (param $1 i32) (result i32)
   local.get $0
@@ -9479,6 +9498,11 @@
   local.get $0
   local.get $1
   i32.store $0 offset=84
+ )
+ (func $assembly/gen/daverb/Daverb#set:_params_ed (param $0 i32) (param $1 i32)
+  local.get $0
+  local.get $1
+  i32.store $0 offset=88
  )
  (func $assembly/gen/daverb/Daverb#set:_dpn (param $0 i32) (param $1 f32)
   local.get $0
@@ -14496,9 +14520,6 @@
   local.tee $4
   call $assembly/core/runner/Runner#fill
   local.get $1
-  f64.const 0
-  f64.const 0
-  f64.const 0
   i32.const 0
   i32.const 0
   local.get $4
@@ -15068,10 +15089,6 @@
   local.get $0
   f64.load $0 offset=48
  )
- (func $assembly/gen/biquad/Biquad#get:_b0 (param $0 i32) (result f64)
-  local.get $0
-  f64.load $0 offset=72
- )
  (func $assembly/gen/biquad/Biquad#get:_b1 (param $0 i32) (result f64)
   local.get $0
   f64.load $0 offset=80
@@ -15079,10 +15096,6 @@
  (func $assembly/gen/biquad/Biquad#get:_b2 (param $0 i32) (result f64)
   local.get $0
   f64.load $0 offset=88
- )
- (func $assembly/gen/biquad/Biquad#get:_a1 (param $0 i32) (result f64)
-  local.get $0
-  f64.load $0 offset=56
  )
  (func $assembly/gen/biquad/Biquad#get:_a2 (param $0 i32) (result f64)
   local.get $0

@@ -67,9 +67,9 @@ export class VmCtrl extends VmObject {
     instance?.exports.update_gens()
     instance?.exports.reset_gens()
 
-    payload?.signal.L?.fill(0)
-    payload?.signal.R?.fill(0)
-    payload?.signal.LR?.fill(0)
+    // payload?.signal.L?.fill(0)
+    // payload?.signal.R?.fill(0)
+    // payload?.signal.LR?.fill(0)
   }
 }
 
