@@ -1,7 +1,6 @@
-import { Clock } from './core/clock'
-import { Engine, Core } from './core/engine'
+import { Core, Engine } from './core/engine'
 import { Bar, Ctrl, Runner, Signal } from './core/runner'
-import { logf, logi } from './env'
+import { logf } from './env'
 import { Bap } from './gen/bap'
 import { Bbp } from './gen/bbp'
 import { Bhp } from './gen/bhp'
@@ -23,6 +22,7 @@ import { Diode } from './gen/diode'
 import { Exp } from './gen/exp'
 import { Freesound } from './gen/freesound'
 import { Gen } from './gen/gen'
+import { Inc } from './gen/inc'
 import { Lp } from './gen/lp'
 import { Mhp } from './gen/mhp'
 import { Mlp } from './gen/mlp'
@@ -197,6 +197,10 @@ export function preventTreeShaking(gen: Gen): void {
 
   const comp: Comp = new Comp(engine)
   const compSize: usize = util.getObjectSize<Comp>()
+
+  const inc: Inc = new Inc(engine)
+  const incSize: usize = util.getObjectSize<Inc>()
+  inc.trig = 0
 
   const freesound: Freesound = new Freesound(engine)
   const freesoundSize: usize = util.getObjectSize<Freesound>()

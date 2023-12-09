@@ -110,7 +110,7 @@ const Proto = [
   [inheritSample, ['sample', 'gen']],
   [['delay', 'daverb', 'tap', 'comp', 'lp', 'diode',
     'dclip', 'dcliplin', 'dclipexp',
-    'clip', 'clamp'], ['gen']],
+    'clip', 'clamp', 'inc'], ['gen']],
   [inheritAOsc, ['aosc', 'osc', 'gen']],
   [inheritOsc, ['osc', 'gen']],
 ]

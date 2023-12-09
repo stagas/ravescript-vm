@@ -22,6 +22,9 @@ export class Delay extends Gen {
 
   _reset(): void {
     this._floats.fill(0, 0, DELAY_MAX_SIZE)
+    // this._stepf = 0
+    // this._index = 0
+    // this._targetf = 0
   }
 
   _audio(begin: u32, end: u32, out: usize): void {

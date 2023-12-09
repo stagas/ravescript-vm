@@ -257,8 +257,10 @@
  (export "runner_get_ctrls" (func $assembly/core/wavetable/Wavetable#get:sine))
  (export "runner_Ctrl_get_signal" (func $assembly/core/antialias-wavetable/AntialiasWavetable#get:freqs))
  (export "runner_get_bars" (func $assembly/core/antialias-wavetable/AntialiasWavetable#get:imag))
- (export "runner_Bar_get_size" (func $assembly/core/antialias-wavetable/AntialiasWavetable#get:real))
  (export "runner_get_clock" (func $assembly/core/runner/Runner#get:clock))
+ (export "clock_get_time" (func $assembly/core/clock/Clock#get:time))
+ (export "clock_get_barTime" (func $assembly/core/clock/Clock#get:barTime))
+ (export "runner_Bar_get_size" (func $assembly/core/antialias-wavetable/AntialiasWavetable#get:real))
  (export "runner_Bar_get_tracks" (func $assembly/core/antialias-wavetable/AntialiasWavetable#get:freqs))
  (export "runner_get_tableIndex" (func $assembly/core/antialias-wavetable/AntialiasWavetable#get:maxHarms))
  (export "runner_Ctrl_get_id" (func $assembly/core/antialias-wavetable/AntialiasWavetable#get:imag))
@@ -276,8 +278,6 @@
  (export "runner_Bar_get_main" (func $assembly/core/antialias-wavetable/AntialiasWavetable#get:imag))
  (export "copy_copyInto" (func $assembly/graph/copy/copyInto))
  (export "runner_fill" (func $assembly/core/runner/Runner#fill))
- (export "clock_get_time" (func $assembly/core/clock/Clock#get:time))
- (export "clock_get_barTime" (func $assembly/core/clock/Clock#get:barTime))
  (export "clock_get_nextBarTime" (func $assembly/core/clock/Clock#get:nextBarTime))
  (export "clock_get_timeStep" (func $assembly/core/clock/Clock#get:timeStep))
  (export "runner_get_last" (func $assembly/core/wavetable/Wavetable#get:exp))
@@ -573,6 +573,12 @@
  (export "gen_comp_set__gainReduction" (func $assembly/gen/delay/Delay#set:_targetf))
  (export "gen_comp_constructor" (func $assembly/gen/comp/Comp#constructor))
  (export "util_getObjectSize__gen_comp_Comp_" (func $assembly/util/getObjectSize<assembly/gen/sin/Sin>))
+ (export "gen_inc_set_amt" (func $assembly/gen/osc/Osc#set:hz))
+ (export "gen_inc_set_trig" (func $assembly/gen/osc/Osc#set:trig))
+ (export "gen_inc_set__lastTrig" (func $~lib/rt/common/OBJECT#set:rtSize))
+ (export "gen_inc_set__value" (func $assembly/gen/lp/Lp#set:_sample))
+ (export "gen_inc_constructor" (func $assembly/gen/inc/Inc#constructor))
+ (export "util_getObjectSize__gen_inc_Inc_" (func $assembly/util/getObjectSize<assembly/gen/lp/Lp>))
  (export "gen_sample_set_offset" (func $assembly/gen/osc/Osc#set:hz))
  (export "gen_sample_set_trig" (func $assembly/gen/osc/Osc#set:trig))
  (export "gen_sample_set__floats" (func $~lib/rt/common/OBJECT#set:rtSize))
@@ -671,6 +677,9 @@
  (export "gen_diode_get__k" (func $assembly/gen/diode/Diode#get:_k))
  (export "gen_diode_get_cut" (func $assembly/gen/delay/Delay#get:ms))
  (export "gen_diode__update" (func $assembly/gen/diode/Diode#_update))
+ (export "gen_inc_get__lastTrig" (func $assembly/gen/inc/Inc#get:_lastTrig))
+ (export "gen_inc_get_trig" (func $assembly/gen/daverb/Daverb#get:pd))
+ (export "gen_inc__update" (func $assembly/gen/inc/Inc#_update))
  (export "gen_lp_get_cut" (func $assembly/gen/delay/Delay#get:ms))
  (export "gen_lp__update" (func $assembly/gen/lp/Lp#_update))
  (export "gen_mhp_get_cut" (func $assembly/gen/mhp/Mhp#get:cut))
@@ -822,6 +831,9 @@
  (export "gen_diode_get__z4" (func $assembly/gen/daverb/Daverb#get:ex))
  (export "gen_diode_soft" (func $assembly/gen/diode/soft))
  (export "gen_diode__audio" (func $assembly/gen/diode/Diode#_audio))
+ (export "gen_inc_get_amt" (func $assembly/gen/delay/Delay#get:ms))
+ (export "gen_inc_get__value" (func $assembly/gen/diode/Diode#get:q))
+ (export "gen_inc__audio" (func $assembly/gen/inc/Inc#_audio))
  (export "gen_lp_get__alpha" (func $assembly/gen/osc/Osc#get:offset))
  (export "gen_lp_get__sample" (func $assembly/gen/diode/Diode#get:q))
  (export "gen_lp_get_in" (func $assembly/core/wavetable/Wavetable#get:sine))
@@ -6053,6 +6065,14 @@
   local.get $0
   i32.load $0 offset=28
  )
+ (func $assembly/core/clock/Clock#get:time (param $0 i32) (result f64)
+  local.get $0
+  f64.load $0
+ )
+ (func $assembly/core/clock/Clock#get:barTime (param $0 i32) (result f64)
+  local.get $0
+  f64.load $0 offset=56
+ )
  (func $assembly/graph/copy/copyMem (param $0 i32) (param $1 i32) (param $2 i32)
   local.get $1
   local.get $0
@@ -6367,8 +6387,10 @@
  )
  (func $assembly/core/runner/Runner#fill (param $0 i32) (param $1 i32) (param $2 i32) (param $3 i32) (param $4 i32)
   (local $5 i32)
-  (local $6 i32)
-  (local $7 i32)
+  (local $6 f64)
+  (local $7 f64)
+  (local $8 i32)
+  (local $9 i32)
   local.get $0
   i32.load $0 offset=4
   local.get $1
@@ -6378,6 +6400,14 @@
   if
    return
   end
+  local.get $0
+  i32.load $0 offset=28
+  local.tee $8
+  f64.load $0
+  local.set $6
+  local.get $8
+  f64.load $0 offset=56
+  local.set $7
   loop $for-loop|0
    local.get $5
    local.get $1
@@ -6386,90 +6416,90 @@
    if
     local.get $0
     i32.load $0 offset=28
-    f64.const 0
+    local.get $6
     f64.store $0
     local.get $0
     i32.load $0 offset=28
-    f64.const 0
+    local.get $7
     f64.store $0 offset=56
     local.get $1
     i32.load $0 offset=8
     local.get $5
     call $~lib/staticarray/StaticArray<~lib/staticarray/StaticArray<f32>>#__get
-    local.tee $6
+    local.tee $8
     i32.load $0 offset=4
     local.get $0
     i32.load $0 offset=24
-    local.tee $7
+    local.tee $9
     call $assembly/env/setCtrlInstanceAt
     drop
-    local.get $6
-    local.get $7
+    local.get $8
+    local.get $9
     i32.store $0
     local.get $0
-    local.get $7
+    local.get $9
     i32.const 2
     i32.add
-    local.tee $7
+    local.tee $9
     i32.const 0
-    local.get $7
+    local.get $9
     i32.const 128
     i32.ne
     select
     i32.store $0 offset=24
-    local.get $6
+    local.get $8
     i32.load $0 offset=16
-    local.get $6
+    local.get $8
     i32.load $0 offset=20
-    local.get $6
+    local.get $8
     i32.load $0 offset=12
     i32.const 2
     i32.shl
     memory.copy $0 $0
     local.get $2
     local.get $3
-    local.get $6
+    local.get $8
     i32.load $0
     call_indirect $0 (type $i32_i32_=>_none)
-    local.get $6
+    local.get $8
     i32.load $0 offset=8
-    local.tee $6
+    local.tee $8
     i32.load $0
     if
-     local.get $6
+     local.get $8
      i32.load $0
      local.get $4
      i32.load $0
-     local.tee $7
+     local.tee $9
      local.get $2
      local.get $3
-     local.get $7
+     local.get $9
      call $assembly/math/add_audio_audio
     end
-    local.get $6
+    local.get $8
     i32.load $0 offset=4
     if
-     local.get $6
+     local.get $8
      i32.load $0 offset=4
      local.get $4
      i32.load $0 offset=4
-     local.tee $7
+     local.tee $9
      local.get $2
      local.get $3
-     local.get $7
+     local.get $9
      call $assembly/math/add_audio_audio
     end
-    local.get $6
+    local.get $8
     i32.load $0 offset=8
     if
-     local.get $6
+     local.get $8
      i32.load $0 offset=8
      local.get $4
      i32.load $0 offset=8
-     local.tee $6
+     local.tee $8
      local.get $2
      local.get $3
-     local.get $6
+     local.get $8
      call $assembly/math/add_audio_audio
     end
     local.get $5
@@ -6485,11 +6515,11 @@
   if
    local.get $0
    i32.load $0 offset=28
-   f64.const 0
+   local.get $6
    f64.store $0
    local.get $0
    i32.load $0 offset=28
-   f64.const 0
+   local.get $7
    f64.store $0 offset=56
    local.get $1
    i32.load $0 offset=4
@@ -6557,14 +6587,6 @@
    local.get $2
    memory.copy $0 $0
   end
- )
- (func $assembly/core/clock/Clock#get:time (param $0 i32) (result f64)
-  local.get $0
-  f64.load $0
- )
- (func $assembly/core/clock/Clock#get:barTime (param $0 i32) (result f64)
-  local.get $0
-  f64.load $0 offset=56
  )
  (func $assembly/core/clock/Clock#get:nextBarTime (param $0 i32) (result f64)
   local.get $0
@@ -10047,13 +10069,38 @@
   f32.store $0 offset=36
   local.get $0
  )
+ (func $assembly/gen/inc/Inc#constructor (param $0 i32) (param $1 i32) (result i32)
+  local.get $0
+  if (result i32)
+   local.get $0
+  else
+   i32.const 24
+   i32.const 67
+   call $~lib/rt/stub/__new
+  end
+  local.get $1
+  call $assembly/gen/gen/Gen#constructor
+  local.tee $0
+  f32.const 1
+  f32.store $0 offset=8
+  local.get $0
+  f32.const 0
+  f32.store $0 offset=12
+  local.get $0
+  i32.const -1
+  i32.store $0 offset=16
+  local.get $0
+  f32.const 0
+  f32.store $0 offset=20
+  local.get $0
+ )
  (func $assembly/gen/sample/Sample#constructor (param $0 i32) (param $1 i32) (result i32)
   local.get $0
   if (result i32)
    local.get $0
   else
    i32.const 52
-   i32.const 68
+   i32.const 69
    call $~lib/rt/stub/__new
   end
   local.get $1
@@ -10094,7 +10141,7 @@
    local.get $0
   else
    i32.const 56
-   i32.const 67
+   i32.const 68
    call $~lib/rt/stub/__new
   end
   local.get $1
@@ -10117,7 +10164,7 @@
    local.get $0
   else
    i32.const 56
-   i32.const 69
+   i32.const 70
    call $~lib/rt/stub/__new
   end
   local.get $1
@@ -14742,6 +14789,11 @@
   drop
   i32.const 0
   local.get $2
+  call $assembly/gen/inc/Inc#constructor
+  f32.const 0
+  f32.store $0 offset=12
+  i32.const 0
+  local.get $2
   call $assembly/gen/freesound/Freesound#constructor
   f32.load $0 offset=52
   call $assembly/env/logf
@@ -17418,6 +17470,28 @@
   local.get $0
   local.get $5
   f32.store $0 offset=76
+ )
+ (func $assembly/gen/inc/Inc#get:_lastTrig (param $0 i32) (result i32)
+  local.get $0
+  i32.load $0 offset=16
+ )
+ (func $assembly/gen/inc/Inc#_update (param $0 i32)
+  local.get $0
+  i32.load $0 offset=16
+  local.get $0
+  f32.load $0 offset=12
+  i32.trunc_sat_f32_s
+  i32.ne
+  if
+   local.get $0
+   f32.const 0
+   f32.store $0 offset=20
+  end
+  local.get $0
+  local.get $0
+  f32.load $0 offset=12
+  i32.trunc_sat_f32_s
+  i32.store $0 offset=16
  )
  (func $assembly/gen/lp/Lp#_update (param $0 i32)
   (local $1 f32)
@@ -32459,6 +32533,191 @@
   local.get $0
   local.get $4
   f32.store $0 offset=44
+ )
+ (func $assembly/gen/inc/Inc#_audio (param $0 i32) (param $1 i32) (param $2 i32) (param $3 i32)
+  (local $4 f32)
+  (local $5 f32)
+  local.get $1
+  local.get $2
+  local.get $1
+  i32.sub
+  i32.add
+  local.set $2
+  local.get $3
+  local.get $1
+  i32.const 2
+  i32.shl
+  i32.add
+  local.set $3
+  local.get $0
+  f32.load $0 offset=8
+  f32.const 1.0000000474974513e-03
+  f32.mul
+  local.set $5
+  local.get $0
+  f32.load $0 offset=20
+  local.set $4
+  loop $for-loop|0
+   local.get $1
+   local.get $2
+   i32.lt_u
+   if
+    local.get $3
+    local.get $4
+    f32.store $0
+    local.get $3
+    i32.const 4
+    i32.add
+    local.tee $3
+    local.get $4
+    local.get $5
+    f32.add
+    local.tee $4
+    f32.store $0
+    local.get $3
+    i32.const 4
+    i32.add
+    local.tee $3
+    local.get $4
+    local.get $5
+    f32.add
+    local.tee $4
+    f32.store $0
+    local.get $3
+    i32.const 4
+    i32.add
+    local.tee $3
+    local.get $4
+    local.get $5
+    f32.add
+    local.tee $4
+    f32.store $0
+    local.get $3
+    i32.const 4
+    i32.add
+    local.tee $3
+    local.get $4
+    local.get $5
+    f32.add
+    local.tee $4
+    f32.store $0
+    local.get $3
+    i32.const 4
+    i32.add
+    local.tee $3
+    local.get $4
+    local.get $5
+    f32.add
+    local.tee $4
+    f32.store $0
+    local.get $3
+    i32.const 4
+    i32.add
+    local.tee $3
+    local.get $4
+    local.get $5
+    f32.add
+    local.tee $4
+    f32.store $0
+    local.get $3
+    i32.const 4
+    i32.add
+    local.tee $3
+    local.get $4
+    local.get $5
+    f32.add
+    local.tee $4
+    f32.store $0
+    local.get $3
+    i32.const 4
+    i32.add
+    local.tee $3
+    local.get $4
+    local.get $5
+    f32.add
+    local.tee $4
+    f32.store $0
+    local.get $3
+    i32.const 4
+    i32.add
+    local.tee $3
+    local.get $4
+    local.get $5
+    f32.add
+    local.tee $4
+    f32.store $0
+    local.get $3
+    i32.const 4
+    i32.add
+    local.tee $3
+    local.get $4
+    local.get $5
+    f32.add
+    local.tee $4
+    f32.store $0
+    local.get $3
+    i32.const 4
+    i32.add
+    local.tee $3
+    local.get $4
+    local.get $5
+    f32.add
+    local.tee $4
+    f32.store $0
+    local.get $3
+    i32.const 4
+    i32.add
+    local.tee $3
+    local.get $4
+    local.get $5
+    f32.add
+    local.tee $4
+    f32.store $0
+    local.get $3
+    i32.const 4
+    i32.add
+    local.tee $3
+    local.get $4
+    local.get $5
+    f32.add
+    local.tee $4
+    f32.store $0
+    local.get $3
+    i32.const 4
+    i32.add
+    local.tee $3
+    local.get $4
+    local.get $5
+    f32.add
+    local.tee $4
+    f32.store $0
+    local.get $3
+    i32.const 4
+    i32.add
+    local.tee $3
+    local.get $4
+    local.get $5
+    f32.add
+    local.tee $4
+    f32.store $0
+    local.get $4
+    local.get $5
+    f32.add
+    local.set $4
+    local.get $3
+    i32.const 4
+    i32.add
+    local.set $3
+    local.get $1
+    i32.const 16
+    i32.add
+    local.set $1
+    br $for-loop|0
+   end
+  end
+  local.get $0
+  local.get $4
+  f32.store $0 offset=20
  )
  (func $assembly/gen/lp/Lp#_audio (param $0 i32) (param $1 i32) (param $2 i32) (param $3 i32)
   (local $4 f32)
@@ -50040,139 +50299,158 @@
   (local $2 i32)
   block $folding-inner0
    block $default
-    block $case26
-     block $case25
-      block $case24
-       block $case23
-        block $case22
-         block $case15
-          block $case14
-           block $case13
-            block $case12
-             block $case11
-              block $case10
-               block $case9
-                block $case8
-                 block $case7
-                  block $case6
-                   block $case5
-                    block $case4
-                     block $case3
-                      block $case2
-                       block $case1
-                        block $case0
-                         block $tablify|0
-                          local.get $0
-                          i32.const 8
-                          i32.sub
-                          i32.load $0
-                          local.tee $2
-                          i32.const 23
-                          i32.sub
-                          br_table $case24 $case24 $case24 $case24 $case26 $case24 $case24 $case24 $case24 $tablify|0 $case10 $case23 $case12 $case15 $case4 $tablify|0 $tablify|0 $tablify|0 $case2 $case1 $case6 $case7 $case0 $case5 $case3 $folding-inner0 $tablify|0 $folding-inner0 $folding-inner0 $folding-inner0 $folding-inner0 $folding-inner0 $case14 $tablify|0 $case13 $case9 $case22 $case11 $tablify|0 $tablify|0 $tablify|0 $tablify|0 $tablify|0 $case8 $case25 $case25 $case25 $tablify|0
+    block $case27
+     block $case26
+      block $case25
+       block $case24
+        block $case23
+         block $case16
+          block $case15
+           block $case14
+            block $case13
+             block $case12
+              block $case11
+               block $case10
+                block $case9
+                 block $case8
+                  block $case7
+                   block $case6
+                    block $case5
+                     block $case4
+                      block $case3
+                       block $case2
+                        block $case1
+                         block $case0
+                          block $tablify|0
+                           local.get $0
+                           i32.const 8
+                           i32.sub
+                           i32.load $0
+                           local.tee $2
+                           i32.const 23
+                           i32.sub
+                           br_table $case25 $case25 $case25 $case25 $case27 $case25 $case25 $case25 $case25 $tablify|0 $case10 $case24 $case13 $case16 $case4 $tablify|0 $tablify|0 $tablify|0 $case2 $case1 $case6 $case7 $case0 $case5 $case3 $folding-inner0 $tablify|0 $folding-inner0 $folding-inner0 $folding-inner0 $folding-inner0 $folding-inner0 $case15 $tablify|0 $case14 $case9 $case23 $case11 $tablify|0 $tablify|0 $tablify|0 $tablify|0 $tablify|0 $case8 $case12 $case26 $case26 $case26 $tablify|0
+                          end
+                          block $tablify|00
+                           local.get $2
+                           i32.const 26
+                           i32.sub
+                           br_table $case27 $tablify|00 $case27 $case27 $case27 $tablify|00
+                          end
+                          br $default
                          end
-                         block $tablify|00
-                          local.get $2
-                          i32.const 26
-                          i32.sub
-                          br_table $case26 $tablify|00 $case26 $case26 $case26 $tablify|00
-                         end
-                         br $default
+                         local.get $0
+                         call $assembly/gen/bap/Bap#_update
+                         return
                         end
                         local.get $0
-                        call $assembly/gen/bap/Bap#_update
+                        call $assembly/gen/bbp/Bbp#_update
                         return
                        end
                        local.get $0
-                       call $assembly/gen/bbp/Bbp#_update
+                       call $assembly/gen/bhp/Bhp#_update
                        return
                       end
                       local.get $0
-                      call $assembly/gen/bhp/Bhp#_update
+                      call $assembly/gen/bhs/Bhs#_update
                       return
                      end
                      local.get $0
-                     call $assembly/gen/bhs/Bhs#_update
+                     call $assembly/gen/blp/Blp#_update
                      return
                     end
                     local.get $0
-                    call $assembly/gen/blp/Blp#_update
+                    call $assembly/gen/bls/Bls#_update
                     return
                    end
                    local.get $0
-                   call $assembly/gen/bls/Bls#_update
+                   call $assembly/gen/bno/Bno#_update
                    return
                   end
                   local.get $0
-                  call $assembly/gen/bno/Bno#_update
+                  call $assembly/gen/bpk/Bpk#_update
                   return
                  end
-                 local.get $0
-                 call $assembly/gen/bpk/Bpk#_update
                  return
                 end
+                local.get $0
+                i32.load $0 offset=4
+                i32.load $0 offset=24
+                f32.convert_i32_u
+                local.set $1
+                local.get $0
+                f32.const 1
+                local.get $0
+                f32.load $0 offset=40
+                f32.sub
+                f32.store $0 offset=92
+                local.get $0
+                local.get $0
+                f32.load $0 offset=44
+                local.get $1
+                f32.div
+                f32.store $0 offset=96
+                local.get $0
+                local.get $0
+                f32.load $0 offset=48
+                local.get $1
+                f32.mul
+                f32.const 1e3
+                f32.div
+                f32.store $0 offset=100
+                local.get $0
+                local.get $0
+                f32.load $0 offset=12
+                local.get $1
+                f32.mul
+                f32.store $0 offset=104
                 return
                end
                local.get $0
+               local.get $0
+               f32.load $0 offset=8
+               f32.const 1.0000000474974513e-03
+               f32.mul
+               local.get $0
                i32.load $0 offset=4
-               i32.load $0 offset=24
+               i32.load $0 offset=4
                f32.convert_i32_u
-               local.set $1
-               local.get $0
-               f32.const 1
-               local.get $0
-               f32.load $0 offset=40
-               f32.sub
-               f32.store $0 offset=92
-               local.get $0
-               local.get $0
-               f32.load $0 offset=44
-               local.get $1
-               f32.div
-               f32.store $0 offset=96
-               local.get $0
-               local.get $0
-               f32.load $0 offset=48
-               local.get $1
                f32.mul
-               f32.const 1e3
-               f32.div
-               f32.store $0 offset=100
+               f32.const 65535
+               f32.min
+               f32.store $0 offset=36
                local.get $0
-               local.get $0
-               f32.load $0 offset=12
-               local.get $1
-               f32.mul
-               f32.store $0 offset=104
+               f32.load $0 offset=32
+               f32.const 0
+               f32.eq
+               if
+                local.get $0
+                local.get $0
+                f32.load $0 offset=36
+                f32.store $0 offset=32
+               end
                return
               end
               local.get $0
-              local.get $0
-              f32.load $0 offset=8
-              f32.const 1.0000000474974513e-03
-              f32.mul
-              local.get $0
-              i32.load $0 offset=4
-              i32.load $0 offset=4
-              f32.convert_i32_u
-              f32.mul
-              f32.const 65535
-              f32.min
-              f32.store $0 offset=36
-              local.get $0
-              f32.load $0 offset=32
-              f32.const 0
-              f32.eq
-              if
-               local.get $0
-               local.get $0
-               f32.load $0 offset=36
-               f32.store $0 offset=32
-              end
+              call $assembly/gen/diode/Diode#_update
               return
              end
              local.get $0
-             call $assembly/gen/diode/Diode#_update
+             i32.load $0 offset=16
+             local.get $0
+             f32.load $0 offset=12
+             i32.trunc_sat_f32_s
+             i32.ne
+             if
+              local.get $0
+              f32.const 0
+              f32.store $0 offset=20
+             end
+             local.get $0
+             local.get $0
+             f32.load $0 offset=12
+             i32.trunc_sat_f32_s
+             i32.store $0 offset=16
              return
             end
             local.get $0
@@ -50391,107 +50669,115 @@
  )
  (func $assembly/gen/gen/Gen#_audio@override (param $0 i32) (param $1 i32) (param $2 i32) (param $3 i32)
   block $default
-   block $case24
-    block $case23
-     block $case22
-      block $case21
-       block $case20
-        block $case19
-         block $case18
-          block $case17
-           block $case16
-            block $case15
-             block $case14
-              block $case13
-               block $case12
-                block $case11
-                 block $case10
-                  block $case9
-                   block $case8
-                    block $case7
-                     block $case6
-                      block $case5
-                       block $case4
-                        block $case3
-                         block $case2
-                          block $case1
-                           block $case0
+   block $case25
+    block $case24
+     block $case23
+      block $case22
+       block $case21
+        block $case20
+         block $case19
+          block $case18
+           block $case17
+            block $case16
+             block $case15
+              block $case14
+               block $case13
+                block $case12
+                 block $case11
+                  block $case10
+                   block $case9
+                    block $case8
+                     block $case7
+                      block $case6
+                       block $case5
+                        block $case4
+                         block $case3
+                          block $case2
+                           block $case1
+                            block $case0
+                             local.get $0
+                             i32.const 8
+                             i32.sub
+                             i32.load $0
+                             i32.const 22
+                             i32.sub
+                             br_table $case22 $case24 $case24 $case24 $case24 $case24 $case24 $case24 $case24 $case24 $case4 $case8 $case21 $case11 $default $case23 $case23 $default $default $case23 $case23 $case23 $case23 $case23 $case23 $case23 $case17 $default $case16 $case15 $case14 $case18 $case19 $case13 $default $case12 $case3 $case20 $case9 $case5 $case7 $case6 $case0 $case1 $case2 $case10 $case25 $case25 $case25 $default
+                            end
                             local.get $0
-                            i32.const 8
-                            i32.sub
-                            i32.load $0
-                            i32.const 22
-                            i32.sub
-                            br_table $case21 $case23 $case23 $case23 $case23 $case23 $case23 $case23 $case23 $case23 $case4 $case8 $case20 $case10 $default $case22 $case22 $default $default $case22 $case22 $case22 $case22 $case22 $case22 $case22 $case16 $default $case15 $case14 $case13 $case17 $case18 $case12 $default $case11 $case3 $case19 $case9 $case5 $case7 $case6 $case0 $case1 $case2 $case24 $case24 $case24 $default
+                            local.get $1
+                            local.get $2
+                            local.get $3
+                            call $assembly/gen/clamp/Clamp#_audio
+                            return
                            end
                            local.get $0
                            local.get $1
                            local.get $2
                            local.get $3
-                           call $assembly/gen/clamp/Clamp#_audio
+                           call $assembly/gen/clip/Clip#_audio
                            return
                           end
                           local.get $0
                           local.get $1
                           local.get $2
                           local.get $3
-                          call $assembly/gen/clip/Clip#_audio
+                          call $assembly/gen/comp/Comp#_audio
                           return
                          end
                          local.get $0
                          local.get $1
                          local.get $2
                          local.get $3
-                         call $assembly/gen/comp/Comp#_audio
+                         call $assembly/gen/daverb/Daverb#_audio
                          return
                         end
                         local.get $0
                         local.get $1
                         local.get $2
                         local.get $3
-                        call $assembly/gen/daverb/Daverb#_audio
+                        call $assembly/gen/dc/Dc#_audio
                         return
                        end
                        local.get $0
                        local.get $1
                        local.get $2
                        local.get $3
-                       call $assembly/gen/dc/Dc#_audio
+                       call $assembly/gen/dclip/Dclip#_audio
                        return
                       end
                       local.get $0
                       local.get $1
                       local.get $2
                       local.get $3
-                      call $assembly/gen/dclip/Dclip#_audio
+                      call $assembly/gen/dclipexp/Dclipexp#_audio
                       return
                      end
                      local.get $0
                      local.get $1
                      local.get $2
                      local.get $3
-                     call $assembly/gen/dclipexp/Dclipexp#_audio
+                     call $assembly/gen/dcliplin/Dcliplin#_audio
                      return
                     end
                     local.get $0
                     local.get $1
                     local.get $2
                     local.get $3
-                    call $assembly/gen/dcliplin/Dcliplin#_audio
+                    call $assembly/gen/delay/Delay#_audio
                     return
                    end
                    local.get $0
                    local.get $1
                    local.get $2
                    local.get $3
-                   call $assembly/gen/delay/Delay#_audio
+                   call $assembly/gen/diode/Diode#_audio
                    return
                   end
                   local.get $0
                   local.get $1
                   local.get $2
                   local.get $3
-                  call $assembly/gen/diode/Diode#_audio
+                  call $assembly/gen/inc/Inc#_audio
                   return
                  end
                  local.get $0

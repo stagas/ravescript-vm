@@ -142,9 +142,12 @@ export class Runner {
     const curr: Bar | null = this.bars[barIndex]
     if (!curr) return
 
+    const actualTime: f64 = this.clock.time
+    const barTime: f64 = this.clock.barTime
+
     let ctrl: Ctrl
     for (let x: u32 = 0; x < curr.size; x++) {
-      this.setTimes(0, 0)
+      this.setTimes(actualTime, barTime)
       ctrl = curr.tracks[x]
       this.register(ctrl)
       applyLiterals(ctrl)
@@ -154,7 +157,7 @@ export class Runner {
 
     const main: Ctrl | null = changetype<Ctrl | null>(curr.main)
     if (main) {
-      this.setTimes(0, 0)
+      this.setTimes(actualTime, barTime)
       this.register(main)
       applyLiterals(main)
       call_indirect<void>(main.run, begin, end)

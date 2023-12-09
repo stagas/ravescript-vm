@@ -2,6 +2,7 @@
   "include": [
     "ambient.d.ts",
     "src",
+    "develop",
     "examples"
   ],
   "compilerOptions": {

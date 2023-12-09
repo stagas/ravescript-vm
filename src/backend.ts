@@ -284,10 +284,13 @@ export class Backend {
   }
   doIdle: Process = () => { }
   process: Process = this.doIdle
-  async fill(barIndex: number, length: number) {
+  async fill(barIndex: number, length: number, noReset = false) {
     // const ptr = this.vmRunner?.bars[0]
     // const bar = this.vmRunner?.vmBarsByPtr.get(ptr)!
-    this.resetClock()
+    if (!noReset) {
+      this.resetClock()
+    }
+    this.updateTime()
     this.clearSignal()
     this.vmRunner!.fill(
       barIndex,

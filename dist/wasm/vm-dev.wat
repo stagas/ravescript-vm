@@ -294,8 +294,10 @@
  (export "runner_get_ctrls" (func $assembly/core/runner/Runner#get:ctrls))
  (export "runner_Ctrl_get_signal" (func $assembly/core/runner/Ctrl#get:signal))
  (export "runner_get_bars" (func $assembly/core/runner/Runner#get:bars))
- (export "runner_Bar_get_size" (func $assembly/core/runner/Bar#get:size))
  (export "runner_get_clock" (func $assembly/core/runner/Runner#get:clock))
+ (export "clock_get_time" (func $assembly/core/clock/Clock#get:time))
+ (export "clock_get_barTime" (func $assembly/core/clock/Clock#get:barTime))
+ (export "runner_Bar_get_size" (func $assembly/core/runner/Bar#get:size))
  (export "runner_Bar_get_tracks" (func $assembly/core/runner/Bar#get:tracks))
  (export "runner_get_tableIndex" (func $assembly/core/runner/Runner#get:tableIndex))
  (export "runner_Ctrl_get_id" (func $assembly/core/runner/Ctrl#get:id))
@@ -313,8 +315,6 @@
  (export "runner_Bar_get_main" (func $assembly/core/runner/Bar#get:main))
  (export "copy_copyInto" (func $assembly/graph/copy/copyInto))
  (export "runner_fill" (func $assembly/core/runner/Runner#fill))
- (export "clock_get_time" (func $assembly/core/clock/Clock#get:time))
- (export "clock_get_barTime" (func $assembly/core/clock/Clock#get:barTime))
  (export "clock_get_nextBarTime" (func $assembly/core/clock/Clock#get:nextBarTime))
  (export "clock_get_timeStep" (func $assembly/core/clock/Clock#get:timeStep))
  (export "runner_get_last" (func $assembly/core/runner/Runner#get:last))
@@ -610,6 +610,12 @@
  (export "gen_comp_set__gainReduction" (func $assembly/gen/comp/Comp#set:_gainReduction))
  (export "gen_comp_constructor" (func $assembly/gen/comp/Comp#constructor))
  (export "util_getObjectSize__gen_comp_Comp_" (func $assembly/util/getObjectSize<assembly/gen/comp/Comp>))
+ (export "gen_inc_set_amt" (func $assembly/gen/inc/Inc#set:amt))
+ (export "gen_inc_set_trig" (func $assembly/gen/inc/Inc#set:trig))
+ (export "gen_inc_set__lastTrig" (func $assembly/gen/inc/Inc#set:_lastTrig))
+ (export "gen_inc_set__value" (func $assembly/gen/inc/Inc#set:_value))
+ (export "gen_inc_constructor" (func $assembly/gen/inc/Inc#constructor))
+ (export "util_getObjectSize__gen_inc_Inc_" (func $assembly/util/getObjectSize<assembly/gen/inc/Inc>))
  (export "gen_sample_set_offset" (func $assembly/gen/sample/Sample#set:offset))
  (export "gen_sample_set_trig" (func $assembly/gen/sample/Sample#set:trig))
  (export "gen_sample_set__floats" (func $assembly/gen/sample/Sample#set:_floats))
@@ -708,6 +714,9 @@
  (export "gen_diode_get__k" (func $assembly/gen/diode/Diode#get:_k))
  (export "gen_diode_get_cut" (func $assembly/gen/diode/Diode#get:cut))
  (export "gen_diode__update" (func $assembly/gen/diode/Diode#_update))
+ (export "gen_inc_get__lastTrig" (func $assembly/gen/inc/Inc#get:_lastTrig))
+ (export "gen_inc_get_trig" (func $assembly/gen/inc/Inc#get:trig))
+ (export "gen_inc__update" (func $assembly/gen/inc/Inc#_update))
  (export "gen_lp_get_cut" (func $assembly/gen/lp/Lp#get:cut))
  (export "gen_lp__update" (func $assembly/gen/lp/Lp#_update))
  (export "gen_mhp_get_cut" (func $assembly/gen/mhp/Mhp#get:cut))
@@ -859,6 +868,9 @@
  (export "gen_diode_get__z4" (func $assembly/gen/diode/Diode#get:_z4))
  (export "gen_diode_soft" (func $assembly/gen/diode/soft))
  (export "gen_diode__audio" (func $assembly/gen/diode/Diode#_audio))
+ (export "gen_inc_get_amt" (func $assembly/gen/inc/Inc#get:amt))
+ (export "gen_inc_get__value" (func $assembly/gen/inc/Inc#get:_value))
+ (export "gen_inc__audio" (func $assembly/gen/inc/Inc#_audio))
  (export "gen_lp_get__alpha" (func $assembly/gen/lp/Lp#get:_alpha))
  (export "gen_lp_get__sample" (func $assembly/gen/lp/Lp#get:_sample))
  (export "gen_lp_get_in" (func $assembly/gen/lp/Lp#get:in))
@@ -7905,13 +7917,21 @@
   local.get $value
   return
  )
- (func $assembly/core/runner/Bar#get:size (param $this i32) (result i32)
-  local.get $this
-  i32.load $0
- )
  (func $assembly/core/runner/Runner#get:clock (param $this i32) (result i32)
   local.get $this
   i32.load $0 offset=28
+ )
+ (func $assembly/core/clock/Clock#get:time (param $this i32) (result f64)
+  local.get $this
+  f64.load $0
+ )
+ (func $assembly/core/clock/Clock#get:barTime (param $this i32) (result f64)
+  local.get $this
+  f64.load $0 offset=56
+ )
+ (func $assembly/core/runner/Bar#get:size (param $this i32) (result i32)
+  local.get $this
+  i32.load $0
  )
  (func $assembly/core/runner/Bar#get:tracks (param $this i32) (result i32)
   local.get $this
@@ -8429,27 +8449,29 @@
  )
  (func $assembly/core/runner/Runner#fill (param $this i32) (param $barIndex i32) (param $begin i32) (param $end i32) (param $out i32)
   (local $curr i32)
+  (local $actualTime f64)
+  (local $barTime f64)
   (local $ctrl i32)
   (local $x i32)
-  (local $this|8 i32)
+  (local $this|10 i32)
   (local $time f64)
-  (local $barTime f64)
-  (local $this|11 i32)
-  (local $ctrl|12 i32)
-  (local $tableIndex i32)
+  (local $barTime|12 f64)
+  (local $this|13 i32)
   (local $ctrl|14 i32)
-  (local $begin|15 i32)
-  (local $end|16 i32)
+  (local $tableIndex i32)
+  (local $ctrl|16 i32)
+  (local $begin|17 i32)
+  (local $end|18 i32)
   (local $sIn i32)
   (local $sOut i32)
   (local $main i32)
-  (local $this|20 i32)
-  (local $time|21 f64)
-  (local $barTime|22 f64)
-  (local $this|23 i32)
-  (local $ctrl|24 i32)
-  (local $tableIndex|25 i32)
+  (local $this|22 i32)
+  (local $time|23 f64)
+  (local $barTime|24 f64)
+  (local $this|25 i32)
   (local $ctrl|26 i32)
+  (local $tableIndex|27 i32)
+  (local $ctrl|28 i32)
   local.get $this
   call $assembly/core/runner/Runner#get:bars
   local.get $barIndex
@@ -8460,6 +8482,14 @@
   if
    return
   end
+  local.get $this
+  call $assembly/core/runner/Runner#get:clock
+  call $assembly/core/clock/Clock#get:time
+  local.set $actualTime
+  local.get $this
+  call $assembly/core/runner/Runner#get:clock
+  call $assembly/core/clock/Clock#get:barTime
+  local.set $barTime
   i32.const 0
   local.set $x
   loop $for-loop|0
@@ -8469,18 +8499,18 @@
    i32.lt_u
    if
     local.get $this
-    local.set $this|8
-    f64.const 0
+    local.set $this|10
+    local.get $actualTime
     local.set $time
-    f64.const 0
-    local.set $barTime
-    local.get $this|8
+    local.get $barTime
+    local.set $barTime|12
+    local.get $this|10
     call $assembly/core/runner/Runner#get:clock
     local.get $time
     call $assembly/core/clock/Clock#set:time
-    local.get $this|8
+    local.get $this|10
     call $assembly/core/runner/Runner#get:clock
-    local.get $barTime
+    local.get $barTime|12
     call $assembly/core/clock/Clock#set:barTime
     local.get $curr
     call $assembly/core/runner/Bar#get:tracks
@@ -8488,18 +8518,18 @@
     call $~lib/staticarray/StaticArray<assembly/core/runner/Ctrl>#__get
     local.set $ctrl
     local.get $this
-    local.set $this|11
+    local.set $this|13
     local.get $ctrl
-    local.set $ctrl|12
-    local.get $this|11
+    local.set $ctrl|14
+    local.get $this|13
     call $assembly/core/runner/Runner#get:tableIndex
     local.set $tableIndex
-    local.get $ctrl|12
+    local.get $ctrl|14
     call $assembly/core/runner/Ctrl#get:id
     local.get $tableIndex
     call $assembly/env/setCtrlInstanceAt
     drop
-    local.get $ctrl|12
+    local.get $ctrl|14
     local.get $tableIndex
     call $assembly/core/runner/Ctrl#set:tableIndex
     local.get $tableIndex
@@ -8513,16 +8543,16 @@
      i32.const 0
      local.set $tableIndex
     end
-    local.get $this|11
+    local.get $this|13
     local.get $tableIndex
     call $assembly/core/runner/Runner#set:tableIndex
     local.get $ctrl
-    local.set $ctrl|14
-    local.get $ctrl|14
+    local.set $ctrl|16
+    local.get $ctrl|16
     call $assembly/core/runner/Ctrl#get:ownLiterals
-    local.get $ctrl|14
+    local.get $ctrl|16
     call $assembly/core/runner/Ctrl#get:liveLiterals
-    local.get $ctrl|14
+    local.get $ctrl|16
     call $assembly/core/runner/Ctrl#get:literalsCount
     i32.const 2
     i32.shl
@@ -8533,9 +8563,9 @@
     call $assembly/core/runner/Ctrl#get:run
     call_indirect $0 (type $i32_i32_=>_none)
     local.get $begin
-    local.set $begin|15
+    local.set $begin|17
     local.get $end
-    local.set $end|16
+    local.set $end|18
     local.get $ctrl
     call $assembly/core/runner/Ctrl#get:signal
     local.set $sIn
@@ -8548,8 +8578,8 @@
      call $assembly/core/runner/Signal#get:L
      local.get $sOut
      call $assembly/core/runner/Signal#get:L
-     local.get $begin|15
-     local.get $end|16
+     local.get $begin|17
+     local.get $end|18
      local.get $sOut
      call $assembly/core/runner/Signal#get:L
      call $assembly/math/add_audio_audio
@@ -8561,8 +8591,8 @@
      call $assembly/core/runner/Signal#get:R
      local.get $sOut
      call $assembly/core/runner/Signal#get:R
-     local.get $begin|15
-     local.get $end|16
+     local.get $begin|17
+     local.get $end|18
      local.get $sOut
      call $assembly/core/runner/Signal#get:R
      call $assembly/math/add_audio_audio
@@ -8574,8 +8604,8 @@
      call $assembly/core/runner/Signal#get:LR
      local.get $sOut
      call $assembly/core/runner/Signal#get:LR
-     local.get $begin|15
-     local.get $end|16
+     local.get $begin|17
+     local.get $end|18
      local.get $sOut
      call $assembly/core/runner/Signal#get:LR
      call $assembly/math/add_audio_audio
@@ -8593,55 +8623,55 @@
   local.get $main
   if
    local.get $this
-   local.set $this|20
-   f64.const 0
-   local.set $time|21
-   f64.const 0
-   local.set $barTime|22
-   local.get $this|20
+   local.set $this|22
+   local.get $actualTime
+   local.set $time|23
+   local.get $barTime
+   local.set $barTime|24
+   local.get $this|22
    call $assembly/core/runner/Runner#get:clock
-   local.get $time|21
+   local.get $time|23
    call $assembly/core/clock/Clock#set:time
-   local.get $this|20
+   local.get $this|22
    call $assembly/core/runner/Runner#get:clock
-   local.get $barTime|22
+   local.get $barTime|24
    call $assembly/core/clock/Clock#set:barTime
    local.get $this
-   local.set $this|23
+   local.set $this|25
    local.get $main
-   local.set $ctrl|24
-   local.get $this|23
+   local.set $ctrl|26
+   local.get $this|25
    call $assembly/core/runner/Runner#get:tableIndex
-   local.set $tableIndex|25
-   local.get $ctrl|24
+   local.set $tableIndex|27
+   local.get $ctrl|26
    call $assembly/core/runner/Ctrl#get:id
-   local.get $tableIndex|25
+   local.get $tableIndex|27
    call $assembly/env/setCtrlInstanceAt
    drop
-   local.get $ctrl|24
-   local.get $tableIndex|25
+   local.get $ctrl|26
+   local.get $tableIndex|27
    call $assembly/core/runner/Ctrl#set:tableIndex
-   local.get $tableIndex|25
+   local.get $tableIndex|27
    i32.const 2
    i32.add
-   local.set $tableIndex|25
-   local.get $tableIndex|25
+   local.set $tableIndex|27
+   local.get $tableIndex|27
    i32.const 128
    i32.eq
    if
     i32.const 0
-    local.set $tableIndex|25
+    local.set $tableIndex|27
    end
-   local.get $this|23
-   local.get $tableIndex|25
+   local.get $this|25
+   local.get $tableIndex|27
    call $assembly/core/runner/Runner#set:tableIndex
    local.get $main
-   local.set $ctrl|26
-   local.get $ctrl|26
+   local.set $ctrl|28
+   local.get $ctrl|28
    call $assembly/core/runner/Ctrl#get:ownLiterals
-   local.get $ctrl|26
+   local.get $ctrl|28
    call $assembly/core/runner/Ctrl#get:liveLiterals
-   local.get $ctrl|26
+   local.get $ctrl|28
    call $assembly/core/runner/Ctrl#get:literalsCount
    i32.const 2
    i32.shl
@@ -8668,14 +8698,6 @@
    call $assembly/core/runner/Signal#get:R
    call $assembly/graph/copy/copyInto
   end
- )
- (func $assembly/core/clock/Clock#get:time (param $this i32) (result f64)
-  local.get $this
-  f64.load $0
- )
- (func $assembly/core/clock/Clock#get:barTime (param $this i32) (result f64)
-  local.get $this
-  f64.load $0 offset=56
  )
  (func $assembly/core/clock/Clock#get:nextBarTime (param $this i32) (result f64)
   local.get $this
@@ -14447,6 +14469,57 @@
   i32.const 40
   return
  )
+ (func $assembly/gen/inc/Inc#set:amt (param $this i32) (param $amt f32)
+  local.get $this
+  local.get $amt
+  f32.store $0 offset=8
+ )
+ (func $assembly/gen/inc/Inc#set:trig (param $this i32) (param $trig f32)
+  local.get $this
+  local.get $trig
+  f32.store $0 offset=12
+ )
+ (func $assembly/gen/inc/Inc#set:_lastTrig (param $this i32) (param $_lastTrig i32)
+  local.get $this
+  local.get $_lastTrig
+  i32.store $0 offset=16
+ )
+ (func $assembly/gen/inc/Inc#set:_value (param $this i32) (param $_value f32)
+  local.get $this
+  local.get $_value
+  f32.store $0 offset=20
+ )
+ (func $assembly/gen/inc/Inc#constructor (param $this i32) (param $_engine i32) (result i32)
+  local.get $this
+  i32.eqz
+  if
+   i32.const 24
+   i32.const 67
+   call $~lib/rt/stub/__new
+   local.set $this
+  end
+  local.get $this
+  local.get $_engine
+  call $assembly/gen/gen/Gen#constructor
+  local.set $this
+  local.get $this
+  f32.const 1
+  call $assembly/gen/inc/Inc#set:amt
+  local.get $this
+  f32.const 0
+  call $assembly/gen/inc/Inc#set:trig
+  local.get $this
+  i32.const -1
+  call $assembly/gen/inc/Inc#set:_lastTrig
+  local.get $this
+  f32.const 0
+  call $assembly/gen/inc/Inc#set:_value
+  local.get $this
+ )
+ (func $assembly/util/getObjectSize<assembly/gen/inc/Inc> (result i32)
+  i32.const 24
+  return
+ )
  (func $assembly/gen/sample/Sample#set:offset (param $this i32) (param $offset f32)
   local.get $this
   local.get $offset
@@ -14501,7 +14574,7 @@
   i32.eqz
   if
    i32.const 52
-   i32.const 68
+   i32.const 69
    call $~lib/rt/stub/__new
    local.set $this
   end
@@ -14552,7 +14625,7 @@
   i32.eqz
   if
    i32.const 56
-   i32.const 67
+   i32.const 68
    call $~lib/rt/stub/__new
    local.set $this
   end
@@ -14583,7 +14656,7 @@
   i32.eqz
   if
    i32.const 56
-   i32.const 69
+   i32.const 70
    call $~lib/rt/stub/__new
    local.set $this
   end
@@ -21198,6 +21271,8 @@
   (local $clipSize i32)
   (local $comp i32)
   (local $compSize i32)
+  (local $inc i32)
+  (local $incSize i32)
   (local $freesound i32)
   (local $freesoundSize i32)
   (local $say i32)
@@ -21530,6 +21605,15 @@
   local.set $comp
   call $assembly/util/getObjectSize<assembly/gen/comp/Comp>
   local.set $compSize
+  i32.const 0
+  local.get $engine
+  call $assembly/gen/inc/Inc#constructor
+  local.set $inc
+  call $assembly/util/getObjectSize<assembly/gen/inc/Inc>
+  local.set $incSize
+  local.get $inc
+  f32.const 0
+  call $assembly/gen/inc/Inc#set:trig
   i32.const 0
   local.get $engine
   call $assembly/gen/freesound/Freesound#constructor
@@ -25755,6 +25839,32 @@
   local.get $this
   local.get $g0
   call $assembly/gen/diode/Diode#set:_g0
+ )
+ (func $assembly/gen/inc/Inc#get:_lastTrig (param $this i32) (result i32)
+  local.get $this
+  i32.load $0 offset=16
+ )
+ (func $assembly/gen/inc/Inc#get:trig (param $this i32) (result f32)
+  local.get $this
+  f32.load $0 offset=12
+ )
+ (func $assembly/gen/inc/Inc#_update (param $this i32)
+  local.get $this
+  call $assembly/gen/inc/Inc#get:_lastTrig
+  local.get $this
+  call $assembly/gen/inc/Inc#get:trig
+  i32.trunc_sat_f32_s
+  i32.ne
+  if
+   local.get $this
+   f32.const 0
+   call $assembly/gen/inc/Inc#set:_value
+  end
+  local.get $this
+  local.get $this
+  call $assembly/gen/inc/Inc#get:trig
+  i32.trunc_sat_f32_s
+  call $assembly/gen/inc/Inc#set:_lastTrig
  )
  (func $assembly/gen/lp/Lp#get:cut (param $this i32) (result f32)
   local.get $this
@@ -43938,6 +44048,238 @@
   local.get $this
   local.get $z4
   call $assembly/gen/diode/Diode#set:_z4
+ )
+ (func $assembly/gen/inc/Inc#get:amt (param $this i32) (result f32)
+  local.get $this
+  f32.load $0 offset=8
+ )
+ (func $assembly/gen/inc/Inc#get:_value (param $this i32) (result f32)
+  local.get $this
+  f32.load $0 offset=20
+ )
+ (func $assembly/gen/inc/Inc#_audio (param $this i32) (param $begin i32) (param $end i32) (param $out i32)
+  (local $length i32)
+  (local $i i32)
+  (local $offset i32)
+  (local $amt f32)
+  (local $value f32)
+  local.get $end
+  local.get $begin
+  i32.sub
+  local.set $length
+  local.get $begin
+  local.set $i
+  local.get $i
+  local.get $length
+  i32.add
+  local.set $end
+  local.get $begin
+  i32.const 2
+  i32.shl
+  local.set $offset
+  local.get $out
+  local.get $offset
+  i32.add
+  local.set $out
+  local.get $this
+  call $assembly/gen/inc/Inc#get:amt
+  f32.const 1.0000000474974513e-03
+  f32.mul
+  local.set $amt
+  local.get $this
+  call $assembly/gen/inc/Inc#get:_value
+  local.set $value
+  loop $for-loop|0
+   local.get $i
+   local.get $end
+   i32.lt_u
+   if
+    local.get $out
+    local.get $value
+    f32.store $0
+    local.get $value
+    local.get $amt
+    f32.add
+    local.set $value
+    local.get $out
+    i32.const 4
+    i32.add
+    local.set $out
+    local.get $out
+    local.get $value
+    f32.store $0
+    local.get $value
+    local.get $amt
+    f32.add
+    local.set $value
+    local.get $out
+    i32.const 4
+    i32.add
+    local.set $out
+    local.get $out
+    local.get $value
+    f32.store $0
+    local.get $value
+    local.get $amt
+    f32.add
+    local.set $value
+    local.get $out
+    i32.const 4
+    i32.add
+    local.set $out
+    local.get $out
+    local.get $value
+    f32.store $0
+    local.get $value
+    local.get $amt
+    f32.add
+    local.set $value
+    local.get $out
+    i32.const 4
+    i32.add
+    local.set $out
+    local.get $out
+    local.get $value
+    f32.store $0
+    local.get $value
+    local.get $amt
+    f32.add
+    local.set $value
+    local.get $out
+    i32.const 4
+    i32.add
+    local.set $out
+    local.get $out
+    local.get $value
+    f32.store $0
+    local.get $value
+    local.get $amt
+    f32.add
+    local.set $value
+    local.get $out
+    i32.const 4
+    i32.add
+    local.set $out
+    local.get $out
+    local.get $value
+    f32.store $0
+    local.get $value
+    local.get $amt
+    f32.add
+    local.set $value
+    local.get $out
+    i32.const 4
+    i32.add
+    local.set $out
+    local.get $out
+    local.get $value
+    f32.store $0
+    local.get $value
+    local.get $amt
+    f32.add
+    local.set $value
+    local.get $out
+    i32.const 4
+    i32.add
+    local.set $out
+    local.get $out
+    local.get $value
+    f32.store $0
+    local.get $value
+    local.get $amt
+    f32.add
+    local.set $value
+    local.get $out
+    i32.const 4
+    i32.add
+    local.set $out
+    local.get $out
+    local.get $value
+    f32.store $0
+    local.get $value
+    local.get $amt
+    f32.add
+    local.set $value
+    local.get $out
+    i32.const 4
+    i32.add
+    local.set $out
+    local.get $out
+    local.get $value
+    f32.store $0
+    local.get $value
+    local.get $amt
+    f32.add
+    local.set $value
+    local.get $out
+    i32.const 4
+    i32.add
+    local.set $out
+    local.get $out
+    local.get $value
+    f32.store $0
+    local.get $value
+    local.get $amt
+    f32.add
+    local.set $value
+    local.get $out
+    i32.const 4
+    i32.add
+    local.set $out
+    local.get $out
+    local.get $value
+    f32.store $0
+    local.get $value
+    local.get $amt
+    f32.add
+    local.set $value
+    local.get $out
+    i32.const 4
+    i32.add
+    local.set $out
+    local.get $out
+    local.get $value
+    f32.store $0
+    local.get $value
+    local.get $amt
+    f32.add
+    local.set $value
+    local.get $out
+    i32.const 4
+    i32.add
+    local.set $out
+    local.get $out
+    local.get $value
+    f32.store $0
+    local.get $value
+    local.get $amt
+    f32.add
+    local.set $value
+    local.get $out
+    i32.const 4
+    i32.add
+    local.set $out
+    local.get $out
+    local.get $value
+    f32.store $0
+    local.get $value
+    local.get $amt
+    f32.add
+    local.set $value
+    local.get $out
+    i32.const 4
+    i32.add
+    local.set $out
+    local.get $i
+    i32.const 16
+    i32.add
+    local.set $i
+    br $for-loop|0
+   end
+  end
+  local.get $this
+  local.get $value
+  call $assembly/gen/inc/Inc#set:_value
  )
  (func $assembly/gen/lp/Lp#get:_alpha (param $this i32) (result f32)
   local.get $this
@@ -64198,246 +64540,255 @@
  (func $assembly/gen/gen/Gen#_update@override (param $0 i32)
   (local $1 i32)
   block $default
-   block $case26
-    block $case25
-     block $case24
-      block $case23
-       block $case22
-        block $case21
-         block $case20
-          block $case19
-           block $case18
-            block $case17
-             block $case16
-              block $case15
-               block $case14
-                block $case13
-                 block $case12
-                  block $case11
-                   block $case10
-                    block $case9
-                     block $case8
-                      block $case7
-                       block $case6
-                        block $case5
-                         block $case4
-                          block $case3
-                           block $case2
-                            block $case1
-                             block $case0
+   block $case27
+    block $case26
+     block $case25
+      block $case24
+       block $case23
+        block $case22
+         block $case21
+          block $case20
+           block $case19
+            block $case18
+             block $case17
+              block $case16
+               block $case15
+                block $case14
+                 block $case13
+                  block $case12
+                   block $case11
+                    block $case10
+                     block $case9
+                      block $case8
+                       block $case7
+                        block $case6
+                         block $case5
+                          block $case4
+                           block $case3
+                            block $case2
+                             block $case1
+                              block $case0
+                               local.get $0
+                               i32.const 8
+                               i32.sub
+                               i32.load $0
+                               local.set $1
+                               local.get $1
+                               i32.const 45
+                               i32.eq
+                               br_if $case0
+                               local.get $1
+                               i32.const 42
+                               i32.eq
+                               br_if $case1
+                               local.get $1
+                               i32.const 41
+                               i32.eq
+                               br_if $case2
+                               local.get $1
+                               i32.const 47
+                               i32.eq
+                               br_if $case3
+                               local.get $1
+                               i32.const 37
+                               i32.eq
+                               br_if $case4
+                               local.get $1
+                               i32.const 46
+                               i32.eq
+                               br_if $case5
+                               local.get $1
+                               i32.const 43
+                               i32.eq
+                               br_if $case6
+                               local.get $1
+                               i32.const 44
+                               i32.eq
+                               br_if $case7
+                               local.get $1
+                               i32.const 66
+                               i32.eq
+                               br_if $case8
+                               local.get $1
+                               i32.const 58
+                               i32.eq
+                               br_if $case9
+                               local.get $1
+                               i32.const 33
+                               i32.eq
+                               br_if $case10
+                               local.get $1
+                               i32.const 60
+                               i32.eq
+                               br_if $case11
+                               local.get $1
+                               i32.const 67
+                               i32.eq
+                               br_if $case12
+                               local.get $1
+                               i32.const 35
+                               i32.eq
+                               br_if $case13
+                               local.get $1
+                               i32.const 57
+                               i32.eq
+                               br_if $case14
+                               local.get $1
+                               i32.const 55
+                               i32.eq
+                               br_if $case15
+                               local.get $1
+                               i32.const 36
+                               i32.eq
+                               br_if $case16
+                               local.get $1
+                               i32.const 52
+                               i32.eq
+                               br_if $case17
+                               local.get $1
+                               i32.const 51
+                               i32.eq
+                               br_if $case18
+                               local.get $1
+                               i32.const 50
+                               i32.eq
+                               br_if $case19
+                               local.get $1
+                               i32.const 48
+                               i32.eq
+                               br_if $case20
+                               local.get $1
+                               i32.const 53
+                               i32.eq
+                               br_if $case21
+                               local.get $1
+                               i32.const 54
+                               i32.eq
+                               br_if $case22
+                               local.get $1
+                               i32.const 59
+                               i32.eq
+                               br_if $case23
+                               local.get $1
+                               i32.const 34
+                               i32.eq
+                               br_if $case24
+                               local.get $1
+                               i32.const 24
+                               i32.eq
+                               br_if $case25
+                               local.get $1
+                               i32.const 23
+                               i32.eq
+                               br_if $case25
+                               local.get $1
+                               i32.const 25
+                               i32.eq
+                               br_if $case25
+                               local.get $1
+                               i32.const 26
+                               i32.eq
+                               br_if $case25
+                               local.get $1
+                               i32.const 28
+                               i32.eq
+                               br_if $case25
+                               local.get $1
+                               i32.const 29
+                               i32.eq
+                               br_if $case25
+                               local.get $1
+                               i32.const 30
+                               i32.eq
+                               br_if $case25
+                               local.get $1
+                               i32.const 31
+                               i32.eq
+                               br_if $case25
+                               local.get $1
+                               i32.const 69
+                               i32.eq
+                               br_if $case26
+                               local.get $1
+                               i32.const 68
+                               i32.eq
+                               br_if $case26
+                               local.get $1
+                               i32.const 70
+                               i32.eq
+                               br_if $case26
+                               local.get $1
+                               i32.const 27
+                               i32.eq
+                               br_if $case27
+                               local.get $1
+                               i32.const 26
+                               i32.eq
+                               br_if $case27
+                               local.get $1
+                               i32.const 28
+                               i32.eq
+                               br_if $case27
+                               local.get $1
+                               i32.const 29
+                               i32.eq
+                               br_if $case27
+                               local.get $1
+                               i32.const 30
+                               i32.eq
+                               br_if $case27
+                               br $default
+                              end
                               local.get $0
-                              i32.const 8
-                              i32.sub
-                              i32.load $0
-                              local.set $1
-                              local.get $1
-                              i32.const 45
-                              i32.eq
-                              br_if $case0
-                              local.get $1
-                              i32.const 42
-                              i32.eq
-                              br_if $case1
-                              local.get $1
-                              i32.const 41
-                              i32.eq
-                              br_if $case2
-                              local.get $1
-                              i32.const 47
-                              i32.eq
-                              br_if $case3
-                              local.get $1
-                              i32.const 37
-                              i32.eq
-                              br_if $case4
-                              local.get $1
-                              i32.const 46
-                              i32.eq
-                              br_if $case5
-                              local.get $1
-                              i32.const 43
-                              i32.eq
-                              br_if $case6
-                              local.get $1
-                              i32.const 44
-                              i32.eq
-                              br_if $case7
-                              local.get $1
-                              i32.const 66
-                              i32.eq
-                              br_if $case8
-                              local.get $1
-                              i32.const 58
-                              i32.eq
-                              br_if $case9
-                              local.get $1
-                              i32.const 33
-                              i32.eq
-                              br_if $case10
-                              local.get $1
-                              i32.const 60
-                              i32.eq
-                              br_if $case11
-                              local.get $1
-                              i32.const 35
-                              i32.eq
-                              br_if $case12
-                              local.get $1
-                              i32.const 57
-                              i32.eq
-                              br_if $case13
-                              local.get $1
-                              i32.const 55
-                              i32.eq
-                              br_if $case14
-                              local.get $1
-                              i32.const 36
-                              i32.eq
-                              br_if $case15
-                              local.get $1
-                              i32.const 52
-                              i32.eq
-                              br_if $case16
-                              local.get $1
-                              i32.const 51
-                              i32.eq
-                              br_if $case17
-                              local.get $1
-                              i32.const 50
-                              i32.eq
-                              br_if $case18
-                              local.get $1
-                              i32.const 48
-                              i32.eq
-                              br_if $case19
-                              local.get $1
-                              i32.const 53
-                              i32.eq
-                              br_if $case20
-                              local.get $1
-                              i32.const 54
-                              i32.eq
-                              br_if $case21
-                              local.get $1
-                              i32.const 59
-                              i32.eq
-                              br_if $case22
-                              local.get $1
-                              i32.const 34
-                              i32.eq
-                              br_if $case23
-                              local.get $1
-                              i32.const 24
-                              i32.eq
-                              br_if $case24
-                              local.get $1
-                              i32.const 23
-                              i32.eq
-                              br_if $case24
-                              local.get $1
-                              i32.const 25
-                              i32.eq
-                              br_if $case24
-                              local.get $1
-                              i32.const 26
-                              i32.eq
-                              br_if $case24
-                              local.get $1
-                              i32.const 28
-                              i32.eq
-                              br_if $case24
-                              local.get $1
-                              i32.const 29
-                              i32.eq
-                              br_if $case24
-                              local.get $1
-                              i32.const 30
-                              i32.eq
-                              br_if $case24
-                              local.get $1
-                              i32.const 31
-                              i32.eq
-                              br_if $case24
-                              local.get $1
-                              i32.const 68
-                              i32.eq
-                              br_if $case25
-                              local.get $1
-                              i32.const 67
-                              i32.eq
-                              br_if $case25
-                              local.get $1
-                              i32.const 69
-                              i32.eq
-                              br_if $case25
-                              local.get $1
-                              i32.const 27
-                              i32.eq
-                              br_if $case26
-                              local.get $1
-                              i32.const 26
-                              i32.eq
-                              br_if $case26
-                              local.get $1
-                              i32.const 28
-                              i32.eq
-                              br_if $case26
-                              local.get $1
-                              i32.const 29
-                              i32.eq
-                              br_if $case26
-                              local.get $1
-                              i32.const 30
-                              i32.eq
-                              br_if $case26
-                              br $default
+                              call $assembly/gen/bap/Bap#_update
+                              return
                              end
                              local.get $0
-                             call $assembly/gen/bap/Bap#_update
+                             call $assembly/gen/bbp/Bbp#_update
                              return
                             end
                             local.get $0
-                            call $assembly/gen/bbp/Bbp#_update
+                            call $assembly/gen/bhp/Bhp#_update
                             return
                            end
                            local.get $0
-                           call $assembly/gen/bhp/Bhp#_update
+                           call $assembly/gen/bhs/Bhs#_update
                            return
                           end
                           local.get $0
-                          call $assembly/gen/bhs/Bhs#_update
+                          call $assembly/gen/blp/Blp#_update
                           return
                          end
                          local.get $0
-                         call $assembly/gen/blp/Blp#_update
+                         call $assembly/gen/bls/Bls#_update
                          return
                         end
                         local.get $0
-                        call $assembly/gen/bls/Bls#_update
+                        call $assembly/gen/bno/Bno#_update
                         return
                        end
                        local.get $0
-                       call $assembly/gen/bno/Bno#_update
+                       call $assembly/gen/bpk/Bpk#_update
                        return
                       end
                       local.get $0
-                      call $assembly/gen/bpk/Bpk#_update
+                      call $assembly/gen/comp/Comp#_update
                       return
                      end
                      local.get $0
-                     call $assembly/gen/comp/Comp#_update
+                     call $assembly/gen/daverb/Daverb#_update
                      return
                     end
                     local.get $0
-                    call $assembly/gen/daverb/Daverb#_update
+                    call $assembly/gen/delay/Delay#_update
                     return
                    end
                    local.get $0
-                   call $assembly/gen/delay/Delay#_update
+                   call $assembly/gen/diode/Diode#_update
                    return
                   end
                   local.get $0
-                  call $assembly/gen/diode/Diode#_update
+                  call $assembly/gen/inc/Inc#_update
                   return
                  end
                  local.get $0
@@ -64528,278 +64879,290 @@
  (func $assembly/gen/gen/Gen#_audio@override (param $0 i32) (param $1 i32) (param $2 i32) (param $3 i32)
   (local $4 i32)
   block $default
-   block $case24
-    block $case23
-     block $case22
-      block $case21
-       block $case20
-        block $case19
-         block $case18
-          block $case17
-           block $case16
-            block $case15
-             block $case14
-              block $case13
-               block $case12
-                block $case11
-                 block $case10
-                  block $case9
-                   block $case8
-                    block $case7
-                     block $case6
-                      block $case5
-                       block $case4
-                        block $case3
-                         block $case2
-                          block $case1
-                           block $case0
+   block $case25
+    block $case24
+     block $case23
+      block $case22
+       block $case21
+        block $case20
+         block $case19
+          block $case18
+           block $case17
+            block $case16
+             block $case15
+              block $case14
+               block $case13
+                block $case12
+                 block $case11
+                  block $case10
+                   block $case9
+                    block $case8
+                     block $case7
+                      block $case6
+                       block $case5
+                        block $case4
+                         block $case3
+                          block $case2
+                           block $case1
+                            block $case0
+                             local.get $0
+                             i32.const 8
+                             i32.sub
+                             i32.load $0
+                             local.set $4
+                             local.get $4
+                             i32.const 64
+                             i32.eq
+                             br_if $case0
+                             local.get $4
+                             i32.const 65
+                             i32.eq
+                             br_if $case1
+                             local.get $4
+                             i32.const 66
+                             i32.eq
+                             br_if $case2
+                             local.get $4
+                             i32.const 58
+                             i32.eq
+                             br_if $case3
+                             local.get $4
+                             i32.const 32
+                             i32.eq
+                             br_if $case4
+                             local.get $4
+                             i32.const 61
+                             i32.eq
+                             br_if $case5
+                             local.get $4
+                             i32.const 63
+                             i32.eq
+                             br_if $case6
+                             local.get $4
+                             i32.const 62
+                             i32.eq
+                             br_if $case7
+                             local.get $4
+                             i32.const 33
+                             i32.eq
+                             br_if $case8
+                             local.get $4
+                             i32.const 60
+                             i32.eq
+                             br_if $case9
+                             local.get $4
+                             i32.const 67
+                             i32.eq
+                             br_if $case10
+                             local.get $4
+                             i32.const 35
+                             i32.eq
+                             br_if $case11
+                             local.get $4
+                             i32.const 57
+                             i32.eq
+                             br_if $case12
+                             local.get $4
+                             i32.const 55
+                             i32.eq
+                             br_if $case13
+                             local.get $4
+                             i32.const 52
+                             i32.eq
+                             br_if $case14
+                             local.get $4
+                             i32.const 51
+                             i32.eq
+                             br_if $case15
+                             local.get $4
+                             i32.const 50
+                             i32.eq
+                             br_if $case16
+                             local.get $4
+                             i32.const 48
+                             i32.eq
+                             br_if $case17
+                             local.get $4
+                             i32.const 53
+                             i32.eq
+                             br_if $case18
+                             local.get $4
+                             i32.const 54
+                             i32.eq
+                             br_if $case19
+                             local.get $4
+                             i32.const 59
+                             i32.eq
+                             br_if $case20
+                             local.get $4
+                             i32.const 34
+                             i32.eq
+                             br_if $case21
+                             local.get $4
+                             i32.const 22
+                             i32.eq
+                             br_if $case22
+                             local.get $4
+                             i32.const 38
+                             i32.eq
+                             br_if $case23
+                             local.get $4
+                             i32.const 37
+                             i32.eq
+                             br_if $case23
+                             local.get $4
+                             i32.const 41
+                             i32.eq
+                             br_if $case23
+                             local.get $4
+                             i32.const 42
+                             i32.eq
+                             br_if $case23
+                             local.get $4
+                             i32.const 43
+                             i32.eq
+                             br_if $case23
+                             local.get $4
+                             i32.const 44
+                             i32.eq
+                             br_if $case23
+                             local.get $4
+                             i32.const 45
+                             i32.eq
+                             br_if $case23
+                             local.get $4
+                             i32.const 46
+                             i32.eq
+                             br_if $case23
+                             local.get $4
+                             i32.const 47
+                             i32.eq
+                             br_if $case23
+                             local.get $4
+                             i32.const 24
+                             i32.eq
+                             br_if $case24
+                             local.get $4
+                             i32.const 23
+                             i32.eq
+                             br_if $case24
+                             local.get $4
+                             i32.const 25
+                             i32.eq
+                             br_if $case24
+                             local.get $4
+                             i32.const 27
+                             i32.eq
+                             br_if $case24
+                             local.get $4
+                             i32.const 26
+                             i32.eq
+                             br_if $case24
+                             local.get $4
+                             i32.const 28
+                             i32.eq
+                             br_if $case24
+                             local.get $4
+                             i32.const 29
+                             i32.eq
+                             br_if $case24
+                             local.get $4
+                             i32.const 30
+                             i32.eq
+                             br_if $case24
+                             local.get $4
+                             i32.const 31
+                             i32.eq
+                             br_if $case24
+                             local.get $4
+                             i32.const 69
+                             i32.eq
+                             br_if $case25
+                             local.get $4
+                             i32.const 68
+                             i32.eq
+                             br_if $case25
+                             local.get $4
+                             i32.const 70
+                             i32.eq
+                             br_if $case25
+                             br $default
+                            end
                             local.get $0
-                            i32.const 8
-                            i32.sub
-                            i32.load $0
-                            local.set $4
-                            local.get $4
-                            i32.const 64
-                            i32.eq
-                            br_if $case0
-                            local.get $4
-                            i32.const 65
-                            i32.eq
-                            br_if $case1
-                            local.get $4
-                            i32.const 66
-                            i32.eq
-                            br_if $case2
-                            local.get $4
-                            i32.const 58
-                            i32.eq
-                            br_if $case3
-                            local.get $4
-                            i32.const 32
-                            i32.eq
-                            br_if $case4
-                            local.get $4
-                            i32.const 61
-                            i32.eq
-                            br_if $case5
-                            local.get $4
-                            i32.const 63
-                            i32.eq
-                            br_if $case6
-                            local.get $4
-                            i32.const 62
-                            i32.eq
-                            br_if $case7
-                            local.get $4
-                            i32.const 33
-                            i32.eq
-                            br_if $case8
-                            local.get $4
-                            i32.const 60
-                            i32.eq
-                            br_if $case9
-                            local.get $4
-                            i32.const 35
-                            i32.eq
-                            br_if $case10
-                            local.get $4
-                            i32.const 57
-                            i32.eq
-                            br_if $case11
-                            local.get $4
-                            i32.const 55
-                            i32.eq
-                            br_if $case12
-                            local.get $4
-                            i32.const 52
-                            i32.eq
-                            br_if $case13
-                            local.get $4
-                            i32.const 51
-                            i32.eq
-                            br_if $case14
-                            local.get $4
-                            i32.const 50
-                            i32.eq
-                            br_if $case15
-                            local.get $4
-                            i32.const 48
-                            i32.eq
-                            br_if $case16
-                            local.get $4
-                            i32.const 53
-                            i32.eq
-                            br_if $case17
-                            local.get $4
-                            i32.const 54
-                            i32.eq
-                            br_if $case18
-                            local.get $4
-                            i32.const 59
-                            i32.eq
-                            br_if $case19
-                            local.get $4
-                            i32.const 34
-                            i32.eq
-                            br_if $case20
-                            local.get $4
-                            i32.const 22
-                            i32.eq
-                            br_if $case21
-                            local.get $4
-                            i32.const 38
-                            i32.eq
-                            br_if $case22
-                            local.get $4
-                            i32.const 37
-                            i32.eq
-                            br_if $case22
-                            local.get $4
-                            i32.const 41
-                            i32.eq
-                            br_if $case22
-                            local.get $4
-                            i32.const 42
-                            i32.eq
-                            br_if $case22
-                            local.get $4
-                            i32.const 43
-                            i32.eq
-                            br_if $case22
-                            local.get $4
-                            i32.const 44
-                            i32.eq
-                            br_if $case22
-                            local.get $4
-                            i32.const 45
-                            i32.eq
-                            br_if $case22
-                            local.get $4
-                            i32.const 46
-                            i32.eq
-                            br_if $case22
-                            local.get $4
-                            i32.const 47
-                            i32.eq
-                            br_if $case22
-                            local.get $4
-                            i32.const 24
-                            i32.eq
-                            br_if $case23
-                            local.get $4
-                            i32.const 23
-                            i32.eq
-                            br_if $case23
-                            local.get $4
-                            i32.const 25
-                            i32.eq
-                            br_if $case23
-                            local.get $4
-                            i32.const 27
-                            i32.eq
-                            br_if $case23
-                            local.get $4
-                            i32.const 26
-                            i32.eq
-                            br_if $case23
-                            local.get $4
-                            i32.const 28
-                            i32.eq
-                            br_if $case23
-                            local.get $4
-                            i32.const 29
-                            i32.eq
-                            br_if $case23
-                            local.get $4
-                            i32.const 30
-                            i32.eq
-                            br_if $case23
-                            local.get $4
-                            i32.const 31
-                            i32.eq
-                            br_if $case23
-                            local.get $4
-                            i32.const 68
-                            i32.eq
-                            br_if $case24
-                            local.get $4
-                            i32.const 67
-                            i32.eq
-                            br_if $case24
-                            local.get $4
-                            i32.const 69
-                            i32.eq
-                            br_if $case24
-                            br $default
+                            local.get $1
+                            local.get $2
+                            local.get $3
+                            call $assembly/gen/clamp/Clamp#_audio
+                            return
                            end
                            local.get $0
                            local.get $1
                            local.get $2
                            local.get $3
-                           call $assembly/gen/clamp/Clamp#_audio
+                           call $assembly/gen/clip/Clip#_audio
                            return
                           end
                           local.get $0
                           local.get $1
                           local.get $2
                           local.get $3
-                          call $assembly/gen/clip/Clip#_audio
+                          call $assembly/gen/comp/Comp#_audio
                           return
                          end
                          local.get $0
                          local.get $1
                          local.get $2
                          local.get $3
-                         call $assembly/gen/comp/Comp#_audio
+                         call $assembly/gen/daverb/Daverb#_audio
                          return
                         end
                         local.get $0
                         local.get $1
                         local.get $2
                         local.get $3
-                        call $assembly/gen/daverb/Daverb#_audio
+                        call $assembly/gen/dc/Dc#_audio
                         return
                        end
                        local.get $0
                        local.get $1
                        local.get $2
                        local.get $3
-                       call $assembly/gen/dc/Dc#_audio
+                       call $assembly/gen/dclip/Dclip#_audio
                        return
                       end
                       local.get $0
                       local.get $1
                       local.get $2
                       local.get $3
-                      call $assembly/gen/dclip/Dclip#_audio
+                      call $assembly/gen/dclipexp/Dclipexp#_audio
                       return
                      end
                      local.get $0
                      local.get $1
                      local.get $2
                      local.get $3
-                     call $assembly/gen/dclipexp/Dclipexp#_audio
+                     call $assembly/gen/dcliplin/Dcliplin#_audio
                      return
                     end
                     local.get $0
                     local.get $1
                     local.get $2
                     local.get $3
-                    call $assembly/gen/dcliplin/Dcliplin#_audio
+                    call $assembly/gen/delay/Delay#_audio
                     return
                    end
                    local.get $0
                    local.get $1
                    local.get $2
                    local.get $3
-                   call $assembly/gen/delay/Delay#_audio
+                   call $assembly/gen/diode/Diode#_audio
                    return
                   end
                   local.get $0
                   local.get $1
                   local.get $2
                   local.get $3
-                  call $assembly/gen/diode/Diode#_audio
+                  call $assembly/gen/inc/Inc#_audio
                   return
                  end
                  local.get $0
