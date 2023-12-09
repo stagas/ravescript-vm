@@ -67,9 +67,12 @@ export class Engine extends VmObject {
       this.vm.exports.engine_get_runner(this.engine)
     )
   }
+  // allocated = 0
   getBlock = (length = this.blockSize): Block => {
+    // console.warn('allocated:', this.allocated)
     let block = this.blocks.pop()?.fill(0)
     if (!block) {
+      // this.allocated++
       block = this.vm.view.getF32(
         this.vm.exports.engine_createBlock(this.engine, length),
         length
@@ -80,6 +83,7 @@ export class Engine extends VmObject {
   getBlockU32 = (length = this.blockSize): BlockU32 => {
     let block = this.blocksU32.pop()?.fill(0)
     if (!block) {
+      // this.allocated++
       block = this.vm.view.getU32(
         this.vm.exports.engine_createBlock(this.engine, length),
         length
@@ -94,10 +98,12 @@ export class Engine extends VmObject {
     ) return
 
     if (this.blocks.includes(block)) return
+    // this.allocated--
     this.blocks.unshift(block)
   }
   freeBlockU32 = (block: BlockU32) => {
     if (this.blocksU32.includes(block)) return
+    // this.allocated--
     this.blocksU32.unshift(block)
   }
 }
