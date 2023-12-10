@@ -24,6 +24,7 @@
   "dependencies": {
     "@bjorn3/browser_wasi_shim": "0.2.10",
     "alice-bob": "2.0.0",
+    "annotate-code": "github:stagas/annotate-code",
     "signal": "github:stagas/signal",
     "utils": "github:stagas/utils",
     "visitor-as": "0.11.4"
