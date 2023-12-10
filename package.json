@@ -1,18 +1,11 @@
 {
   "name": "ravescript-vm",
+  "author": "stagas",
   "version": "1.0.0",
   "description": "RAVEscript VM",
-  "main": "src/index.ts",
+  "license": "AGPLv3",
   "type": "module",
-  "author": "stagas",
-  "keywords": [],
-  "devDependencies": {
-    "@total-typescript/ts-reset": "0.5.1",
-    "@types/audioworklet": "0.0.30",
-    "@types/jest": "28.1.6",
-    "@types/node": "20.3.0",
-    "assemblyscript": "0.27.5"
-  },
+  "main": "src/index.ts",
   "scripts": {
     "test": "utr src/index.ts",
     "asc": "npm run asc:js && asc ./assembly/index.ts --stats --config=asconfig.json --transform ./dist/transforms/unroll.js --transform ./dist/transforms/export-all.js",
@@ -20,6 +13,12 @@
     "asc:dev": "npm run asc -- --target=dev",
     "asc:prod": "npm run asc -- --target=prod",
     "build": "npm run asc:prod"
+  },
+  "devDependencies": {
+    "ambient-dts": "github:stagas/ambient-dts",
+    "@types/audioworklet": "0.0.30",
+    "@types/node": "20.3.0",
+    "assemblyscript": "0.27.5"
   },
   "dependencies": {
     "@bjorn3/browser_wasi_shim": "0.2.10",

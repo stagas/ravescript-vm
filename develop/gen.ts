@@ -1,5 +1,5 @@
 import { $, fx, of } from 'signal'
-import { BackendInit, Backend, Signal } from '../src/backend.ts'
+import { BackendInit, Backend } from '../src/backend.ts'
 import { Engine } from '../src/engine.ts'
 import { Frontend } from '../src/frontend.ts'
 import { createVmMemory, fetchVmBinary, initVm } from '../src/vm.ts'
