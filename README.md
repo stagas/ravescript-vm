@@ -23,20 +23,20 @@ bun add -g github:stagas/devito
 ```ts
 import { Gen } from './gen'
 
-export class MyGen extends Gen {
+export class Mygen extends Gen {
   ...
 }
 ```
 
 - In the file `assembly/index.ts`, add an import:
 ```ts
-import { MyGen } from './gen/mygen'
+import { Mygen } from './gen/mygen'
 ```
-- In the `preventTreeShaking()` function, make an instance of that class (`MyGen`) and get its size, and access any new public properties, like this:
+- In the `preventTreeShaking()` function, make an instance of that class (`Mygen`) and get its size, and access any new public properties, like this:
 ```ts
-const myGen: MyGen = new MyGen(engine)
-const myGenSize: usize = util.getObjectSize<MyGen>()
-myGen.trig = 0 // if used
+const mygen: Mygen = new Mygen(engine)
+const mygenSize: usize = util.getObjectSize<Mygen>()
+mygen.trig = 0 // if used
 ```
 - Build the assembly project:
 
