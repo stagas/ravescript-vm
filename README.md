@@ -16,6 +16,14 @@ bun add -g github:stagas/devito
 
 > [Addition cert setup instructions for Windows machines.](https://www.haveiplayedbowie.today/blog/posts/secure-localhost-with-mkcert/)
 
+## Installing
+
+- Clone the repo.
+- Install the dependencies:
+```
+bun i
+```
+
 ## Making a new Gen
 
 - Under `assembly/gen/`, make a new file `mygen.ts`. All Gens inherit from the base class `Gen`.
