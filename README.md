@@ -14,7 +14,7 @@ bun add -g github:stagas/devito
 ```
 > [Setting up an https cert for devito.](https://github.com/stagas/devito)
 
-> [Addition cert setup instructions for Windows machines.](https://www.haveiplayedbowie.today/blog/posts/secure-localhost-with-mkcert/)
+> [Additional cert setup instructions for Windows machines.](https://www.haveiplayedbowie.today/blog/posts/secure-localhost-with-mkcert/)
 
 ## Installing
 
