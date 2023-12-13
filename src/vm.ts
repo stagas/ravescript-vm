@@ -131,7 +131,8 @@ export async function initVm({
         setCtrlInstanceAt: (instanceId: number, tableIndex: number) => {
           const instance = ctrlInstances.get(instanceId)
           if (instance == null) {
-            throw new Error('Not instantiated: ' + instanceId)
+            console.warn('Not instantiated: ' + instanceId)
+            return
           }
           setCtrlInstanceAt(instance, table, tableIndex)
         },
