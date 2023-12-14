@@ -9,6 +9,7 @@ import { Compile, compile } from './lang/compiler.ts'
 import { Emitter } from './lang/emitter.ts'
 import { AstNode, Source, Token, parse, produce, tokenize } from './lang/index.ts'
 import { Vm } from './vm.ts'
+import { VolView } from './structs.ts'
 
 export type Block = Float32Array
 export type BlockU32 = Uint32Array
@@ -44,12 +45,14 @@ export namespace Build {
 
   export interface Shared {
     info: Emitter.Info
+    vol: VolView
     memories: Memories
     payload: Payload //Omit<Payload, 'ownLiterals'>
   }
 
   export interface Sound {
     frontend: Frontend
+    vol: VolView
     info: Emitter.Info
     shared: Shared
     signal: Signal
@@ -217,6 +220,7 @@ export class Frontend {
       const build: Build.Sound = {
         frontend: this,
         info,
+        vol: shared.vol,
         shared: shared,
         signal: shared.payload.signal,
         payload: { ...shared.payload },
@@ -288,11 +292,13 @@ export class Frontend {
     }
 
     const ownLiterals = engine.getBlock()
+    const vol: VolView = VolView(ownLiterals)
 
     this.usedMemories.add(info.instanceId, ownLiterals)
 
     shared = {
       info,
+      vol,
       memories,
       payload: {
         instanceId: info.instanceId,
@@ -314,6 +320,7 @@ export class Frontend {
     const build: Build.Sound = {
       frontend: this,
       info,
+      vol,
       shared,
       signal,
       payload: shared.payload,

@@ -38,14 +38,9 @@ function getCallers(item: Emitter.Item) {
       node.type === AstNode.Type.Block
       && node.kind === AstNode.Block.Kind.Expression
     ) {
-      if (
-        s.parent?.returnStack.length
-        // || s.parent?.returnStack.length
-        // && s.parent.type !== Scope.Type.Prog
-      ) {
+      if (s.parent?.returnStack.length) {
         node.info.hasView = true
       }
-      // console.log('AAAH', node, s.parent)
       callers.unshift({ node, scopeId: s.id })
     }
   } while (s = s.parent)
@@ -187,6 +182,7 @@ export class Emitter {
     // info
     this.info = new Emitter.Info(this.scope, tokens)
     const { codes, updates, resets, lists, picks, withs, gfx } = this.info
+
     // TODO: Hardcoding 2 inputs for the time being, but we need to
     //  actually infer the number of inputs from usage.
     // this.info.ins = 2
@@ -278,6 +274,9 @@ export class Emitter {
           let i = listItems
           const ptr = i
           for (const item of items) {
+            // These are for the global search to take us here:
+            // lists[]
+            // codes[]
             let target = item.kind === Scope.Value.Scalar.Kind.Literal
               ? lists
               : codes
@@ -288,7 +287,7 @@ export class Emitter {
               (item as Scope.Value.Scalar.Literal)
             )
 
-            target.push(`literals[${i}]=${value.code}`)
+            target.push(`lists[${i}]=${value.code}`)
             i = ++listItems
           }
           const length = i - ptr
@@ -313,8 +312,8 @@ export class Emitter {
           codes.push(`list_pos=modf(${pickItemValue.code},${length}.0) // slide pos`)
           codes.push(`list_index=floor(list_pos) // slide index`)
           codes.push(`list_next=floor(modf(list_pos+1.0,${length}.0)) // slide next`)
-          codes.push(`sample=literals[${ptr > 0 ? `${ptr} + ` : ''}(to_i32 list_index)]`)
-          codes.push(`scalar_${scalar.ptr}=sample+(literals[${ptr > 0 ? `${ptr} + ` : ''}(to_i32 list_next)]-sample)*pow_scalar_scalar(list_pos-list_index,${slopeItemValue.code})`)
+          codes.push(`sample=lists[${ptr > 0 ? `${ptr} + ` : ''}(to_i32 list_index)]`)
+          codes.push(`scalar_${scalar.ptr}=sample+(lists[${ptr > 0 ? `${ptr} + ` : ''}(to_i32 list_next)]-sample)*pow_scalar_scalar(list_pos-list_index,${slopeItemValue.code})`)
           codes.push(`scalar_exports[${scalar.ptr}]=list_index`)
 
           indexValue.info.emitterValue = scalar
@@ -331,6 +330,8 @@ export class Emitter {
           let i = listItems
           const ptr = i
           for (const item of items) {
+            // lists[]
+            // codes[]
             let target = returnValue.kind === Scope.Value.Scalar.Kind.Audio
               ? codes
               : item.kind === Scope.Value.Scalar.Kind.Literal
@@ -343,7 +344,7 @@ export class Emitter {
               (item as Scope.Value.Scalar.Literal)
             )
 
-            target.push(`literals[${i}]=${returnValue.kind === Scope.Value.Scalar.Kind.Audio ? 'to_f32 ' : ''}${value.code}`)
+            target.push(`lists[${i}]=${returnValue.kind === Scope.Value.Scalar.Kind.Audio ? 'to_f32 ' : ''}${value.code}`)
             i = ++listItems
           }
           const length = i - ptr
@@ -355,7 +356,7 @@ export class Emitter {
 
           // TODO: if pickItem is not scalar then we need to cast
           codes.push(`list_index=floor(modf(${pickItemValue.code},${length}.0)) // pick`)
-          codes.push(`scalar_${scalar.ptr}=literals[${ptr > 0 ? `${ptr} + ` : ''}(to_i32 list_index)]`)
+          codes.push(`scalar_${scalar.ptr}=lists[${ptr > 0 ? `${ptr} + ` : ''}(to_i32 list_index)]`)
           // codes.push(`scalars[${scalar.ptr}]=scalar_${scalar.ptr}`)
           codes.push(`scalar_exports[${scalar.ptr}]=list_index`)
 

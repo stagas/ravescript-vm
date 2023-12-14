@@ -1,7 +1,7 @@
-import { logi, setCtrlInstanceAt, resetCtrlInstance } from '../env'
-import { copyInto, copyMem } from '../graph/copy'
+import { resetCtrlInstance, setCtrlInstanceAt } from '../env'
+import { copyMem } from '../graph/copy'
 import { fadeIn, fadeOut } from '../graph/fade'
-import { add_audio_audio } from '../math'
+import { addmul_audio_audio_scalar, mul_audio_scalar } from '../math'
 import { Clock } from './clock'
 
 @unmanaged
@@ -152,7 +152,7 @@ export class Runner {
       this.register(ctrl)
       applyLiterals(ctrl)
       call_indirect<void>(ctrl.run, begin, end)
-      addSignal(begin, end, ctrl.signal, out)
+      addSignal(ctrl, begin, end, out)
     }
 
     const main: Ctrl | null = changetype<Ctrl | null>(curr.main)
@@ -161,8 +161,7 @@ export class Runner {
       this.register(main)
       applyLiterals(main)
       call_indirect<void>(main.run, begin, end)
-      copyInto(begin, end, main.signal.L, out.L)
-      copyInto(begin, end, main.signal.R, out.R)
+      copyMainSignal(main, begin, end, out)
     }
   }
 
@@ -202,7 +201,7 @@ export class Runner {
 
             applyLiterals(ctrl)
             call_indirect<void>(ctrl.run, begin, end)
-            addSignal(begin, end, ctrl.signal, out)
+            addSignal(ctrl, begin, end, out)
           }
         }
         // x x y
@@ -220,7 +219,7 @@ export class Runner {
             if (!next || !exists(ctrl, next)) {
               fadeOutSignal(128, begin, end, ctrl.signal)
             }
-            addSignal(begin, end, ctrl.signal, out)
+            addSignal(ctrl, begin, end, out)
           }
         }
       }
@@ -236,7 +235,7 @@ export class Runner {
             ctrl = curr.tracks[x]
             this.register(ctrl)
             mix(last, ctrl, begin, end)
-            addSignal(begin, end, ctrl.signal, out)
+            addSignal(ctrl, begin, end, out)
           }
           this.lastMain = null
         }
@@ -254,7 +253,7 @@ export class Runner {
             if (!next || !exists(ctrl, next)) {
               fadeOutSignal(128, begin, end, ctrl.signal)
             }
-            addSignal(begin, end, ctrl.signal, out)
+            addSignal(ctrl, begin, end, out)
           }
           this.lastMain = null
         }
@@ -275,7 +274,7 @@ export class Runner {
           applyLiterals(ctrl)
           call_indirect<void>(ctrl.run, begin, end)
           fadeInSignal(32, begin, end, ctrl.signal)
-          addSignal(begin, end, ctrl.signal, out)
+          addSignal(ctrl, begin, end, out)
         }
         this.lastMain = null
       }
@@ -296,7 +295,7 @@ export class Runner {
           if (!next || !exists(ctrl, next)) {
             fadeOutSignal(128, begin, end, ctrl.signal)
           }
-          addSignal(begin, end, ctrl.signal, out)
+          addSignal(ctrl, begin, end, out)
         }
         this.lastMain = null
       }
@@ -309,8 +308,7 @@ export class Runner {
     this.setTimes(actualTime, barTime)
     applyLiterals(main)
     call_indirect<void>(main.run, begin, end)
-    copyInto(begin, end, main.signal.L, out.L)
-    copyInto(begin, end, main.signal.R, out.R)
+    copyMainSignal(main, begin, end, out)
 
     this.last = curr
   }
@@ -320,12 +318,30 @@ export class Runner {
   }
 }
 
+@unmanaged
+class Vol {
+  L: f32 = 0.0
+  R: f32 = 0.0
+  LR: f32 = 0.0
+}
+
 // @ts-ignore
 @inline
-function addSignal(begin: u32, end: u32, sIn: Signal, sOut: Signal): void {
-  if (sIn.L) add_audio_audio(sIn.L, sOut.L, begin, end, sOut.L)
-  if (sIn.R) add_audio_audio(sIn.R, sOut.R, begin, end, sOut.R)
-  if (sIn.LR) add_audio_audio(sIn.LR, sOut.LR, begin, end, sOut.LR)
+function addSignal(ctrl: Ctrl, begin: u32, end: u32, sOut: Signal): void {
+  const sIn: Signal = ctrl.signal
+  const vol: Vol = changetype<Vol>(ctrl.liveLiterals)
+  if (sIn.L) addmul_audio_audio_scalar(sIn.L, sOut.L, vol.L, begin, end, sOut.L)
+  if (sIn.R) addmul_audio_audio_scalar(sIn.R, sOut.R, vol.R, begin, end, sOut.R)
+  if (sIn.LR) addmul_audio_audio_scalar(sIn.LR, sOut.LR, vol.LR, begin, end, sOut.LR)
+}
+
+// @ts-ignore
+@inline
+function copyMainSignal(ctrl: Ctrl, begin: u32, end: u32, sOut: Signal): void {
+  const sIn: Signal = ctrl.signal
+  const vol: Vol = changetype<Vol>(ctrl.liveLiterals)
+  mul_audio_scalar(sIn.L, vol.L, begin, end, sOut.L)
+  mul_audio_scalar(sIn.R, vol.L, begin, end, sOut.R)
 }
 
 // @ts-ignore

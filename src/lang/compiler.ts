@@ -85,6 +85,14 @@ export function compile(
     )
   }
 
+  let clock_ptr = 3
+  const clock_lit = {
+    time: clock_ptr++,
+    barTime: clock_ptr++,
+    sampleRate: clock_ptr++,
+    coeff: clock_ptr++,
+  }
+
   let text = `\
 import default_memory 1 ${VM_MEM_PAGES} from "env/memory"
 import logi: fn (i32) void from "env/logi"
@@ -113,7 +121,7 @@ ${Array.from(info.scalars, (s) =>
 // scalars
 scalars: ptr f32=${meta.scalars >> 2}
 
-// scalars exported
+// scalarExports
 scalar_exports: ptr f32=${meta.scalarExports >> 2}
 
 // lists
@@ -135,7 +143,7 @@ run: fn (i: i32, end: i32) void {
 
   sample_rate: i32 = to_i32 cast_i64 clock[12]
   sample_rate_float: f32 = to_f32 sample_rate
-  literal_2 = sample_rate_float
+  literal_${clock_lit.sampleRate} = sample_rate_float
 
   ${Array.from(info.literals)
       // .filter(literal => info.scope.used.has(literal))
@@ -149,14 +157,14 @@ run: fn (i: i32, end: i32) void {
   bar_time: f64 = clock[7]
   bar_time_step: f64 = clock[8] * 64.0x64
 
-  literal_0 = to_f32 time
-  literal_1 = to_f32 bar_time
-  literals[0] = literal_0
-  literals[1] = literal_1
+  literal_${clock_lit.time} = to_f32 time
+  literal_${clock_lit.barTime} = to_f32 bar_time
+  literals[${clock_lit.time}] = literal_${clock_lit.time}
+  literals[${clock_lit.barTime}] = literal_${clock_lit.barTime}
 
   coeff: f64 = clock[6]
-  literal_3 = to_f32 coeff
-  literals[3] = literal_3
+  literal_${clock_lit.coeff} = to_f32 coeff
+  literals[${clock_lit.coeff}] = literal_${clock_lit.coeff}
 
   // list pointers
   list_pos: f32 = 0.0
@@ -179,14 +187,14 @@ run: fn (i: i32, end: i32) void {
     time = time + time_step
     bar_time = bar_time + bar_time_step
 
-    literal_0 = to_f32 time
-    literal_1 = to_f32 bar_time
+    literal_${clock_lit.time} = to_f32 time
+    literal_${clock_lit.barTime} = to_f32 bar_time
 
     if (i >= end) break
   }
 
-  literals[0] = literal_0
-  literals[1] = literal_1
+  literals[${clock_lit.time}] = literal_${clock_lit.time}
+  literals[${clock_lit.barTime}] = literal_${clock_lit.barTime}
   clock[0] = time
   clock[7] = bar_time
 }
@@ -279,11 +287,12 @@ export function test_compiler() {
 
     passing.forEach(([code, expected]) => {
       it(code, async () => {
-        const ast = parse([...tokenize({ code })])
+        const tokens = [...tokenize({ code })]
+        const ast = parse(tokens)
         console.log(ast)
         const scope = analyse(ast)
         console.log(scope)
-        const info = produce(scope)
+        const info = produce(tokens, scope)
         console.log(info)
 
         const outputCode = info.codes.join('\n')

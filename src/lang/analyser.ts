@@ -1201,6 +1201,7 @@ let prelude: { code: string }
 let preludeScope: Scope
 const prelude2: Source = {
   code: `\
+vol_L:[lit 0] vol_R:[lit 0] vol_LR:[lit 0]
 t:[lit 0] bt:[lit 0] sr:[lit 44100] co:[lit 0]
 L:[audio] R:[audio] LR:[audio]
 [rate sr]`

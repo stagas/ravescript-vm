@@ -23,3 +23,10 @@ export const CtrlView = defineStruct({
   liveLiterals: 'usize',
   ownLiterals: 'usize',
 })
+
+export type VolView = typeof VolView.type
+export const VolView = defineStruct({
+  L: 'f32',
+  R: 'f32',
+  LR: 'f32',
+})

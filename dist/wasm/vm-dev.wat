@@ -12,8 +12,8 @@
  (type $i32_i32_i32_=>_none (func (param i32 i32 i32)))
  (type $f64_=>_f64 (func (param f64) (result f64)))
  (type $f32_=>_f32 (func (param f32) (result f32)))
- (type $i32_i32_i32_i32_i32_=>_none (func (param i32 i32 i32 i32 i32)))
  (type $i32_f32_i32_i32_i32_=>_none (func (param i32 f32 i32 i32 i32)))
+ (type $i32_i32_i32_i32_i32_=>_none (func (param i32 i32 i32 i32 i32)))
  (type $none_=>_none (func))
  (type $i32_i32_i32_=>_i32 (func (param i32 i32 i32) (result i32)))
  (type $f32_f32_=>_f32 (func (param f32 f32) (result f32)))
@@ -24,6 +24,7 @@
  (type $i32_i32_i32_=>_f32 (func (param i32 i32 i32) (result f32)))
  (type $i32_i32_f32_i32_i32_=>_none (func (param i32 i32 f32 i32 i32)))
  (type $f64_i64_=>_i32 (func (param f64 i64) (result i32)))
+ (type $i32_i32_f32_i32_i32_i32_=>_none (func (param i32 i32 f32 i32 i32 i32)))
  (type $i32_i32_i32_i32_=>_i32 (func (param i32 i32 i32 i32) (result i32)))
  (type $i32_v128_=>_none (func (param i32 v128)))
  (type $f32_=>_none (func (param f32)))
@@ -309,11 +310,14 @@
  (export "runner_Ctrl_get_tableIndex" (func $assembly/core/runner/Ctrl#get:tableIndex))
  (export "runner_Ctrl_get_run" (func $assembly/core/runner/Ctrl#get:run))
  (export "runner_Signal_get_L" (func $assembly/core/runner/Signal#get:L))
- (export "add_audio_audio" (func $assembly/math/add_audio_audio))
+ (export "runner_Vol_get_L" (func $assembly/core/runner/Vol#get:L))
+ (export "addmul_audio_audio_scalar" (func $assembly/math/addmul_audio_audio_scalar))
  (export "runner_Signal_get_R" (func $assembly/core/runner/Signal#get:R))
+ (export "runner_Vol_get_R" (func $assembly/core/runner/Vol#get:R))
  (export "runner_Signal_get_LR" (func $assembly/core/runner/Signal#get:LR))
+ (export "runner_Vol_get_LR" (func $assembly/core/runner/Vol#get:LR))
  (export "runner_Bar_get_main" (func $assembly/core/runner/Bar#get:main))
- (export "copy_copyInto" (func $assembly/graph/copy/copyInto))
+ (export "mul_audio_scalar" (func $assembly/math/mul_audio_scalar))
  (export "runner_fill" (func $assembly/core/runner/Runner#fill))
  (export "clock_get_nextBarTime" (func $assembly/core/clock/Clock#get:nextBarTime))
  (export "clock_get_timeStep" (func $assembly/core/clock/Clock#get:timeStep))
@@ -640,11 +644,11 @@
  (export "pow_audio_scalar" (func $assembly/math/pow_audio_scalar))
  (export "pow_scalar_audio" (func $assembly/math/pow_scalar_audio))
  (export "pow_scalar_scalar" (func $assembly/math/pow_scalar_scalar))
- (export "mul_audio_scalar" (func $assembly/math/mul_audio_scalar))
  (export "mul_audio_audio" (func $assembly/math/mul_audio_audio))
  (export "div_audio_scalar" (func $assembly/math/div_audio_scalar))
  (export "div_scalar_audio" (func $assembly/math/div_scalar_audio))
  (export "add_audio_scalar" (func $assembly/math/add_audio_scalar))
+ (export "add_audio_audio" (func $assembly/math/add_audio_audio))
  (export "sub_audio_scalar" (func $assembly/math/sub_audio_scalar))
  (export "sub_audio_audio" (func $assembly/math/sub_audio_audio))
  (export "not_audio" (func $assembly/math/not_audio))
@@ -653,6 +657,7 @@
  (export "join_join21" (func $assembly/graph/join/join21))
  (export "dc_bias_dcBias" (func $assembly/graph/dc-bias/dcBias))
  (export "rms_" (func $assembly/graph/rms/rms))
+ (export "copy_copyInto" (func $assembly/graph/copy/copyInto))
  (export "index_preventTreeShaking" (func $assembly/index/preventTreeShaking))
  (export "bench_audio_benchAudio" (func $assembly/bench/bench-audio/benchAudio))
  (export "gen_gen_get_gain" (func $assembly/gen/gen/Gen#get:gain))
@@ -7976,12 +7981,20 @@
   local.get $this
   i32.load $0
  )
- (func $assembly/math/add_audio_audio (param $in0 i32) (param $in1 i32) (param $begin i32) (param $end i32) (param $out i32)
+ (func $assembly/core/runner/Vol#get:L (param $this i32) (result f32)
+  local.get $this
+  f32.load $0
+ )
+ (func $assembly/math/addmul_audio_audio_scalar (param $in0 i32) (param $in1 i32) (param $scalar f32) (param $begin i32) (param $end i32) (param $out i32)
+  (local $scalarv v128)
   (local $in0v v128)
   (local $in1v v128)
   (local $resv v128)
   (local $i i32)
   (local $offset i32)
+  local.get $scalar
+  f32x4.splat
+  local.set $scalarv
   local.get $begin
   local.set $i
   local.get $begin
@@ -8015,30 +8028,9 @@
     local.get $in1v
     f32x4.add
     local.set $resv
-    local.get $out
     local.get $resv
-    v128.store $0
-    local.get $in0
-    i32.const 16
-    i32.add
-    local.set $in0
-    local.get $in1
-    i32.const 16
-    i32.add
-    local.set $in1
-    local.get $out
-    i32.const 16
-    i32.add
-    local.set $out
-    local.get $in0
-    v128.load $0
-    local.set $in0v
-    local.get $in1
-    v128.load $0
-    local.set $in1v
-    local.get $in0v
-    local.get $in1v
-    f32x4.add
+    local.get $scalarv
+    f32x4.mul
     local.set $resv
     local.get $out
     local.get $resv
@@ -8065,30 +8057,9 @@
     local.get $in1v
     f32x4.add
     local.set $resv
-    local.get $out
     local.get $resv
-    v128.store $0
-    local.get $in0
-    i32.const 16
-    i32.add
-    local.set $in0
-    local.get $in1
-    i32.const 16
-    i32.add
-    local.set $in1
-    local.get $out
-    i32.const 16
-    i32.add
-    local.set $out
-    local.get $in0
-    v128.load $0
-    local.set $in0v
-    local.get $in1
-    v128.load $0
-    local.set $in1v
-    local.get $in0v
-    local.get $in1v
-    f32x4.add
+    local.get $scalarv
+    f32x4.mul
     local.set $resv
     local.get $out
     local.get $resv
@@ -8115,30 +8086,9 @@
     local.get $in1v
     f32x4.add
     local.set $resv
-    local.get $out
     local.get $resv
-    v128.store $0
-    local.get $in0
-    i32.const 16
-    i32.add
-    local.set $in0
-    local.get $in1
-    i32.const 16
-    i32.add
-    local.set $in1
-    local.get $out
-    i32.const 16
-    i32.add
-    local.set $out
-    local.get $in0
-    v128.load $0
-    local.set $in0v
-    local.get $in1
-    v128.load $0
-    local.set $in1v
-    local.get $in0v
-    local.get $in1v
-    f32x4.add
+    local.get $scalarv
+    f32x4.mul
     local.set $resv
     local.get $out
     local.get $resv
@@ -8165,30 +8115,9 @@
     local.get $in1v
     f32x4.add
     local.set $resv
-    local.get $out
     local.get $resv
-    v128.store $0
-    local.get $in0
-    i32.const 16
-    i32.add
-    local.set $in0
-    local.get $in1
-    i32.const 16
-    i32.add
-    local.set $in1
-    local.get $out
-    i32.const 16
-    i32.add
-    local.set $out
-    local.get $in0
-    v128.load $0
-    local.set $in0v
-    local.get $in1
-    v128.load $0
-    local.set $in1v
-    local.get $in0v
-    local.get $in1v
-    f32x4.add
+    local.get $scalarv
+    f32x4.mul
     local.set $resv
     local.get $out
     local.get $resv
@@ -8215,30 +8144,9 @@
     local.get $in1v
     f32x4.add
     local.set $resv
-    local.get $out
     local.get $resv
-    v128.store $0
-    local.get $in0
-    i32.const 16
-    i32.add
-    local.set $in0
-    local.get $in1
-    i32.const 16
-    i32.add
-    local.set $in1
-    local.get $out
-    i32.const 16
-    i32.add
-    local.set $out
-    local.get $in0
-    v128.load $0
-    local.set $in0v
-    local.get $in1
-    v128.load $0
-    local.set $in1v
-    local.get $in0v
-    local.get $in1v
-    f32x4.add
+    local.get $scalarv
+    f32x4.mul
     local.set $resv
     local.get $out
     local.get $resv
@@ -8265,30 +8173,9 @@
     local.get $in1v
     f32x4.add
     local.set $resv
-    local.get $out
     local.get $resv
-    v128.store $0
-    local.get $in0
-    i32.const 16
-    i32.add
-    local.set $in0
-    local.get $in1
-    i32.const 16
-    i32.add
-    local.set $in1
-    local.get $out
-    i32.const 16
-    i32.add
-    local.set $out
-    local.get $in0
-    v128.load $0
-    local.set $in0v
-    local.get $in1
-    v128.load $0
-    local.set $in1v
-    local.get $in0v
-    local.get $in1v
-    f32x4.add
+    local.get $scalarv
+    f32x4.mul
     local.set $resv
     local.get $out
     local.get $resv
@@ -8315,30 +8202,9 @@
     local.get $in1v
     f32x4.add
     local.set $resv
-    local.get $out
     local.get $resv
-    v128.store $0
-    local.get $in0
-    i32.const 16
-    i32.add
-    local.set $in0
-    local.get $in1
-    i32.const 16
-    i32.add
-    local.set $in1
-    local.get $out
-    i32.const 16
-    i32.add
-    local.set $out
-    local.get $in0
-    v128.load $0
-    local.set $in0v
-    local.get $in1
-    v128.load $0
-    local.set $in1v
-    local.get $in0v
-    local.get $in1v
-    f32x4.add
+    local.get $scalarv
+    f32x4.mul
     local.set $resv
     local.get $out
     local.get $resv
@@ -8365,6 +8231,10 @@
     local.get $in1v
     f32x4.add
     local.set $resv
+    local.get $resv
+    local.get $scalarv
+    f32x4.mul
+    local.set $resv
     local.get $out
     local.get $resv
     v128.store $0
@@ -8389,6 +8259,213 @@
     local.get $in0v
     local.get $in1v
     f32x4.add
+    local.set $resv
+    local.get $resv
+    local.get $scalarv
+    f32x4.mul
+    local.set $resv
+    local.get $out
+    local.get $resv
+    v128.store $0
+    local.get $in0
+    i32.const 16
+    i32.add
+    local.set $in0
+    local.get $in1
+    i32.const 16
+    i32.add
+    local.set $in1
+    local.get $out
+    i32.const 16
+    i32.add
+    local.set $out
+    local.get $in0
+    v128.load $0
+    local.set $in0v
+    local.get $in1
+    v128.load $0
+    local.set $in1v
+    local.get $in0v
+    local.get $in1v
+    f32x4.add
+    local.set $resv
+    local.get $resv
+    local.get $scalarv
+    f32x4.mul
+    local.set $resv
+    local.get $out
+    local.get $resv
+    v128.store $0
+    local.get $in0
+    i32.const 16
+    i32.add
+    local.set $in0
+    local.get $in1
+    i32.const 16
+    i32.add
+    local.set $in1
+    local.get $out
+    i32.const 16
+    i32.add
+    local.set $out
+    local.get $in0
+    v128.load $0
+    local.set $in0v
+    local.get $in1
+    v128.load $0
+    local.set $in1v
+    local.get $in0v
+    local.get $in1v
+    f32x4.add
+    local.set $resv
+    local.get $resv
+    local.get $scalarv
+    f32x4.mul
+    local.set $resv
+    local.get $out
+    local.get $resv
+    v128.store $0
+    local.get $in0
+    i32.const 16
+    i32.add
+    local.set $in0
+    local.get $in1
+    i32.const 16
+    i32.add
+    local.set $in1
+    local.get $out
+    i32.const 16
+    i32.add
+    local.set $out
+    local.get $in0
+    v128.load $0
+    local.set $in0v
+    local.get $in1
+    v128.load $0
+    local.set $in1v
+    local.get $in0v
+    local.get $in1v
+    f32x4.add
+    local.set $resv
+    local.get $resv
+    local.get $scalarv
+    f32x4.mul
+    local.set $resv
+    local.get $out
+    local.get $resv
+    v128.store $0
+    local.get $in0
+    i32.const 16
+    i32.add
+    local.set $in0
+    local.get $in1
+    i32.const 16
+    i32.add
+    local.set $in1
+    local.get $out
+    i32.const 16
+    i32.add
+    local.set $out
+    local.get $in0
+    v128.load $0
+    local.set $in0v
+    local.get $in1
+    v128.load $0
+    local.set $in1v
+    local.get $in0v
+    local.get $in1v
+    f32x4.add
+    local.set $resv
+    local.get $resv
+    local.get $scalarv
+    f32x4.mul
+    local.set $resv
+    local.get $out
+    local.get $resv
+    v128.store $0
+    local.get $in0
+    i32.const 16
+    i32.add
+    local.set $in0
+    local.get $in1
+    i32.const 16
+    i32.add
+    local.set $in1
+    local.get $out
+    i32.const 16
+    i32.add
+    local.set $out
+    local.get $in0
+    v128.load $0
+    local.set $in0v
+    local.get $in1
+    v128.load $0
+    local.set $in1v
+    local.get $in0v
+    local.get $in1v
+    f32x4.add
+    local.set $resv
+    local.get $resv
+    local.get $scalarv
+    f32x4.mul
+    local.set $resv
+    local.get $out
+    local.get $resv
+    v128.store $0
+    local.get $in0
+    i32.const 16
+    i32.add
+    local.set $in0
+    local.get $in1
+    i32.const 16
+    i32.add
+    local.set $in1
+    local.get $out
+    i32.const 16
+    i32.add
+    local.set $out
+    local.get $in0
+    v128.load $0
+    local.set $in0v
+    local.get $in1
+    v128.load $0
+    local.set $in1v
+    local.get $in0v
+    local.get $in1v
+    f32x4.add
+    local.set $resv
+    local.get $resv
+    local.get $scalarv
+    f32x4.mul
+    local.set $resv
+    local.get $out
+    local.get $resv
+    v128.store $0
+    local.get $in0
+    i32.const 16
+    i32.add
+    local.set $in0
+    local.get $in1
+    i32.const 16
+    i32.add
+    local.set $in1
+    local.get $out
+    i32.const 16
+    i32.add
+    local.set $out
+    local.get $in0
+    v128.load $0
+    local.set $in0v
+    local.get $in1
+    v128.load $0
+    local.set $in1v
+    local.get $in0v
+    local.get $in1v
+    f32x4.add
+    local.set $resv
+    local.get $resv
+    local.get $scalarv
+    f32x4.mul
     local.set $resv
     local.get $out
     local.get $resv
@@ -8417,35 +8494,345 @@
   local.get $this
   i32.load $0 offset=4
  )
+ (func $assembly/core/runner/Vol#get:R (param $this i32) (result f32)
+  local.get $this
+  f32.load $0 offset=4
+ )
  (func $assembly/core/runner/Signal#get:LR (param $this i32) (result i32)
   local.get $this
   i32.load $0 offset=8
+ )
+ (func $assembly/core/runner/Vol#get:LR (param $this i32) (result f32)
+  local.get $this
+  f32.load $0 offset=8
  )
  (func $assembly/core/runner/Bar#get:main (param $this i32) (result i32)
   local.get $this
   i32.load $0 offset=4
  )
- (func $assembly/graph/copy/copyInto (param $begin i32) (param $end i32) (param $inp i32) (param $out i32)
-  (local $size i32)
+ (func $assembly/math/mul_audio_scalar (param $in0 i32) (param $scalar f32) (param $begin i32) (param $end i32) (param $out i32)
+  (local $scalarv v128)
+  (local $in0v v128)
+  (local $resv v128)
+  (local $i i32)
   (local $offset i32)
-  local.get $end
+  local.get $scalar
+  f32x4.splat
+  local.set $scalarv
   local.get $begin
-  i32.sub
-  i32.const 2
-  i32.shl
-  local.set $size
+  local.set $i
   local.get $begin
   i32.const 2
   i32.shl
   local.set $offset
+  local.get $in0
+  local.get $offset
+  i32.add
+  local.set $in0
   local.get $out
   local.get $offset
   i32.add
-  local.get $inp
-  local.get $offset
-  i32.add
-  local.get $size
-  memory.copy $0 $0
+  local.set $out
+  loop $for-loop|0
+   local.get $i
+   local.get $end
+   i32.lt_u
+   if
+    local.get $in0
+    v128.load $0
+    local.set $in0v
+    local.get $in0v
+    local.get $scalarv
+    f32x4.mul
+    local.set $resv
+    local.get $out
+    local.get $resv
+    v128.store $0
+    local.get $in0
+    i32.const 16
+    i32.add
+    local.set $in0
+    local.get $out
+    i32.const 16
+    i32.add
+    local.set $out
+    local.get $in0
+    v128.load $0
+    local.set $in0v
+    local.get $in0v
+    local.get $scalarv
+    f32x4.mul
+    local.set $resv
+    local.get $out
+    local.get $resv
+    v128.store $0
+    local.get $in0
+    i32.const 16
+    i32.add
+    local.set $in0
+    local.get $out
+    i32.const 16
+    i32.add
+    local.set $out
+    local.get $in0
+    v128.load $0
+    local.set $in0v
+    local.get $in0v
+    local.get $scalarv
+    f32x4.mul
+    local.set $resv
+    local.get $out
+    local.get $resv
+    v128.store $0
+    local.get $in0
+    i32.const 16
+    i32.add
+    local.set $in0
+    local.get $out
+    i32.const 16
+    i32.add
+    local.set $out
+    local.get $in0
+    v128.load $0
+    local.set $in0v
+    local.get $in0v
+    local.get $scalarv
+    f32x4.mul
+    local.set $resv
+    local.get $out
+    local.get $resv
+    v128.store $0
+    local.get $in0
+    i32.const 16
+    i32.add
+    local.set $in0
+    local.get $out
+    i32.const 16
+    i32.add
+    local.set $out
+    local.get $in0
+    v128.load $0
+    local.set $in0v
+    local.get $in0v
+    local.get $scalarv
+    f32x4.mul
+    local.set $resv
+    local.get $out
+    local.get $resv
+    v128.store $0
+    local.get $in0
+    i32.const 16
+    i32.add
+    local.set $in0
+    local.get $out
+    i32.const 16
+    i32.add
+    local.set $out
+    local.get $in0
+    v128.load $0
+    local.set $in0v
+    local.get $in0v
+    local.get $scalarv
+    f32x4.mul
+    local.set $resv
+    local.get $out
+    local.get $resv
+    v128.store $0
+    local.get $in0
+    i32.const 16
+    i32.add
+    local.set $in0
+    local.get $out
+    i32.const 16
+    i32.add
+    local.set $out
+    local.get $in0
+    v128.load $0
+    local.set $in0v
+    local.get $in0v
+    local.get $scalarv
+    f32x4.mul
+    local.set $resv
+    local.get $out
+    local.get $resv
+    v128.store $0
+    local.get $in0
+    i32.const 16
+    i32.add
+    local.set $in0
+    local.get $out
+    i32.const 16
+    i32.add
+    local.set $out
+    local.get $in0
+    v128.load $0
+    local.set $in0v
+    local.get $in0v
+    local.get $scalarv
+    f32x4.mul
+    local.set $resv
+    local.get $out
+    local.get $resv
+    v128.store $0
+    local.get $in0
+    i32.const 16
+    i32.add
+    local.set $in0
+    local.get $out
+    i32.const 16
+    i32.add
+    local.set $out
+    local.get $in0
+    v128.load $0
+    local.set $in0v
+    local.get $in0v
+    local.get $scalarv
+    f32x4.mul
+    local.set $resv
+    local.get $out
+    local.get $resv
+    v128.store $0
+    local.get $in0
+    i32.const 16
+    i32.add
+    local.set $in0
+    local.get $out
+    i32.const 16
+    i32.add
+    local.set $out
+    local.get $in0
+    v128.load $0
+    local.set $in0v
+    local.get $in0v
+    local.get $scalarv
+    f32x4.mul
+    local.set $resv
+    local.get $out
+    local.get $resv
+    v128.store $0
+    local.get $in0
+    i32.const 16
+    i32.add
+    local.set $in0
+    local.get $out
+    i32.const 16
+    i32.add
+    local.set $out
+    local.get $in0
+    v128.load $0
+    local.set $in0v
+    local.get $in0v
+    local.get $scalarv
+    f32x4.mul
+    local.set $resv
+    local.get $out
+    local.get $resv
+    v128.store $0
+    local.get $in0
+    i32.const 16
+    i32.add
+    local.set $in0
+    local.get $out
+    i32.const 16
+    i32.add
+    local.set $out
+    local.get $in0
+    v128.load $0
+    local.set $in0v
+    local.get $in0v
+    local.get $scalarv
+    f32x4.mul
+    local.set $resv
+    local.get $out
+    local.get $resv
+    v128.store $0
+    local.get $in0
+    i32.const 16
+    i32.add
+    local.set $in0
+    local.get $out
+    i32.const 16
+    i32.add
+    local.set $out
+    local.get $in0
+    v128.load $0
+    local.set $in0v
+    local.get $in0v
+    local.get $scalarv
+    f32x4.mul
+    local.set $resv
+    local.get $out
+    local.get $resv
+    v128.store $0
+    local.get $in0
+    i32.const 16
+    i32.add
+    local.set $in0
+    local.get $out
+    i32.const 16
+    i32.add
+    local.set $out
+    local.get $in0
+    v128.load $0
+    local.set $in0v
+    local.get $in0v
+    local.get $scalarv
+    f32x4.mul
+    local.set $resv
+    local.get $out
+    local.get $resv
+    v128.store $0
+    local.get $in0
+    i32.const 16
+    i32.add
+    local.set $in0
+    local.get $out
+    i32.const 16
+    i32.add
+    local.set $out
+    local.get $in0
+    v128.load $0
+    local.set $in0v
+    local.get $in0v
+    local.get $scalarv
+    f32x4.mul
+    local.set $resv
+    local.get $out
+    local.get $resv
+    v128.store $0
+    local.get $in0
+    i32.const 16
+    i32.add
+    local.set $in0
+    local.get $out
+    i32.const 16
+    i32.add
+    local.set $out
+    local.get $in0
+    v128.load $0
+    local.set $in0v
+    local.get $in0v
+    local.get $scalarv
+    f32x4.mul
+    local.set $resv
+    local.get $out
+    local.get $resv
+    v128.store $0
+    local.get $in0
+    i32.const 16
+    i32.add
+    local.set $in0
+    local.get $out
+    i32.const 16
+    i32.add
+    local.set $out
+    local.get $i
+    i32.const 64
+    i32.add
+    local.set $i
+    br $for-loop|0
+   end
+  end
  )
  (func $assembly/core/runner/Runner#fill (param $this i32) (param $barIndex i32) (param $begin i32) (param $end i32) (param $out i32)
   (local $curr i32)
@@ -8460,18 +8847,26 @@
   (local $ctrl|14 i32)
   (local $tableIndex i32)
   (local $ctrl|16 i32)
-  (local $begin|17 i32)
-  (local $end|18 i32)
-  (local $sIn i32)
+  (local $ctrl|17 i32)
+  (local $begin|18 i32)
+  (local $end|19 i32)
   (local $sOut i32)
+  (local $sIn i32)
+  (local $vol i32)
   (local $main i32)
-  (local $this|22 i32)
-  (local $time|23 f64)
-  (local $barTime|24 f64)
-  (local $this|25 i32)
-  (local $ctrl|26 i32)
-  (local $tableIndex|27 i32)
+  (local $this|24 i32)
+  (local $time|25 f64)
+  (local $barTime|26 f64)
+  (local $this|27 i32)
   (local $ctrl|28 i32)
+  (local $tableIndex|29 i32)
+  (local $ctrl|30 i32)
+  (local $ctrl|31 i32)
+  (local $begin|32 i32)
+  (local $end|33 i32)
+  (local $sOut|34 i32)
+  (local $sIn|35 i32)
+  (local $vol|36 i32)
   local.get $this
   call $assembly/core/runner/Runner#get:bars
   local.get $barIndex
@@ -8562,15 +8957,20 @@
     local.get $ctrl
     call $assembly/core/runner/Ctrl#get:run
     call_indirect $0 (type $i32_i32_=>_none)
-    local.get $begin
-    local.set $begin|17
-    local.get $end
-    local.set $end|18
     local.get $ctrl
-    call $assembly/core/runner/Ctrl#get:signal
-    local.set $sIn
+    local.set $ctrl|17
+    local.get $begin
+    local.set $begin|18
+    local.get $end
+    local.set $end|19
     local.get $out
     local.set $sOut
+    local.get $ctrl|17
+    call $assembly/core/runner/Ctrl#get:signal
+    local.set $sIn
+    local.get $ctrl|17
+    call $assembly/core/runner/Ctrl#get:liveLiterals
+    local.set $vol
     local.get $sIn
     call $assembly/core/runner/Signal#get:L
     if
@@ -8578,11 +8978,13 @@
      call $assembly/core/runner/Signal#get:L
      local.get $sOut
      call $assembly/core/runner/Signal#get:L
-     local.get $begin|17
-     local.get $end|18
+     local.get $vol
+     call $assembly/core/runner/Vol#get:L
+     local.get $begin|18
+     local.get $end|19
      local.get $sOut
      call $assembly/core/runner/Signal#get:L
-     call $assembly/math/add_audio_audio
+     call $assembly/math/addmul_audio_audio_scalar
     end
     local.get $sIn
     call $assembly/core/runner/Signal#get:R
@@ -8591,11 +8993,13 @@
      call $assembly/core/runner/Signal#get:R
      local.get $sOut
      call $assembly/core/runner/Signal#get:R
-     local.get $begin|17
-     local.get $end|18
+     local.get $vol
+     call $assembly/core/runner/Vol#get:R
+     local.get $begin|18
+     local.get $end|19
      local.get $sOut
      call $assembly/core/runner/Signal#get:R
-     call $assembly/math/add_audio_audio
+     call $assembly/math/addmul_audio_audio_scalar
     end
     local.get $sIn
     call $assembly/core/runner/Signal#get:LR
@@ -8604,11 +9008,13 @@
      call $assembly/core/runner/Signal#get:LR
      local.get $sOut
      call $assembly/core/runner/Signal#get:LR
-     local.get $begin|17
-     local.get $end|18
+     local.get $vol
+     call $assembly/core/runner/Vol#get:LR
+     local.get $begin|18
+     local.get $end|19
      local.get $sOut
      call $assembly/core/runner/Signal#get:LR
-     call $assembly/math/add_audio_audio
+     call $assembly/math/addmul_audio_audio_scalar
     end
     local.get $x
     i32.const 1
@@ -8623,55 +9029,55 @@
   local.get $main
   if
    local.get $this
-   local.set $this|22
+   local.set $this|24
    local.get $actualTime
-   local.set $time|23
+   local.set $time|25
    local.get $barTime
-   local.set $barTime|24
-   local.get $this|22
+   local.set $barTime|26
+   local.get $this|24
    call $assembly/core/runner/Runner#get:clock
-   local.get $time|23
+   local.get $time|25
    call $assembly/core/clock/Clock#set:time
-   local.get $this|22
+   local.get $this|24
    call $assembly/core/runner/Runner#get:clock
-   local.get $barTime|24
+   local.get $barTime|26
    call $assembly/core/clock/Clock#set:barTime
    local.get $this
-   local.set $this|25
+   local.set $this|27
    local.get $main
-   local.set $ctrl|26
-   local.get $this|25
+   local.set $ctrl|28
+   local.get $this|27
    call $assembly/core/runner/Runner#get:tableIndex
-   local.set $tableIndex|27
-   local.get $ctrl|26
+   local.set $tableIndex|29
+   local.get $ctrl|28
    call $assembly/core/runner/Ctrl#get:id
-   local.get $tableIndex|27
+   local.get $tableIndex|29
    call $assembly/env/setCtrlInstanceAt
    drop
-   local.get $ctrl|26
-   local.get $tableIndex|27
+   local.get $ctrl|28
+   local.get $tableIndex|29
    call $assembly/core/runner/Ctrl#set:tableIndex
-   local.get $tableIndex|27
+   local.get $tableIndex|29
    i32.const 2
    i32.add
-   local.set $tableIndex|27
-   local.get $tableIndex|27
+   local.set $tableIndex|29
+   local.get $tableIndex|29
    i32.const 128
    i32.eq
    if
     i32.const 0
-    local.set $tableIndex|27
+    local.set $tableIndex|29
    end
-   local.get $this|25
-   local.get $tableIndex|27
+   local.get $this|27
+   local.get $tableIndex|29
    call $assembly/core/runner/Runner#set:tableIndex
    local.get $main
-   local.set $ctrl|28
-   local.get $ctrl|28
+   local.set $ctrl|30
+   local.get $ctrl|30
    call $assembly/core/runner/Ctrl#get:ownLiterals
-   local.get $ctrl|28
+   local.get $ctrl|30
    call $assembly/core/runner/Ctrl#get:liveLiterals
-   local.get $ctrl|28
+   local.get $ctrl|30
    call $assembly/core/runner/Ctrl#get:literalsCount
    i32.const 2
    i32.shl
@@ -8681,22 +9087,38 @@
    local.get $main
    call $assembly/core/runner/Ctrl#get:run
    call_indirect $0 (type $i32_i32_=>_none)
-   local.get $begin
-   local.get $end
    local.get $main
-   call $assembly/core/runner/Ctrl#get:signal
-   call $assembly/core/runner/Signal#get:L
-   local.get $out
-   call $assembly/core/runner/Signal#get:L
-   call $assembly/graph/copy/copyInto
+   local.set $ctrl|31
    local.get $begin
+   local.set $begin|32
    local.get $end
-   local.get $main
-   call $assembly/core/runner/Ctrl#get:signal
-   call $assembly/core/runner/Signal#get:R
+   local.set $end|33
    local.get $out
+   local.set $sOut|34
+   local.get $ctrl|31
+   call $assembly/core/runner/Ctrl#get:signal
+   local.set $sIn|35
+   local.get $ctrl|31
+   call $assembly/core/runner/Ctrl#get:liveLiterals
+   local.set $vol|36
+   local.get $sIn|35
+   call $assembly/core/runner/Signal#get:L
+   local.get $vol|36
+   call $assembly/core/runner/Vol#get:L
+   local.get $begin|32
+   local.get $end|33
+   local.get $sOut|34
+   call $assembly/core/runner/Signal#get:L
+   call $assembly/math/mul_audio_scalar
+   local.get $sIn|35
    call $assembly/core/runner/Signal#get:R
-   call $assembly/graph/copy/copyInto
+   local.get $vol|36
+   call $assembly/core/runner/Vol#get:L
+   local.get $begin|32
+   local.get $end|33
+   local.get $sOut|34
+   call $assembly/core/runner/Signal#get:R
+   call $assembly/math/mul_audio_scalar
   end
  )
  (func $assembly/core/clock/Clock#get:nextBarTime (param $this i32) (result f64)
@@ -9982,137 +10404,155 @@
   (local $time f64)
   (local $barTime|16 f64)
   (local $ctrl|17 i32)
-  (local $begin|18 i32)
-  (local $end|19 i32)
-  (local $sIn i32)
+  (local $ctrl|18 i32)
+  (local $begin|19 i32)
+  (local $end|20 i32)
   (local $sOut i32)
-  (local $x|22 i32)
-  (local $this|23 i32)
-  (local $time|24 f64)
-  (local $barTime|25 f64)
-  (local $ctrl|26 i32)
-  (local $ctrl|27 i32)
+  (local $sIn i32)
+  (local $vol i32)
+  (local $x|24 i32)
+  (local $this|25 i32)
+  (local $time|26 f64)
+  (local $barTime|27 f64)
+  (local $ctrl|28 i32)
+  (local $ctrl|29 i32)
   (local $bar i32)
   (local $found i32)
   (local $other i32)
   (local $y i32)
   (local $total i32)
-  (local $begin|33 i32)
-  (local $end|34 i32)
+  (local $begin|35 i32)
+  (local $end|36 i32)
   (local $s i32)
-  (local $begin|36 i32)
-  (local $end|37 i32)
-  (local $sIn|38 i32)
-  (local $sOut|39 i32)
-  (local $x|40 i32)
-  (local $this|41 i32)
-  (local $time|42 f64)
-  (local $barTime|43 f64)
-  (local $this|44 i32)
-  (local $ctrl|45 i32)
+  (local $ctrl|38 i32)
+  (local $begin|39 i32)
+  (local $end|40 i32)
+  (local $sOut|41 i32)
+  (local $sIn|42 i32)
+  (local $vol|43 i32)
+  (local $x|44 i32)
+  (local $this|45 i32)
+  (local $time|46 f64)
+  (local $barTime|47 f64)
+  (local $this|48 i32)
+  (local $ctrl|49 i32)
   (local $tableIndex i32)
-  (local $last|47 i32)
-  (local $ctrl|48 i32)
-  (local $begin|49 i32)
-  (local $end|50 i32)
-  (local $ctrl|51 i32)
-  (local $bar|52 i32)
-  (local $found|53 i32)
-  (local $other|54 i32)
-  (local $y|55 i32)
+  (local $last|51 i32)
+  (local $ctrl|52 i32)
+  (local $begin|53 i32)
+  (local $end|54 i32)
+  (local $ctrl|55 i32)
+  (local $bar|56 i32)
+  (local $found|57 i32)
+  (local $other|58 i32)
+  (local $y|59 i32)
   (local $existed i32)
-  (local $ctrl|57 i32)
-  (local $total|58 i32)
-  (local $begin|59 i32)
-  (local $end|60 i32)
-  (local $s|61 i32)
-  (local $begin|62 i32)
-  (local $end|63 i32)
-  (local $sIn|64 i32)
-  (local $sOut|65 i32)
-  (local $x|66 i32)
-  (local $this|67 i32)
-  (local $time|68 f64)
-  (local $barTime|69 f64)
-  (local $this|70 i32)
-  (local $ctrl|71 i32)
-  (local $tableIndex|72 i32)
-  (local $last|73 i32)
-  (local $ctrl|74 i32)
-  (local $begin|75 i32)
-  (local $end|76 i32)
+  (local $ctrl|61 i32)
+  (local $total|62 i32)
+  (local $begin|63 i32)
+  (local $end|64 i32)
+  (local $s|65 i32)
+  (local $ctrl|66 i32)
+  (local $begin|67 i32)
+  (local $end|68 i32)
+  (local $sOut|69 i32)
+  (local $sIn|70 i32)
+  (local $vol|71 i32)
+  (local $x|72 i32)
+  (local $this|73 i32)
+  (local $time|74 f64)
+  (local $barTime|75 f64)
+  (local $this|76 i32)
   (local $ctrl|77 i32)
-  (local $bar|78 i32)
-  (local $found|79 i32)
-  (local $other|80 i32)
-  (local $y|81 i32)
-  (local $existed|82 i32)
+  (local $tableIndex|78 i32)
+  (local $last|79 i32)
+  (local $ctrl|80 i32)
+  (local $begin|81 i32)
+  (local $end|82 i32)
   (local $ctrl|83 i32)
-  (local $total|84 i32)
-  (local $begin|85 i32)
-  (local $end|86 i32)
-  (local $s|87 i32)
-  (local $ctrl|88 i32)
-  (local $bar|89 i32)
-  (local $found|90 i32)
-  (local $other|91 i32)
-  (local $y|92 i32)
-  (local $total|93 i32)
-  (local $begin|94 i32)
-  (local $end|95 i32)
-  (local $s|96 i32)
-  (local $begin|97 i32)
-  (local $end|98 i32)
-  (local $sIn|99 i32)
-  (local $sOut|100 i32)
-  (local $x|101 i32)
-  (local $this|102 i32)
-  (local $time|103 f64)
-  (local $barTime|104 f64)
-  (local $this|105 i32)
-  (local $ctrl|106 i32)
-  (local $tableIndex|107 i32)
-  (local $ctrl|108 i32)
-  (local $total|109 i32)
-  (local $begin|110 i32)
-  (local $end|111 i32)
-  (local $s|112 i32)
-  (local $begin|113 i32)
-  (local $end|114 i32)
-  (local $sIn|115 i32)
-  (local $sOut|116 i32)
-  (local $x|117 i32)
-  (local $this|118 i32)
-  (local $time|119 f64)
-  (local $barTime|120 f64)
-  (local $this|121 i32)
-  (local $ctrl|122 i32)
-  (local $tableIndex|123 i32)
-  (local $ctrl|124 i32)
-  (local $total|125 i32)
-  (local $begin|126 i32)
-  (local $end|127 i32)
-  (local $s|128 i32)
-  (local $ctrl|129 i32)
-  (local $bar|130 i32)
-  (local $found|131 i32)
-  (local $other|132 i32)
-  (local $y|133 i32)
-  (local $total|134 i32)
-  (local $begin|135 i32)
-  (local $end|136 i32)
-  (local $s|137 i32)
-  (local $begin|138 i32)
-  (local $end|139 i32)
-  (local $sIn|140 i32)
-  (local $sOut|141 i32)
-  (local $this|142 i32)
-  (local $ctrl|143 i32)
-  (local $tableIndex|144 i32)
-  (local $this|145 i32)
-  (local $time|146 f64)
-  (local $barTime|147 f64)
+  (local $bar|84 i32)
+  (local $found|85 i32)
+  (local $other|86 i32)
+  (local $y|87 i32)
+  (local $existed|88 i32)
+  (local $ctrl|89 i32)
+  (local $total|90 i32)
+  (local $begin|91 i32)
+  (local $end|92 i32)
+  (local $s|93 i32)
+  (local $ctrl|94 i32)
+  (local $bar|95 i32)
+  (local $found|96 i32)
+  (local $other|97 i32)
+  (local $y|98 i32)
+  (local $total|99 i32)
+  (local $begin|100 i32)
+  (local $end|101 i32)
+  (local $s|102 i32)
+  (local $ctrl|103 i32)
+  (local $begin|104 i32)
+  (local $end|105 i32)
+  (local $sOut|106 i32)
+  (local $sIn|107 i32)
+  (local $vol|108 i32)
+  (local $x|109 i32)
+  (local $this|110 i32)
+  (local $time|111 f64)
+  (local $barTime|112 f64)
+  (local $this|113 i32)
+  (local $ctrl|114 i32)
+  (local $tableIndex|115 i32)
+  (local $ctrl|116 i32)
+  (local $total|117 i32)
+  (local $begin|118 i32)
+  (local $end|119 i32)
+  (local $s|120 i32)
+  (local $ctrl|121 i32)
+  (local $begin|122 i32)
+  (local $end|123 i32)
+  (local $sOut|124 i32)
+  (local $sIn|125 i32)
+  (local $vol|126 i32)
+  (local $x|127 i32)
+  (local $this|128 i32)
+  (local $time|129 f64)
+  (local $barTime|130 f64)
+  (local $this|131 i32)
+  (local $ctrl|132 i32)
+  (local $tableIndex|133 i32)
+  (local $ctrl|134 i32)
+  (local $total|135 i32)
+  (local $begin|136 i32)
+  (local $end|137 i32)
+  (local $s|138 i32)
+  (local $ctrl|139 i32)
+  (local $bar|140 i32)
+  (local $found|141 i32)
+  (local $other|142 i32)
+  (local $y|143 i32)
+  (local $total|144 i32)
+  (local $begin|145 i32)
+  (local $end|146 i32)
+  (local $s|147 i32)
   (local $ctrl|148 i32)
+  (local $begin|149 i32)
+  (local $end|150 i32)
+  (local $sOut|151 i32)
+  (local $sIn|152 i32)
+  (local $vol|153 i32)
+  (local $this|154 i32)
+  (local $ctrl|155 i32)
+  (local $tableIndex|156 i32)
+  (local $this|157 i32)
+  (local $time|158 f64)
+  (local $barTime|159 f64)
+  (local $ctrl|160 i32)
+  (local $ctrl|161 i32)
+  (local $begin|162 i32)
+  (local $end|163 i32)
+  (local $sOut|164 i32)
+  (local $sIn|165 i32)
+  (local $vol|166 i32)
   local.get $this
   call $assembly/core/runner/Runner#get:clock
   call $assembly/core/clock/Clock#get:time
@@ -10232,15 +10672,20 @@
        local.get $ctrl
        call $assembly/core/runner/Ctrl#get:run
        call_indirect $0 (type $i32_i32_=>_none)
-       local.get $begin
-       local.set $begin|18
-       local.get $end
-       local.set $end|19
        local.get $ctrl
-       call $assembly/core/runner/Ctrl#get:signal
-       local.set $sIn
+       local.set $ctrl|18
+       local.get $begin
+       local.set $begin|19
+       local.get $end
+       local.set $end|20
        local.get $out
        local.set $sOut
+       local.get $ctrl|18
+       call $assembly/core/runner/Ctrl#get:signal
+       local.set $sIn
+       local.get $ctrl|18
+       call $assembly/core/runner/Ctrl#get:liveLiterals
+       local.set $vol
        local.get $sIn
        call $assembly/core/runner/Signal#get:L
        if
@@ -10248,11 +10693,13 @@
         call $assembly/core/runner/Signal#get:L
         local.get $sOut
         call $assembly/core/runner/Signal#get:L
-        local.get $begin|18
-        local.get $end|19
+        local.get $vol
+        call $assembly/core/runner/Vol#get:L
+        local.get $begin|19
+        local.get $end|20
         local.get $sOut
         call $assembly/core/runner/Signal#get:L
-        call $assembly/math/add_audio_audio
+        call $assembly/math/addmul_audio_audio_scalar
        end
        local.get $sIn
        call $assembly/core/runner/Signal#get:R
@@ -10261,11 +10708,13 @@
         call $assembly/core/runner/Signal#get:R
         local.get $sOut
         call $assembly/core/runner/Signal#get:R
-        local.get $begin|18
-        local.get $end|19
+        local.get $vol
+        call $assembly/core/runner/Vol#get:R
+        local.get $begin|19
+        local.get $end|20
         local.get $sOut
         call $assembly/core/runner/Signal#get:R
-        call $assembly/math/add_audio_audio
+        call $assembly/math/addmul_audio_audio_scalar
        end
        local.get $sIn
        call $assembly/core/runner/Signal#get:LR
@@ -10274,11 +10723,13 @@
         call $assembly/core/runner/Signal#get:LR
         local.get $sOut
         call $assembly/core/runner/Signal#get:LR
-        local.get $begin|18
-        local.get $end|19
+        local.get $vol
+        call $assembly/core/runner/Vol#get:LR
+        local.get $begin|19
+        local.get $end|20
         local.get $sOut
         call $assembly/core/runner/Signal#get:LR
-        call $assembly/math/add_audio_audio
+        call $assembly/math/addmul_audio_audio_scalar
        end
        local.get $x
        i32.const 1
@@ -10289,44 +10740,44 @@
      end
     else
      i32.const 0
-     local.set $x|22
+     local.set $x|24
      loop $for-loop|1
-      local.get $x|22
+      local.get $x|24
       local.get $curr
       call $assembly/core/runner/Bar#get:size
       i32.lt_u
       if
-       local.get $x|22
+       local.get $x|24
        i32.const 0
        i32.gt_u
        if
         local.get $this
-        local.set $this|23
+        local.set $this|25
         local.get $actualTime
-        local.set $time|24
+        local.set $time|26
         local.get $barTime
-        local.set $barTime|25
-        local.get $this|23
+        local.set $barTime|27
+        local.get $this|25
         call $assembly/core/runner/Runner#get:clock
-        local.get $time|24
+        local.get $time|26
         call $assembly/core/clock/Clock#set:time
-        local.get $this|23
+        local.get $this|25
         call $assembly/core/runner/Runner#get:clock
-        local.get $barTime|25
+        local.get $barTime|27
         call $assembly/core/clock/Clock#set:barTime
        end
        local.get $curr
        call $assembly/core/runner/Bar#get:tracks
-       local.get $x|22
+       local.get $x|24
        call $~lib/staticarray/StaticArray<assembly/core/runner/Ctrl>#__get
        local.set $ctrl
        local.get $ctrl
-       local.set $ctrl|26
-       local.get $ctrl|26
+       local.set $ctrl|28
+       local.get $ctrl|28
        call $assembly/core/runner/Ctrl#get:ownLiterals
-       local.get $ctrl|26
+       local.get $ctrl|28
        call $assembly/core/runner/Ctrl#get:liveLiterals
-       local.get $ctrl|26
+       local.get $ctrl|28
        call $assembly/core/runner/Ctrl#get:literalsCount
        i32.const 2
        i32.shl
@@ -10343,7 +10794,7 @@
        else
         block $assembly/core/runner/exists|inlined.0 (result i32)
          local.get $ctrl
-         local.set $ctrl|27
+         local.set $ctrl|29
          local.get $next
          local.set $bar
          i32.const 0
@@ -10362,7 +10813,7 @@
             local.get $y
             call $~lib/staticarray/StaticArray<assembly/core/runner/Ctrl>#__get
             local.set $other
-            local.get $ctrl|27
+            local.get $ctrl|29
             call $assembly/core/runner/Ctrl#get:id
             local.get $other
             call $assembly/core/runner/Ctrl#get:id
@@ -10389,9 +10840,9 @@
         i32.const 128
         local.set $total
         local.get $begin
-        local.set $begin|33
+        local.set $begin|35
         local.get $end
-        local.set $end|34
+        local.set $end|36
         local.get $ctrl
         call $assembly/core/runner/Ctrl#get:signal
         local.set $s
@@ -10399,8 +10850,8 @@
         call $assembly/core/runner/Signal#get:L
         if
          local.get $total
-         local.get $begin|33
-         local.get $end|34
+         local.get $begin|35
+         local.get $end|36
          local.get $s
          call $assembly/core/runner/Signal#get:L
          call $assembly/graph/fade/fadeOut
@@ -10409,8 +10860,8 @@
         call $assembly/core/runner/Signal#get:R
         if
          local.get $total
-         local.get $begin|33
-         local.get $end|34
+         local.get $begin|35
+         local.get $end|36
          local.get $s
          call $assembly/core/runner/Signal#get:R
          call $assembly/graph/fade/fadeOut
@@ -10419,65 +10870,76 @@
         call $assembly/core/runner/Signal#get:LR
         if
          local.get $total
-         local.get $begin|33
-         local.get $end|34
+         local.get $begin|35
+         local.get $end|36
          local.get $s
          call $assembly/core/runner/Signal#get:LR
          call $assembly/graph/fade/fadeOut
         end
        end
-       local.get $begin
-       local.set $begin|36
-       local.get $end
-       local.set $end|37
        local.get $ctrl
-       call $assembly/core/runner/Ctrl#get:signal
-       local.set $sIn|38
+       local.set $ctrl|38
+       local.get $begin
+       local.set $begin|39
+       local.get $end
+       local.set $end|40
        local.get $out
-       local.set $sOut|39
-       local.get $sIn|38
+       local.set $sOut|41
+       local.get $ctrl|38
+       call $assembly/core/runner/Ctrl#get:signal
+       local.set $sIn|42
+       local.get $ctrl|38
+       call $assembly/core/runner/Ctrl#get:liveLiterals
+       local.set $vol|43
+       local.get $sIn|42
        call $assembly/core/runner/Signal#get:L
        if
-        local.get $sIn|38
+        local.get $sIn|42
         call $assembly/core/runner/Signal#get:L
-        local.get $sOut|39
+        local.get $sOut|41
         call $assembly/core/runner/Signal#get:L
-        local.get $begin|36
-        local.get $end|37
-        local.get $sOut|39
+        local.get $vol|43
+        call $assembly/core/runner/Vol#get:L
+        local.get $begin|39
+        local.get $end|40
+        local.get $sOut|41
         call $assembly/core/runner/Signal#get:L
-        call $assembly/math/add_audio_audio
+        call $assembly/math/addmul_audio_audio_scalar
        end
-       local.get $sIn|38
+       local.get $sIn|42
        call $assembly/core/runner/Signal#get:R
        if
-        local.get $sIn|38
+        local.get $sIn|42
         call $assembly/core/runner/Signal#get:R
-        local.get $sOut|39
+        local.get $sOut|41
         call $assembly/core/runner/Signal#get:R
-        local.get $begin|36
-        local.get $end|37
-        local.get $sOut|39
+        local.get $vol|43
+        call $assembly/core/runner/Vol#get:R
+        local.get $begin|39
+        local.get $end|40
+        local.get $sOut|41
         call $assembly/core/runner/Signal#get:R
-        call $assembly/math/add_audio_audio
+        call $assembly/math/addmul_audio_audio_scalar
        end
-       local.get $sIn|38
+       local.get $sIn|42
        call $assembly/core/runner/Signal#get:LR
        if
-        local.get $sIn|38
+        local.get $sIn|42
         call $assembly/core/runner/Signal#get:LR
-        local.get $sOut|39
+        local.get $sOut|41
         call $assembly/core/runner/Signal#get:LR
-        local.get $begin|36
-        local.get $end|37
-        local.get $sOut|39
+        local.get $vol|43
+        call $assembly/core/runner/Vol#get:LR
+        local.get $begin|39
+        local.get $end|40
+        local.get $sOut|41
         call $assembly/core/runner/Signal#get:LR
-        call $assembly/math/add_audio_audio
+        call $assembly/math/addmul_audio_audio_scalar
        end
-       local.get $x|22
+       local.get $x|24
        i32.const 1
        i32.add
-       local.set $x|22
+       local.set $x|24
        br $for-loop|1
       end
      end
@@ -10488,50 +10950,50 @@
     i32.eq
     if
      i32.const 0
-     local.set $x|40
+     local.set $x|44
      loop $for-loop|3
-      local.get $x|40
+      local.get $x|44
       local.get $curr
       call $assembly/core/runner/Bar#get:size
       i32.lt_u
       if
-       local.get $x|40
+       local.get $x|44
        i32.const 0
        i32.gt_u
        if
         local.get $this
-        local.set $this|41
+        local.set $this|45
         local.get $actualTime
-        local.set $time|42
+        local.set $time|46
         local.get $barTime
-        local.set $barTime|43
-        local.get $this|41
+        local.set $barTime|47
+        local.get $this|45
         call $assembly/core/runner/Runner#get:clock
-        local.get $time|42
+        local.get $time|46
         call $assembly/core/clock/Clock#set:time
-        local.get $this|41
+        local.get $this|45
         call $assembly/core/runner/Runner#get:clock
-        local.get $barTime|43
+        local.get $barTime|47
         call $assembly/core/clock/Clock#set:barTime
        end
        local.get $curr
        call $assembly/core/runner/Bar#get:tracks
-       local.get $x|40
+       local.get $x|44
        call $~lib/staticarray/StaticArray<assembly/core/runner/Ctrl>#__get
        local.set $ctrl
        local.get $this
-       local.set $this|44
+       local.set $this|48
        local.get $ctrl
-       local.set $ctrl|45
-       local.get $this|44
+       local.set $ctrl|49
+       local.get $this|48
        call $assembly/core/runner/Runner#get:tableIndex
        local.set $tableIndex
-       local.get $ctrl|45
+       local.get $ctrl|49
        call $assembly/core/runner/Ctrl#get:id
        local.get $tableIndex
        call $assembly/env/setCtrlInstanceAt
        drop
-       local.get $ctrl|45
+       local.get $ctrl|49
        local.get $tableIndex
        call $assembly/core/runner/Ctrl#set:tableIndex
        local.get $tableIndex
@@ -10545,179 +11007,190 @@
         i32.const 0
         local.set $tableIndex
        end
-       local.get $this|44
+       local.get $this|48
        local.get $tableIndex
        call $assembly/core/runner/Runner#set:tableIndex
        local.get $last
-       local.set $last|47
+       local.set $last|51
        local.get $ctrl
-       local.set $ctrl|48
+       local.set $ctrl|52
        local.get $begin
-       local.set $begin|49
+       local.set $begin|53
        local.get $end
-       local.set $end|50
+       local.set $end|54
        block $assembly/core/runner/exists|inlined.1 (result i32)
-        local.get $ctrl|48
-        local.set $ctrl|51
-        local.get $last|47
-        local.set $bar|52
+        local.get $ctrl|52
+        local.set $ctrl|55
+        local.get $last|51
+        local.set $bar|56
         i32.const 0
-        local.set $found|53
+        local.set $found|57
         i32.const 0
-        local.set $y|55
+        local.set $y|59
         block $for-break4
          loop $for-loop|4
-          local.get $y|55
-          local.get $bar|52
+          local.get $y|59
+          local.get $bar|56
           call $assembly/core/runner/Bar#get:size
           i32.lt_u
           if
-           local.get $bar|52
+           local.get $bar|56
            call $assembly/core/runner/Bar#get:tracks
-           local.get $y|55
+           local.get $y|59
            call $~lib/staticarray/StaticArray<assembly/core/runner/Ctrl>#__get
-           local.set $other|54
-           local.get $ctrl|51
+           local.set $other|58
+           local.get $ctrl|55
            call $assembly/core/runner/Ctrl#get:id
-           local.get $other|54
+           local.get $other|58
            call $assembly/core/runner/Ctrl#get:id
            i32.eq
            if
             i32.const 1
-            local.set $found|53
+            local.set $found|57
             br $for-break4
            end
-           local.get $y|55
+           local.get $y|59
            i32.const 1
            i32.add
-           local.set $y|55
+           local.set $y|59
            br $for-loop|4
           end
          end
         end
-        local.get $found|53
+        local.get $found|57
         br $assembly/core/runner/exists|inlined.1
        end
        local.set $existed
        local.get $existed
        i32.eqz
        if
-        local.get $ctrl|48
+        local.get $ctrl|52
         call $assembly/core/runner/Ctrl#get:id
         call $assembly/env/resetCtrlInstance
         drop
        end
-       local.get $ctrl|48
-       local.set $ctrl|57
-       local.get $ctrl|57
+       local.get $ctrl|52
+       local.set $ctrl|61
+       local.get $ctrl|61
        call $assembly/core/runner/Ctrl#get:ownLiterals
-       local.get $ctrl|57
+       local.get $ctrl|61
        call $assembly/core/runner/Ctrl#get:liveLiterals
-       local.get $ctrl|57
+       local.get $ctrl|61
        call $assembly/core/runner/Ctrl#get:literalsCount
        i32.const 2
        i32.shl
        call $assembly/graph/copy/copyMem
-       local.get $begin|49
-       local.get $end|50
-       local.get $ctrl|48
+       local.get $begin|53
+       local.get $end|54
+       local.get $ctrl|52
        call $assembly/core/runner/Ctrl#get:run
        call_indirect $0 (type $i32_i32_=>_none)
        local.get $existed
        i32.eqz
        if
         i32.const 8
-        local.set $total|58
-        local.get $begin|49
-        local.set $begin|59
-        local.get $end|50
-        local.set $end|60
-        local.get $ctrl|48
+        local.set $total|62
+        local.get $begin|53
+        local.set $begin|63
+        local.get $end|54
+        local.set $end|64
+        local.get $ctrl|52
         call $assembly/core/runner/Ctrl#get:signal
-        local.set $s|61
-        local.get $s|61
+        local.set $s|65
+        local.get $s|65
         call $assembly/core/runner/Signal#get:L
         if
-         local.get $total|58
-         local.get $begin|59
-         local.get $end|60
-         local.get $s|61
+         local.get $total|62
+         local.get $begin|63
+         local.get $end|64
+         local.get $s|65
          call $assembly/core/runner/Signal#get:L
          call $assembly/graph/fade/fadeIn
         end
-        local.get $s|61
+        local.get $s|65
         call $assembly/core/runner/Signal#get:R
         if
-         local.get $total|58
-         local.get $begin|59
-         local.get $end|60
-         local.get $s|61
+         local.get $total|62
+         local.get $begin|63
+         local.get $end|64
+         local.get $s|65
          call $assembly/core/runner/Signal#get:R
          call $assembly/graph/fade/fadeIn
         end
-        local.get $s|61
+        local.get $s|65
         call $assembly/core/runner/Signal#get:LR
         if
-         local.get $total|58
-         local.get $begin|59
-         local.get $end|60
-         local.get $s|61
+         local.get $total|62
+         local.get $begin|63
+         local.get $end|64
+         local.get $s|65
          call $assembly/core/runner/Signal#get:LR
          call $assembly/graph/fade/fadeIn
         end
        end
-       local.get $begin
-       local.set $begin|62
-       local.get $end
-       local.set $end|63
        local.get $ctrl
-       call $assembly/core/runner/Ctrl#get:signal
-       local.set $sIn|64
+       local.set $ctrl|66
+       local.get $begin
+       local.set $begin|67
+       local.get $end
+       local.set $end|68
        local.get $out
-       local.set $sOut|65
-       local.get $sIn|64
+       local.set $sOut|69
+       local.get $ctrl|66
+       call $assembly/core/runner/Ctrl#get:signal
+       local.set $sIn|70
+       local.get $ctrl|66
+       call $assembly/core/runner/Ctrl#get:liveLiterals
+       local.set $vol|71
+       local.get $sIn|70
        call $assembly/core/runner/Signal#get:L
        if
-        local.get $sIn|64
+        local.get $sIn|70
         call $assembly/core/runner/Signal#get:L
-        local.get $sOut|65
+        local.get $sOut|69
         call $assembly/core/runner/Signal#get:L
-        local.get $begin|62
-        local.get $end|63
-        local.get $sOut|65
+        local.get $vol|71
+        call $assembly/core/runner/Vol#get:L
+        local.get $begin|67
+        local.get $end|68
+        local.get $sOut|69
         call $assembly/core/runner/Signal#get:L
-        call $assembly/math/add_audio_audio
+        call $assembly/math/addmul_audio_audio_scalar
        end
-       local.get $sIn|64
+       local.get $sIn|70
        call $assembly/core/runner/Signal#get:R
        if
-        local.get $sIn|64
+        local.get $sIn|70
         call $assembly/core/runner/Signal#get:R
-        local.get $sOut|65
+        local.get $sOut|69
         call $assembly/core/runner/Signal#get:R
-        local.get $begin|62
-        local.get $end|63
-        local.get $sOut|65
+        local.get $vol|71
+        call $assembly/core/runner/Vol#get:R
+        local.get $begin|67
+        local.get $end|68
+        local.get $sOut|69
         call $assembly/core/runner/Signal#get:R
-        call $assembly/math/add_audio_audio
+        call $assembly/math/addmul_audio_audio_scalar
        end
-       local.get $sIn|64
+       local.get $sIn|70
        call $assembly/core/runner/Signal#get:LR
        if
-        local.get $sIn|64
+        local.get $sIn|70
         call $assembly/core/runner/Signal#get:LR
-        local.get $sOut|65
+        local.get $sOut|69
         call $assembly/core/runner/Signal#get:LR
-        local.get $begin|62
-        local.get $end|63
-        local.get $sOut|65
+        local.get $vol|71
+        call $assembly/core/runner/Vol#get:LR
+        local.get $begin|67
+        local.get $end|68
+        local.get $sOut|69
         call $assembly/core/runner/Signal#get:LR
-        call $assembly/math/add_audio_audio
+        call $assembly/math/addmul_audio_audio_scalar
        end
-       local.get $x|40
+       local.get $x|44
        i32.const 1
        i32.add
-       local.set $x|40
+       local.set $x|44
        br $for-loop|3
       end
      end
@@ -10726,180 +11199,180 @@
      call $assembly/core/runner/Runner#set:lastMain
     else
      i32.const 0
-     local.set $x|66
+     local.set $x|72
      loop $for-loop|5
-      local.get $x|66
+      local.get $x|72
       local.get $curr
       call $assembly/core/runner/Bar#get:size
       i32.lt_u
       if
-       local.get $x|66
+       local.get $x|72
        i32.const 0
        i32.gt_u
        if
         local.get $this
-        local.set $this|67
+        local.set $this|73
         local.get $actualTime
-        local.set $time|68
+        local.set $time|74
         local.get $barTime
-        local.set $barTime|69
-        local.get $this|67
+        local.set $barTime|75
+        local.get $this|73
         call $assembly/core/runner/Runner#get:clock
-        local.get $time|68
+        local.get $time|74
         call $assembly/core/clock/Clock#set:time
-        local.get $this|67
+        local.get $this|73
         call $assembly/core/runner/Runner#get:clock
-        local.get $barTime|69
+        local.get $barTime|75
         call $assembly/core/clock/Clock#set:barTime
        end
        local.get $curr
        call $assembly/core/runner/Bar#get:tracks
-       local.get $x|66
+       local.get $x|72
        call $~lib/staticarray/StaticArray<assembly/core/runner/Ctrl>#__get
        local.set $ctrl
        local.get $this
-       local.set $this|70
+       local.set $this|76
        local.get $ctrl
-       local.set $ctrl|71
-       local.get $this|70
+       local.set $ctrl|77
+       local.get $this|76
        call $assembly/core/runner/Runner#get:tableIndex
-       local.set $tableIndex|72
-       local.get $ctrl|71
+       local.set $tableIndex|78
+       local.get $ctrl|77
        call $assembly/core/runner/Ctrl#get:id
-       local.get $tableIndex|72
+       local.get $tableIndex|78
        call $assembly/env/setCtrlInstanceAt
        drop
-       local.get $ctrl|71
-       local.get $tableIndex|72
+       local.get $ctrl|77
+       local.get $tableIndex|78
        call $assembly/core/runner/Ctrl#set:tableIndex
-       local.get $tableIndex|72
+       local.get $tableIndex|78
        i32.const 2
        i32.add
-       local.set $tableIndex|72
-       local.get $tableIndex|72
+       local.set $tableIndex|78
+       local.get $tableIndex|78
        i32.const 128
        i32.eq
        if
         i32.const 0
-        local.set $tableIndex|72
+        local.set $tableIndex|78
        end
-       local.get $this|70
-       local.get $tableIndex|72
+       local.get $this|76
+       local.get $tableIndex|78
        call $assembly/core/runner/Runner#set:tableIndex
        local.get $last
-       local.set $last|73
+       local.set $last|79
        local.get $ctrl
-       local.set $ctrl|74
+       local.set $ctrl|80
        local.get $begin
-       local.set $begin|75
+       local.set $begin|81
        local.get $end
-       local.set $end|76
+       local.set $end|82
        block $assembly/core/runner/exists|inlined.2 (result i32)
-        local.get $ctrl|74
-        local.set $ctrl|77
-        local.get $last|73
-        local.set $bar|78
+        local.get $ctrl|80
+        local.set $ctrl|83
+        local.get $last|79
+        local.set $bar|84
         i32.const 0
-        local.set $found|79
+        local.set $found|85
         i32.const 0
-        local.set $y|81
+        local.set $y|87
         block $for-break6
          loop $for-loop|6
-          local.get $y|81
-          local.get $bar|78
+          local.get $y|87
+          local.get $bar|84
           call $assembly/core/runner/Bar#get:size
           i32.lt_u
           if
-           local.get $bar|78
+           local.get $bar|84
            call $assembly/core/runner/Bar#get:tracks
-           local.get $y|81
+           local.get $y|87
            call $~lib/staticarray/StaticArray<assembly/core/runner/Ctrl>#__get
-           local.set $other|80
-           local.get $ctrl|77
+           local.set $other|86
+           local.get $ctrl|83
            call $assembly/core/runner/Ctrl#get:id
-           local.get $other|80
+           local.get $other|86
            call $assembly/core/runner/Ctrl#get:id
            i32.eq
            if
             i32.const 1
-            local.set $found|79
+            local.set $found|85
             br $for-break6
            end
-           local.get $y|81
+           local.get $y|87
            i32.const 1
            i32.add
-           local.set $y|81
+           local.set $y|87
            br $for-loop|6
           end
          end
         end
-        local.get $found|79
+        local.get $found|85
         br $assembly/core/runner/exists|inlined.2
        end
-       local.set $existed|82
-       local.get $existed|82
+       local.set $existed|88
+       local.get $existed|88
        i32.eqz
        if
-        local.get $ctrl|74
+        local.get $ctrl|80
         call $assembly/core/runner/Ctrl#get:id
         call $assembly/env/resetCtrlInstance
         drop
        end
-       local.get $ctrl|74
-       local.set $ctrl|83
-       local.get $ctrl|83
+       local.get $ctrl|80
+       local.set $ctrl|89
+       local.get $ctrl|89
        call $assembly/core/runner/Ctrl#get:ownLiterals
-       local.get $ctrl|83
+       local.get $ctrl|89
        call $assembly/core/runner/Ctrl#get:liveLiterals
-       local.get $ctrl|83
+       local.get $ctrl|89
        call $assembly/core/runner/Ctrl#get:literalsCount
        i32.const 2
        i32.shl
        call $assembly/graph/copy/copyMem
-       local.get $begin|75
-       local.get $end|76
-       local.get $ctrl|74
+       local.get $begin|81
+       local.get $end|82
+       local.get $ctrl|80
        call $assembly/core/runner/Ctrl#get:run
        call_indirect $0 (type $i32_i32_=>_none)
-       local.get $existed|82
+       local.get $existed|88
        i32.eqz
        if
         i32.const 8
-        local.set $total|84
-        local.get $begin|75
-        local.set $begin|85
-        local.get $end|76
-        local.set $end|86
-        local.get $ctrl|74
+        local.set $total|90
+        local.get $begin|81
+        local.set $begin|91
+        local.get $end|82
+        local.set $end|92
+        local.get $ctrl|80
         call $assembly/core/runner/Ctrl#get:signal
-        local.set $s|87
-        local.get $s|87
+        local.set $s|93
+        local.get $s|93
         call $assembly/core/runner/Signal#get:L
         if
-         local.get $total|84
-         local.get $begin|85
-         local.get $end|86
-         local.get $s|87
+         local.get $total|90
+         local.get $begin|91
+         local.get $end|92
+         local.get $s|93
          call $assembly/core/runner/Signal#get:L
          call $assembly/graph/fade/fadeIn
         end
-        local.get $s|87
+        local.get $s|93
         call $assembly/core/runner/Signal#get:R
         if
-         local.get $total|84
-         local.get $begin|85
-         local.get $end|86
-         local.get $s|87
+         local.get $total|90
+         local.get $begin|91
+         local.get $end|92
+         local.get $s|93
          call $assembly/core/runner/Signal#get:R
          call $assembly/graph/fade/fadeIn
         end
-        local.get $s|87
+        local.get $s|93
         call $assembly/core/runner/Signal#get:LR
         if
-         local.get $total|84
-         local.get $begin|85
-         local.get $end|86
-         local.get $s|87
+         local.get $total|90
+         local.get $begin|91
+         local.get $end|92
+         local.get $s|93
          call $assembly/core/runner/Signal#get:LR
          call $assembly/graph/fade/fadeIn
         end
@@ -10911,141 +11384,152 @@
        else
         block $assembly/core/runner/exists|inlined.3 (result i32)
          local.get $ctrl
-         local.set $ctrl|88
+         local.set $ctrl|94
          local.get $next
-         local.set $bar|89
+         local.set $bar|95
          i32.const 0
-         local.set $found|90
+         local.set $found|96
          i32.const 0
-         local.set $y|92
+         local.set $y|98
          block $for-break7
           loop $for-loop|7
-           local.get $y|92
-           local.get $bar|89
+           local.get $y|98
+           local.get $bar|95
            call $assembly/core/runner/Bar#get:size
            i32.lt_u
            if
-            local.get $bar|89
+            local.get $bar|95
             call $assembly/core/runner/Bar#get:tracks
-            local.get $y|92
+            local.get $y|98
             call $~lib/staticarray/StaticArray<assembly/core/runner/Ctrl>#__get
-            local.set $other|91
-            local.get $ctrl|88
+            local.set $other|97
+            local.get $ctrl|94
             call $assembly/core/runner/Ctrl#get:id
-            local.get $other|91
+            local.get $other|97
             call $assembly/core/runner/Ctrl#get:id
             i32.eq
             if
              i32.const 1
-             local.set $found|90
+             local.set $found|96
              br $for-break7
             end
-            local.get $y|92
+            local.get $y|98
             i32.const 1
             i32.add
-            local.set $y|92
+            local.set $y|98
             br $for-loop|7
            end
           end
          end
-         local.get $found|90
+         local.get $found|96
          br $assembly/core/runner/exists|inlined.3
         end
         i32.eqz
        end
        if
         i32.const 128
-        local.set $total|93
+        local.set $total|99
         local.get $begin
-        local.set $begin|94
+        local.set $begin|100
         local.get $end
-        local.set $end|95
+        local.set $end|101
         local.get $ctrl
         call $assembly/core/runner/Ctrl#get:signal
-        local.set $s|96
-        local.get $s|96
+        local.set $s|102
+        local.get $s|102
         call $assembly/core/runner/Signal#get:L
         if
-         local.get $total|93
-         local.get $begin|94
-         local.get $end|95
-         local.get $s|96
+         local.get $total|99
+         local.get $begin|100
+         local.get $end|101
+         local.get $s|102
          call $assembly/core/runner/Signal#get:L
          call $assembly/graph/fade/fadeOut
         end
-        local.get $s|96
+        local.get $s|102
         call $assembly/core/runner/Signal#get:R
         if
-         local.get $total|93
-         local.get $begin|94
-         local.get $end|95
-         local.get $s|96
+         local.get $total|99
+         local.get $begin|100
+         local.get $end|101
+         local.get $s|102
          call $assembly/core/runner/Signal#get:R
          call $assembly/graph/fade/fadeOut
         end
-        local.get $s|96
+        local.get $s|102
         call $assembly/core/runner/Signal#get:LR
         if
-         local.get $total|93
-         local.get $begin|94
-         local.get $end|95
-         local.get $s|96
+         local.get $total|99
+         local.get $begin|100
+         local.get $end|101
+         local.get $s|102
          call $assembly/core/runner/Signal#get:LR
          call $assembly/graph/fade/fadeOut
         end
        end
-       local.get $begin
-       local.set $begin|97
-       local.get $end
-       local.set $end|98
        local.get $ctrl
-       call $assembly/core/runner/Ctrl#get:signal
-       local.set $sIn|99
+       local.set $ctrl|103
+       local.get $begin
+       local.set $begin|104
+       local.get $end
+       local.set $end|105
        local.get $out
-       local.set $sOut|100
-       local.get $sIn|99
+       local.set $sOut|106
+       local.get $ctrl|103
+       call $assembly/core/runner/Ctrl#get:signal
+       local.set $sIn|107
+       local.get $ctrl|103
+       call $assembly/core/runner/Ctrl#get:liveLiterals
+       local.set $vol|108
+       local.get $sIn|107
        call $assembly/core/runner/Signal#get:L
        if
-        local.get $sIn|99
+        local.get $sIn|107
         call $assembly/core/runner/Signal#get:L
-        local.get $sOut|100
+        local.get $sOut|106
         call $assembly/core/runner/Signal#get:L
-        local.get $begin|97
-        local.get $end|98
-        local.get $sOut|100
+        local.get $vol|108
+        call $assembly/core/runner/Vol#get:L
+        local.get $begin|104
+        local.get $end|105
+        local.get $sOut|106
         call $assembly/core/runner/Signal#get:L
-        call $assembly/math/add_audio_audio
+        call $assembly/math/addmul_audio_audio_scalar
        end
-       local.get $sIn|99
+       local.get $sIn|107
        call $assembly/core/runner/Signal#get:R
        if
-        local.get $sIn|99
+        local.get $sIn|107
         call $assembly/core/runner/Signal#get:R
-        local.get $sOut|100
+        local.get $sOut|106
         call $assembly/core/runner/Signal#get:R
-        local.get $begin|97
-        local.get $end|98
-        local.get $sOut|100
+        local.get $vol|108
+        call $assembly/core/runner/Vol#get:R
+        local.get $begin|104
+        local.get $end|105
+        local.get $sOut|106
         call $assembly/core/runner/Signal#get:R
-        call $assembly/math/add_audio_audio
+        call $assembly/math/addmul_audio_audio_scalar
        end
-       local.get $sIn|99
+       local.get $sIn|107
        call $assembly/core/runner/Signal#get:LR
        if
-        local.get $sIn|99
+        local.get $sIn|107
         call $assembly/core/runner/Signal#get:LR
-        local.get $sOut|100
+        local.get $sOut|106
         call $assembly/core/runner/Signal#get:LR
-        local.get $begin|97
-        local.get $end|98
-        local.get $sOut|100
+        local.get $vol|108
+        call $assembly/core/runner/Vol#get:LR
+        local.get $begin|104
+        local.get $end|105
+        local.get $sOut|106
         call $assembly/core/runner/Signal#get:LR
-        call $assembly/math/add_audio_audio
+        call $assembly/math/addmul_audio_audio_scalar
        end
-       local.get $x|66
+       local.get $x|72
        i32.const 1
        i32.add
-       local.set $x|66
+       local.set $x|72
        br $for-loop|5
       end
      end
@@ -11060,77 +11544,77 @@
    i32.eq
    if
     i32.const 0
-    local.set $x|101
+    local.set $x|109
     loop $for-loop|8
-     local.get $x|101
+     local.get $x|109
      local.get $curr
      call $assembly/core/runner/Bar#get:size
      i32.lt_u
      if
-      local.get $x|101
+      local.get $x|109
       i32.const 0
       i32.gt_u
       if
        local.get $this
-       local.set $this|102
+       local.set $this|110
        local.get $actualTime
-       local.set $time|103
+       local.set $time|111
        local.get $barTime
-       local.set $barTime|104
-       local.get $this|102
+       local.set $barTime|112
+       local.get $this|110
        call $assembly/core/runner/Runner#get:clock
-       local.get $time|103
+       local.get $time|111
        call $assembly/core/clock/Clock#set:time
-       local.get $this|102
+       local.get $this|110
        call $assembly/core/runner/Runner#get:clock
-       local.get $barTime|104
+       local.get $barTime|112
        call $assembly/core/clock/Clock#set:barTime
       end
       local.get $curr
       call $assembly/core/runner/Bar#get:tracks
-      local.get $x|101
+      local.get $x|109
       call $~lib/staticarray/StaticArray<assembly/core/runner/Ctrl>#__get
       local.set $ctrl
       local.get $this
-      local.set $this|105
+      local.set $this|113
       local.get $ctrl
-      local.set $ctrl|106
-      local.get $this|105
+      local.set $ctrl|114
+      local.get $this|113
       call $assembly/core/runner/Runner#get:tableIndex
-      local.set $tableIndex|107
-      local.get $ctrl|106
+      local.set $tableIndex|115
+      local.get $ctrl|114
       call $assembly/core/runner/Ctrl#get:id
-      local.get $tableIndex|107
+      local.get $tableIndex|115
       call $assembly/env/setCtrlInstanceAt
       drop
-      local.get $ctrl|106
-      local.get $tableIndex|107
+      local.get $ctrl|114
+      local.get $tableIndex|115
       call $assembly/core/runner/Ctrl#set:tableIndex
-      local.get $tableIndex|107
+      local.get $tableIndex|115
       i32.const 2
       i32.add
-      local.set $tableIndex|107
-      local.get $tableIndex|107
+      local.set $tableIndex|115
+      local.get $tableIndex|115
       i32.const 128
       i32.eq
       if
        i32.const 0
-       local.set $tableIndex|107
+       local.set $tableIndex|115
       end
-      local.get $this|105
-      local.get $tableIndex|107
+      local.get $this|113
+      local.get $tableIndex|115
       call $assembly/core/runner/Runner#set:tableIndex
       local.get $ctrl
       call $assembly/core/runner/Ctrl#get:id
       call $assembly/env/resetCtrlInstance
       drop
       local.get $ctrl
-      local.set $ctrl|108
-      local.get $ctrl|108
+      local.set $ctrl|116
+      local.get $ctrl|116
       call $assembly/core/runner/Ctrl#get:ownLiterals
-      local.get $ctrl|108
+      local.get $ctrl|116
       call $assembly/core/runner/Ctrl#get:liveLiterals
-      local.get $ctrl|108
+      local.get $ctrl|116
       call $assembly/core/runner/Ctrl#get:literalsCount
       i32.const 2
       i32.shl
@@ -11141,96 +11625,107 @@
       call $assembly/core/runner/Ctrl#get:run
       call_indirect $0 (type $i32_i32_=>_none)
       i32.const 32
-      local.set $total|109
+      local.set $total|117
       local.get $begin
-      local.set $begin|110
+      local.set $begin|118
       local.get $end
-      local.set $end|111
+      local.set $end|119
       local.get $ctrl
       call $assembly/core/runner/Ctrl#get:signal
-      local.set $s|112
-      local.get $s|112
+      local.set $s|120
+      local.get $s|120
       call $assembly/core/runner/Signal#get:L
       if
-       local.get $total|109
-       local.get $begin|110
-       local.get $end|111
-       local.get $s|112
+       local.get $total|117
+       local.get $begin|118
+       local.get $end|119
+       local.get $s|120
        call $assembly/core/runner/Signal#get:L
        call $assembly/graph/fade/fadeIn
       end
-      local.get $s|112
+      local.get $s|120
       call $assembly/core/runner/Signal#get:R
       if
-       local.get $total|109
-       local.get $begin|110
-       local.get $end|111
-       local.get $s|112
+       local.get $total|117
+       local.get $begin|118
+       local.get $end|119
+       local.get $s|120
        call $assembly/core/runner/Signal#get:R
        call $assembly/graph/fade/fadeIn
       end
-      local.get $s|112
+      local.get $s|120
       call $assembly/core/runner/Signal#get:LR
       if
-       local.get $total|109
-       local.get $begin|110
-       local.get $end|111
-       local.get $s|112
+       local.get $total|117
+       local.get $begin|118
+       local.get $end|119
+       local.get $s|120
        call $assembly/core/runner/Signal#get:LR
        call $assembly/graph/fade/fadeIn
       end
-      local.get $begin
-      local.set $begin|113
-      local.get $end
-      local.set $end|114
       local.get $ctrl
-      call $assembly/core/runner/Ctrl#get:signal
-      local.set $sIn|115
+      local.set $ctrl|121
+      local.get $begin
+      local.set $begin|122
+      local.get $end
+      local.set $end|123
       local.get $out
-      local.set $sOut|116
-      local.get $sIn|115
+      local.set $sOut|124
+      local.get $ctrl|121
+      call $assembly/core/runner/Ctrl#get:signal
+      local.set $sIn|125
+      local.get $ctrl|121
+      call $assembly/core/runner/Ctrl#get:liveLiterals
+      local.set $vol|126
+      local.get $sIn|125
       call $assembly/core/runner/Signal#get:L
       if
-       local.get $sIn|115
+       local.get $sIn|125
        call $assembly/core/runner/Signal#get:L
-       local.get $sOut|116
+       local.get $sOut|124
        call $assembly/core/runner/Signal#get:L
-       local.get $begin|113
-       local.get $end|114
-       local.get $sOut|116
+       local.get $vol|126
+       call $assembly/core/runner/Vol#get:L
+       local.get $begin|122
+       local.get $end|123
+       local.get $sOut|124
        call $assembly/core/runner/Signal#get:L
-       call $assembly/math/add_audio_audio
+       call $assembly/math/addmul_audio_audio_scalar
       end
-      local.get $sIn|115
+      local.get $sIn|125
       call $assembly/core/runner/Signal#get:R
       if
-       local.get $sIn|115
+       local.get $sIn|125
        call $assembly/core/runner/Signal#get:R
-       local.get $sOut|116
+       local.get $sOut|124
        call $assembly/core/runner/Signal#get:R
-       local.get $begin|113
-       local.get $end|114
-       local.get $sOut|116
+       local.get $vol|126
+       call $assembly/core/runner/Vol#get:R
+       local.get $begin|122
+       local.get $end|123
+       local.get $sOut|124
        call $assembly/core/runner/Signal#get:R
-       call $assembly/math/add_audio_audio
+       call $assembly/math/addmul_audio_audio_scalar
       end
-      local.get $sIn|115
+      local.get $sIn|125
       call $assembly/core/runner/Signal#get:LR
       if
-       local.get $sIn|115
+       local.get $sIn|125
        call $assembly/core/runner/Signal#get:LR
-       local.get $sOut|116
+       local.get $sOut|124
        call $assembly/core/runner/Signal#get:LR
-       local.get $begin|113
-       local.get $end|114
-       local.get $sOut|116
+       local.get $vol|126
+       call $assembly/core/runner/Vol#get:LR
+       local.get $begin|122
+       local.get $end|123
+       local.get $sOut|124
        call $assembly/core/runner/Signal#get:LR
-       call $assembly/math/add_audio_audio
+       call $assembly/math/addmul_audio_audio_scalar
       end
-      local.get $x|101
+      local.get $x|109
       i32.const 1
       i32.add
-      local.set $x|101
+      local.set $x|109
       br $for-loop|8
      end
     end
@@ -11239,77 +11734,77 @@
     call $assembly/core/runner/Runner#set:lastMain
    else
     i32.const 0
-    local.set $x|117
+    local.set $x|127
     loop $for-loop|9
-     local.get $x|117
+     local.get $x|127
      local.get $curr
      call $assembly/core/runner/Bar#get:size
      i32.lt_u
      if
-      local.get $x|117
+      local.get $x|127
       i32.const 0
       i32.gt_u
       if
        local.get $this
-       local.set $this|118
+       local.set $this|128
        local.get $actualTime
-       local.set $time|119
+       local.set $time|129
        local.get $barTime
-       local.set $barTime|120
-       local.get $this|118
+       local.set $barTime|130
+       local.get $this|128
        call $assembly/core/runner/Runner#get:clock
-       local.get $time|119
+       local.get $time|129
        call $assembly/core/clock/Clock#set:time
-       local.get $this|118
+       local.get $this|128
        call $assembly/core/runner/Runner#get:clock
-       local.get $barTime|120
+       local.get $barTime|130
        call $assembly/core/clock/Clock#set:barTime
       end
       local.get $curr
       call $assembly/core/runner/Bar#get:tracks
-      local.get $x|117
+      local.get $x|127
       call $~lib/staticarray/StaticArray<assembly/core/runner/Ctrl>#__get
       local.set $ctrl
       local.get $this
-      local.set $this|121
+      local.set $this|131
       local.get $ctrl
-      local.set $ctrl|122
-      local.get $this|121
+      local.set $ctrl|132
+      local.get $this|131
       call $assembly/core/runner/Runner#get:tableIndex
-      local.set $tableIndex|123
-      local.get $ctrl|122
+      local.set $tableIndex|133
+      local.get $ctrl|132
       call $assembly/core/runner/Ctrl#get:id
-      local.get $tableIndex|123
+      local.get $tableIndex|133
       call $assembly/env/setCtrlInstanceAt
       drop
-      local.get $ctrl|122
-      local.get $tableIndex|123
+      local.get $ctrl|132
+      local.get $tableIndex|133
       call $assembly/core/runner/Ctrl#set:tableIndex
-      local.get $tableIndex|123
+      local.get $tableIndex|133
       i32.const 2
       i32.add
-      local.set $tableIndex|123
-      local.get $tableIndex|123
+      local.set $tableIndex|133
+      local.get $tableIndex|133
       i32.const 128
       i32.eq
       if
        i32.const 0
-       local.set $tableIndex|123
+       local.set $tableIndex|133
       end
-      local.get $this|121
-      local.get $tableIndex|123
+      local.get $this|131
+      local.get $tableIndex|133
       call $assembly/core/runner/Runner#set:tableIndex
       local.get $ctrl
       call $assembly/core/runner/Ctrl#get:id
       call $assembly/env/resetCtrlInstance
       drop
       local.get $ctrl
-      local.set $ctrl|124
-      local.get $ctrl|124
+      local.set $ctrl|134
+      local.get $ctrl|134
       call $assembly/core/runner/Ctrl#get:ownLiterals
-      local.get $ctrl|124
+      local.get $ctrl|134
       call $assembly/core/runner/Ctrl#get:liveLiterals
-      local.get $ctrl|124
+      local.get $ctrl|134
       call $assembly/core/runner/Ctrl#get:literalsCount
       i32.const 2
       i32.shl
@@ -11320,41 +11815,41 @@
       call $assembly/core/runner/Ctrl#get:run
       call_indirect $0 (type $i32_i32_=>_none)
       i32.const 32
-      local.set $total|125
+      local.set $total|135
       local.get $begin
-      local.set $begin|126
+      local.set $begin|136
       local.get $end
-      local.set $end|127
+      local.set $end|137
       local.get $ctrl
       call $assembly/core/runner/Ctrl#get:signal
-      local.set $s|128
-      local.get $s|128
+      local.set $s|138
+      local.get $s|138
       call $assembly/core/runner/Signal#get:L
       if
-       local.get $total|125
-       local.get $begin|126
-       local.get $end|127
-       local.get $s|128
+       local.get $total|135
+       local.get $begin|136
+       local.get $end|137
+       local.get $s|138
        call $assembly/core/runner/Signal#get:L
        call $assembly/graph/fade/fadeIn
       end
-      local.get $s|128
+      local.get $s|138
       call $assembly/core/runner/Signal#get:R
       if
-       local.get $total|125
-       local.get $begin|126
-       local.get $end|127
-       local.get $s|128
+       local.get $total|135
+       local.get $begin|136
+       local.get $end|137
+       local.get $s|138
        call $assembly/core/runner/Signal#get:R
        call $assembly/graph/fade/fadeIn
       end
-      local.get $s|128
+      local.get $s|138
       call $assembly/core/runner/Signal#get:LR
       if
-       local.get $total|125
-       local.get $begin|126
-       local.get $end|127
-       local.get $s|128
+       local.get $total|135
+       local.get $begin|136
+       local.get $end|137
+       local.get $s|138
        call $assembly/core/runner/Signal#get:LR
        call $assembly/graph/fade/fadeIn
       end
@@ -11365,141 +11860,152 @@
       else
        block $assembly/core/runner/exists|inlined.4 (result i32)
         local.get $ctrl
-        local.set $ctrl|129
+        local.set $ctrl|139
         local.get $next
-        local.set $bar|130
+        local.set $bar|140
         i32.const 0
-        local.set $found|131
+        local.set $found|141
         i32.const 0
-        local.set $y|133
+        local.set $y|143
         block $for-break10
          loop $for-loop|10
-          local.get $y|133
-          local.get $bar|130
+          local.get $y|143
+          local.get $bar|140
           call $assembly/core/runner/Bar#get:size
           i32.lt_u
           if
-           local.get $bar|130
+           local.get $bar|140
            call $assembly/core/runner/Bar#get:tracks
-           local.get $y|133
+           local.get $y|143
            call $~lib/staticarray/StaticArray<assembly/core/runner/Ctrl>#__get
-           local.set $other|132
-           local.get $ctrl|129
+           local.set $other|142
+           local.get $ctrl|139
            call $assembly/core/runner/Ctrl#get:id
-           local.get $other|132
+           local.get $other|142
            call $assembly/core/runner/Ctrl#get:id
            i32.eq
            if
             i32.const 1
-            local.set $found|131
+            local.set $found|141
             br $for-break10
            end
-           local.get $y|133
+           local.get $y|143
            i32.const 1
            i32.add
-           local.set $y|133
+           local.set $y|143
            br $for-loop|10
           end
          end
         end
-        local.get $found|131
+        local.get $found|141
         br $assembly/core/runner/exists|inlined.4
        end
        i32.eqz
       end
       if
        i32.const 128
-       local.set $total|134
+       local.set $total|144
        local.get $begin
-       local.set $begin|135
+       local.set $begin|145
        local.get $end
-       local.set $end|136
+       local.set $end|146
        local.get $ctrl
        call $assembly/core/runner/Ctrl#get:signal
-       local.set $s|137
-       local.get $s|137
+       local.set $s|147
+       local.get $s|147
        call $assembly/core/runner/Signal#get:L
        if
-        local.get $total|134
-        local.get $begin|135
-        local.get $end|136
-        local.get $s|137
+        local.get $total|144
+        local.get $begin|145
+        local.get $end|146
+        local.get $s|147
         call $assembly/core/runner/Signal#get:L
         call $assembly/graph/fade/fadeOut
        end
-       local.get $s|137
+       local.get $s|147
        call $assembly/core/runner/Signal#get:R
        if
-        local.get $total|134
-        local.get $begin|135
-        local.get $end|136
-        local.get $s|137
+        local.get $total|144
+        local.get $begin|145
+        local.get $end|146
+        local.get $s|147
         call $assembly/core/runner/Signal#get:R
         call $assembly/graph/fade/fadeOut
        end
-       local.get $s|137
+       local.get $s|147
        call $assembly/core/runner/Signal#get:LR
        if
-        local.get $total|134
-        local.get $begin|135
-        local.get $end|136
-        local.get $s|137
+        local.get $total|144
+        local.get $begin|145
+        local.get $end|146
+        local.get $s|147
         call $assembly/core/runner/Signal#get:LR
         call $assembly/graph/fade/fadeOut
        end
       end
-      local.get $begin
-      local.set $begin|138
-      local.get $end
-      local.set $end|139
       local.get $ctrl
-      call $assembly/core/runner/Ctrl#get:signal
-      local.set $sIn|140
+      local.set $ctrl|148
+      local.get $begin
+      local.set $begin|149
+      local.get $end
+      local.set $end|150
       local.get $out
-      local.set $sOut|141
-      local.get $sIn|140
+      local.set $sOut|151
+      local.get $ctrl|148
+      call $assembly/core/runner/Ctrl#get:signal
+      local.set $sIn|152
+      local.get $ctrl|148
+      call $assembly/core/runner/Ctrl#get:liveLiterals
+      local.set $vol|153
+      local.get $sIn|152
       call $assembly/core/runner/Signal#get:L
       if
-       local.get $sIn|140
+       local.get $sIn|152
        call $assembly/core/runner/Signal#get:L
-       local.get $sOut|141
+       local.get $sOut|151
        call $assembly/core/runner/Signal#get:L
-       local.get $begin|138
-       local.get $end|139
-       local.get $sOut|141
+       local.get $vol|153
+       call $assembly/core/runner/Vol#get:L
+       local.get $begin|149
+       local.get $end|150
+       local.get $sOut|151
        call $assembly/core/runner/Signal#get:L
-       call $assembly/math/add_audio_audio
+       call $assembly/math/addmul_audio_audio_scalar
       end
-      local.get $sIn|140
+      local.get $sIn|152
       call $assembly/core/runner/Signal#get:R
       if
-       local.get $sIn|140
+       local.get $sIn|152
        call $assembly/core/runner/Signal#get:R
-       local.get $sOut|141
+       local.get $sOut|151
        call $assembly/core/runner/Signal#get:R
-       local.get $begin|138
-       local.get $end|139
-       local.get $sOut|141
+       local.get $vol|153
+       call $assembly/core/runner/Vol#get:R
+       local.get $begin|149
+       local.get $end|150
+       local.get $sOut|151
        call $assembly/core/runner/Signal#get:R
-       call $assembly/math/add_audio_audio
+       call $assembly/math/addmul_audio_audio_scalar
       end
-      local.get $sIn|140
+      local.get $sIn|152
       call $assembly/core/runner/Signal#get:LR
       if
-       local.get $sIn|140
+       local.get $sIn|152
        call $assembly/core/runner/Signal#get:LR
-       local.get $sOut|141
+       local.get $sOut|151
        call $assembly/core/runner/Signal#get:LR
-       local.get $begin|138
-       local.get $end|139
-       local.get $sOut|141
+       local.get $vol|153
+       call $assembly/core/runner/Vol#get:LR
+       local.get $begin|149
+       local.get $end|150
+       local.get $sOut|151
        call $assembly/core/runner/Signal#get:LR
-       call $assembly/math/add_audio_audio
+       call $assembly/math/addmul_audio_audio_scalar
       end
-      local.get $x|117
+      local.get $x|127
       i32.const 1
       i32.add
-      local.set $x|117
+      local.set $x|127
       br $for-loop|9
      end
     end
@@ -11519,57 +12025,57 @@
    local.get $main
    if
     local.get $this
-    local.set $this|142
+    local.set $this|154
     local.get $main
-    local.set $ctrl|143
-    local.get $this|142
+    local.set $ctrl|155
+    local.get $this|154
     call $assembly/core/runner/Runner#get:tableIndex
-    local.set $tableIndex|144
-    local.get $ctrl|143
+    local.set $tableIndex|156
+    local.get $ctrl|155
     call $assembly/core/runner/Ctrl#get:id
-    local.get $tableIndex|144
+    local.get $tableIndex|156
     call $assembly/env/setCtrlInstanceAt
     drop
-    local.get $ctrl|143
-    local.get $tableIndex|144
+    local.get $ctrl|155
+    local.get $tableIndex|156
     call $assembly/core/runner/Ctrl#set:tableIndex
-    local.get $tableIndex|144
+    local.get $tableIndex|156
     i32.const 2
     i32.add
-    local.set $tableIndex|144
-    local.get $tableIndex|144
+    local.set $tableIndex|156
+    local.get $tableIndex|156
     i32.const 128
     i32.eq
     if
      i32.const 0
-     local.set $tableIndex|144
+     local.set $tableIndex|156
     end
-    local.get $this|142
-    local.get $tableIndex|144
+    local.get $this|154
+    local.get $tableIndex|156
     call $assembly/core/runner/Runner#set:tableIndex
    end
   end
   local.get $this
-  local.set $this|145
+  local.set $this|157
   local.get $actualTime
-  local.set $time|146
+  local.set $time|158
   local.get $barTime
-  local.set $barTime|147
-  local.get $this|145
+  local.set $barTime|159
+  local.get $this|157
   call $assembly/core/runner/Runner#get:clock
-  local.get $time|146
+  local.get $time|158
   call $assembly/core/clock/Clock#set:time
-  local.get $this|145
+  local.get $this|157
   call $assembly/core/runner/Runner#get:clock
-  local.get $barTime|147
+  local.get $barTime|159
   call $assembly/core/clock/Clock#set:barTime
   local.get $main
-  local.set $ctrl|148
-  local.get $ctrl|148
+  local.set $ctrl|160
+  local.get $ctrl|160
   call $assembly/core/runner/Ctrl#get:ownLiterals
-  local.get $ctrl|148
+  local.get $ctrl|160
   call $assembly/core/runner/Ctrl#get:liveLiterals
-  local.get $ctrl|148
+  local.get $ctrl|160
   call $assembly/core/runner/Ctrl#get:literalsCount
   i32.const 2
   i32.shl
@@ -11579,22 +12085,38 @@
   local.get $main
   call $assembly/core/runner/Ctrl#get:run
   call_indirect $0 (type $i32_i32_=>_none)
-  local.get $begin
-  local.get $end
   local.get $main
-  call $assembly/core/runner/Ctrl#get:signal
-  call $assembly/core/runner/Signal#get:L
-  local.get $out
-  call $assembly/core/runner/Signal#get:L
-  call $assembly/graph/copy/copyInto
+  local.set $ctrl|161
   local.get $begin
+  local.set $begin|162
   local.get $end
-  local.get $main
-  call $assembly/core/runner/Ctrl#get:signal
-  call $assembly/core/runner/Signal#get:R
+  local.set $end|163
   local.get $out
+  local.set $sOut|164
+  local.get $ctrl|161
+  call $assembly/core/runner/Ctrl#get:signal
+  local.set $sIn|165
+  local.get $ctrl|161
+  call $assembly/core/runner/Ctrl#get:liveLiterals
+  local.set $vol|166
+  local.get $sIn|165
+  call $assembly/core/runner/Signal#get:L
+  local.get $vol|166
+  call $assembly/core/runner/Vol#get:L
+  local.get $begin|162
+  local.get $end|163
+  local.get $sOut|164
+  call $assembly/core/runner/Signal#get:L
+  call $assembly/math/mul_audio_scalar
+  local.get $sIn|165
   call $assembly/core/runner/Signal#get:R
-  call $assembly/graph/copy/copyInto
+  local.get $vol|166
+  call $assembly/core/runner/Vol#get:L
+  local.get $begin|162
+  local.get $end|163
+  local.get $sOut|164
+  call $assembly/core/runner/Signal#get:R
+  call $assembly/math/mul_audio_scalar
   local.get $this
   local.get $curr
   call $assembly/core/runner/Runner#set:last
@@ -15992,330 +16514,6 @@
   call $~lib/math/NativeMathf.pow
   return
  )
- (func $assembly/math/mul_audio_scalar (param $in0 i32) (param $scalar f32) (param $begin i32) (param $end i32) (param $out i32)
-  (local $scalarv v128)
-  (local $in0v v128)
-  (local $resv v128)
-  (local $i i32)
-  (local $offset i32)
-  local.get $scalar
-  f32x4.splat
-  local.set $scalarv
-  local.get $begin
-  local.set $i
-  local.get $begin
-  i32.const 2
-  i32.shl
-  local.set $offset
-  local.get $in0
-  local.get $offset
-  i32.add
-  local.set $in0
-  local.get $out
-  local.get $offset
-  i32.add
-  local.set $out
-  loop $for-loop|0
-   local.get $i
-   local.get $end
-   i32.lt_u
-   if
-    local.get $in0
-    v128.load $0
-    local.set $in0v
-    local.get $in0v
-    local.get $scalarv
-    f32x4.mul
-    local.set $resv
-    local.get $out
-    local.get $resv
-    v128.store $0
-    local.get $in0
-    i32.const 16
-    i32.add
-    local.set $in0
-    local.get $out
-    i32.const 16
-    i32.add
-    local.set $out
-    local.get $in0
-    v128.load $0
-    local.set $in0v
-    local.get $in0v
-    local.get $scalarv
-    f32x4.mul
-    local.set $resv
-    local.get $out
-    local.get $resv
-    v128.store $0
-    local.get $in0
-    i32.const 16
-    i32.add
-    local.set $in0
-    local.get $out
-    i32.const 16
-    i32.add
-    local.set $out
-    local.get $in0
-    v128.load $0
-    local.set $in0v
-    local.get $in0v
-    local.get $scalarv
-    f32x4.mul
-    local.set $resv
-    local.get $out
-    local.get $resv
-    v128.store $0
-    local.get $in0
-    i32.const 16
-    i32.add
-    local.set $in0
-    local.get $out
-    i32.const 16
-    i32.add
-    local.set $out
-    local.get $in0
-    v128.load $0
-    local.set $in0v
-    local.get $in0v
-    local.get $scalarv
-    f32x4.mul
-    local.set $resv
-    local.get $out
-    local.get $resv
-    v128.store $0
-    local.get $in0
-    i32.const 16
-    i32.add
-    local.set $in0
-    local.get $out
-    i32.const 16
-    i32.add
-    local.set $out
-    local.get $in0
-    v128.load $0
-    local.set $in0v
-    local.get $in0v
-    local.get $scalarv
-    f32x4.mul
-    local.set $resv
-    local.get $out
-    local.get $resv
-    v128.store $0
-    local.get $in0
-    i32.const 16
-    i32.add
-    local.set $in0
-    local.get $out
-    i32.const 16
-    i32.add
-    local.set $out
-    local.get $in0
-    v128.load $0
-    local.set $in0v
-    local.get $in0v
-    local.get $scalarv
-    f32x4.mul
-    local.set $resv
-    local.get $out
-    local.get $resv
-    v128.store $0
-    local.get $in0
-    i32.const 16
-    i32.add
-    local.set $in0
-    local.get $out
-    i32.const 16
-    i32.add
-    local.set $out
-    local.get $in0
-    v128.load $0
-    local.set $in0v
-    local.get $in0v
-    local.get $scalarv
-    f32x4.mul
-    local.set $resv
-    local.get $out
-    local.get $resv
-    v128.store $0
-    local.get $in0
-    i32.const 16
-    i32.add
-    local.set $in0
-    local.get $out
-    i32.const 16
-    i32.add
-    local.set $out
-    local.get $in0
-    v128.load $0
-    local.set $in0v
-    local.get $in0v
-    local.get $scalarv
-    f32x4.mul
-    local.set $resv
-    local.get $out
-    local.get $resv
-    v128.store $0
-    local.get $in0
-    i32.const 16
-    i32.add
-    local.set $in0
-    local.get $out
-    i32.const 16
-    i32.add
-    local.set $out
-    local.get $in0
-    v128.load $0
-    local.set $in0v
-    local.get $in0v
-    local.get $scalarv
-    f32x4.mul
-    local.set $resv
-    local.get $out
-    local.get $resv
-    v128.store $0
-    local.get $in0
-    i32.const 16
-    i32.add
-    local.set $in0
-    local.get $out
-    i32.const 16
-    i32.add
-    local.set $out
-    local.get $in0
-    v128.load $0
-    local.set $in0v
-    local.get $in0v
-    local.get $scalarv
-    f32x4.mul
-    local.set $resv
-    local.get $out
-    local.get $resv
-    v128.store $0
-    local.get $in0
-    i32.const 16
-    i32.add
-    local.set $in0
-    local.get $out
-    i32.const 16
-    i32.add
-    local.set $out
-    local.get $in0
-    v128.load $0
-    local.set $in0v
-    local.get $in0v
-    local.get $scalarv
-    f32x4.mul
-    local.set $resv
-    local.get $out
-    local.get $resv
-    v128.store $0
-    local.get $in0
-    i32.const 16
-    i32.add
-    local.set $in0
-    local.get $out
-    i32.const 16
-    i32.add
-    local.set $out
-    local.get $in0
-    v128.load $0
-    local.set $in0v
-    local.get $in0v
-    local.get $scalarv
-    f32x4.mul
-    local.set $resv
-    local.get $out
-    local.get $resv
-    v128.store $0
-    local.get $in0
-    i32.const 16
-    i32.add
-    local.set $in0
-    local.get $out
-    i32.const 16
-    i32.add
-    local.set $out
-    local.get $in0
-    v128.load $0
-    local.set $in0v
-    local.get $in0v
-    local.get $scalarv
-    f32x4.mul
-    local.set $resv
-    local.get $out
-    local.get $resv
-    v128.store $0
-    local.get $in0
-    i32.const 16
-    i32.add
-    local.set $in0
-    local.get $out
-    i32.const 16
-    i32.add
-    local.set $out
-    local.get $in0
-    v128.load $0
-    local.set $in0v
-    local.get $in0v
-    local.get $scalarv
-    f32x4.mul
-    local.set $resv
-    local.get $out
-    local.get $resv
-    v128.store $0
-    local.get $in0
-    i32.const 16
-    i32.add
-    local.set $in0
-    local.get $out
-    i32.const 16
-    i32.add
-    local.set $out
-    local.get $in0
-    v128.load $0
-    local.set $in0v
-    local.get $in0v
-    local.get $scalarv
-    f32x4.mul
-    local.set $resv
-    local.get $out
-    local.get $resv
-    v128.store $0
-    local.get $in0
-    i32.const 16
-    i32.add
-    local.set $in0
-    local.get $out
-    i32.const 16
-    i32.add
-    local.set $out
-    local.get $in0
-    v128.load $0
-    local.set $in0v
-    local.get $in0v
-    local.get $scalarv
-    f32x4.mul
-    local.set $resv
-    local.get $out
-    local.get $resv
-    v128.store $0
-    local.get $in0
-    i32.const 16
-    i32.add
-    local.set $in0
-    local.get $out
-    i32.const 16
-    i32.add
-    local.set $out
-    local.get $i
-    i32.const 64
-    i32.add
-    local.set $i
-    br $for-loop|0
-   end
-  end
- )
  (func $assembly/math/mul_audio_audio (param $in0 i32) (param $in1 i32) (param $begin i32) (param $end i32) (param $out i32)
   (local $in0v v128)
   (local $in1v v128)
@@ -17713,6 +17911,443 @@
     i32.const 16
     i32.add
     local.set $in0
+    local.get $out
+    i32.const 16
+    i32.add
+    local.set $out
+    local.get $i
+    i32.const 64
+    i32.add
+    local.set $i
+    br $for-loop|0
+   end
+  end
+ )
+ (func $assembly/math/add_audio_audio (param $in0 i32) (param $in1 i32) (param $begin i32) (param $end i32) (param $out i32)
+  (local $in0v v128)
+  (local $in1v v128)
+  (local $resv v128)
+  (local $i i32)
+  (local $offset i32)
+  local.get $begin
+  local.set $i
+  local.get $begin
+  i32.const 2
+  i32.shl
+  local.set $offset
+  local.get $in0
+  local.get $offset
+  i32.add
+  local.set $in0
+  local.get $in1
+  local.get $offset
+  i32.add
+  local.set $in1
+  local.get $out
+  local.get $offset
+  i32.add
+  local.set $out
+  loop $for-loop|0
+   local.get $i
+   local.get $end
+   i32.lt_u
+   if
+    local.get $in0
+    v128.load $0
+    local.set $in0v
+    local.get $in1
+    v128.load $0
+    local.set $in1v
+    local.get $in0v
+    local.get $in1v
+    f32x4.add
+    local.set $resv
+    local.get $out
+    local.get $resv
+    v128.store $0
+    local.get $in0
+    i32.const 16
+    i32.add
+    local.set $in0
+    local.get $in1
+    i32.const 16
+    i32.add
+    local.set $in1
+    local.get $out
+    i32.const 16
+    i32.add
+    local.set $out
+    local.get $in0
+    v128.load $0
+    local.set $in0v
+    local.get $in1
+    v128.load $0
+    local.set $in1v
+    local.get $in0v
+    local.get $in1v
+    f32x4.add
+    local.set $resv
+    local.get $out
+    local.get $resv
+    v128.store $0
+    local.get $in0
+    i32.const 16
+    i32.add
+    local.set $in0
+    local.get $in1
+    i32.const 16
+    i32.add
+    local.set $in1
+    local.get $out
+    i32.const 16
+    i32.add
+    local.set $out
+    local.get $in0
+    v128.load $0
+    local.set $in0v
+    local.get $in1
+    v128.load $0
+    local.set $in1v
+    local.get $in0v
+    local.get $in1v
+    f32x4.add
+    local.set $resv
+    local.get $out
+    local.get $resv
+    v128.store $0
+    local.get $in0
+    i32.const 16
+    i32.add
+    local.set $in0
+    local.get $in1
+    i32.const 16
+    i32.add
+    local.set $in1
+    local.get $out
+    i32.const 16
+    i32.add
+    local.set $out
+    local.get $in0
+    v128.load $0
+    local.set $in0v
+    local.get $in1
+    v128.load $0
+    local.set $in1v
+    local.get $in0v
+    local.get $in1v
+    f32x4.add
+    local.set $resv
+    local.get $out
+    local.get $resv
+    v128.store $0
+    local.get $in0
+    i32.const 16
+    i32.add
+    local.set $in0
+    local.get $in1
+    i32.const 16
+    i32.add
+    local.set $in1
+    local.get $out
+    i32.const 16
+    i32.add
+    local.set $out
+    local.get $in0
+    v128.load $0
+    local.set $in0v
+    local.get $in1
+    v128.load $0
+    local.set $in1v
+    local.get $in0v
+    local.get $in1v
+    f32x4.add
+    local.set $resv
+    local.get $out
+    local.get $resv
+    v128.store $0
+    local.get $in0
+    i32.const 16
+    i32.add
+    local.set $in0
+    local.get $in1
+    i32.const 16
+    i32.add
+    local.set $in1
+    local.get $out
+    i32.const 16
+    i32.add
+    local.set $out
+    local.get $in0
+    v128.load $0
+    local.set $in0v
+    local.get $in1
+    v128.load $0
+    local.set $in1v
+    local.get $in0v
+    local.get $in1v
+    f32x4.add
+    local.set $resv
+    local.get $out
+    local.get $resv
+    v128.store $0
+    local.get $in0
+    i32.const 16
+    i32.add
+    local.set $in0
+    local.get $in1
+    i32.const 16
+    i32.add
+    local.set $in1
+    local.get $out
+    i32.const 16
+    i32.add
+    local.set $out
+    local.get $in0
+    v128.load $0
+    local.set $in0v
+    local.get $in1
+    v128.load $0
+    local.set $in1v
+    local.get $in0v
+    local.get $in1v
+    f32x4.add
+    local.set $resv
+    local.get $out
+    local.get $resv
+    v128.store $0
+    local.get $in0
+    i32.const 16
+    i32.add
+    local.set $in0
+    local.get $in1
+    i32.const 16
+    i32.add
+    local.set $in1
+    local.get $out
+    i32.const 16
+    i32.add
+    local.set $out
+    local.get $in0
+    v128.load $0
+    local.set $in0v
+    local.get $in1
+    v128.load $0
+    local.set $in1v
+    local.get $in0v
+    local.get $in1v
+    f32x4.add
+    local.set $resv
+    local.get $out
+    local.get $resv
+    v128.store $0
+    local.get $in0
+    i32.const 16
+    i32.add
+    local.set $in0
+    local.get $in1
+    i32.const 16
+    i32.add
+    local.set $in1
+    local.get $out
+    i32.const 16
+    i32.add
+    local.set $out
+    local.get $in0
+    v128.load $0
+    local.set $in0v
+    local.get $in1
+    v128.load $0
+    local.set $in1v
+    local.get $in0v
+    local.get $in1v
+    f32x4.add
+    local.set $resv
+    local.get $out
+    local.get $resv
+    v128.store $0
+    local.get $in0
+    i32.const 16
+    i32.add
+    local.set $in0
+    local.get $in1
+    i32.const 16
+    i32.add
+    local.set $in1
+    local.get $out
+    i32.const 16
+    i32.add
+    local.set $out
+    local.get $in0
+    v128.load $0
+    local.set $in0v
+    local.get $in1
+    v128.load $0
+    local.set $in1v
+    local.get $in0v
+    local.get $in1v
+    f32x4.add
+    local.set $resv
+    local.get $out
+    local.get $resv
+    v128.store $0
+    local.get $in0
+    i32.const 16
+    i32.add
+    local.set $in0
+    local.get $in1
+    i32.const 16
+    i32.add
+    local.set $in1
+    local.get $out
+    i32.const 16
+    i32.add
+    local.set $out
+    local.get $in0
+    v128.load $0
+    local.set $in0v
+    local.get $in1
+    v128.load $0
+    local.set $in1v
+    local.get $in0v
+    local.get $in1v
+    f32x4.add
+    local.set $resv
+    local.get $out
+    local.get $resv
+    v128.store $0
+    local.get $in0
+    i32.const 16
+    i32.add
+    local.set $in0
+    local.get $in1
+    i32.const 16
+    i32.add
+    local.set $in1
+    local.get $out
+    i32.const 16
+    i32.add
+    local.set $out
+    local.get $in0
+    v128.load $0
+    local.set $in0v
+    local.get $in1
+    v128.load $0
+    local.set $in1v
+    local.get $in0v
+    local.get $in1v
+    f32x4.add
+    local.set $resv
+    local.get $out
+    local.get $resv
+    v128.store $0
+    local.get $in0
+    i32.const 16
+    i32.add
+    local.set $in0
+    local.get $in1
+    i32.const 16
+    i32.add
+    local.set $in1
+    local.get $out
+    i32.const 16
+    i32.add
+    local.set $out
+    local.get $in0
+    v128.load $0
+    local.set $in0v
+    local.get $in1
+    v128.load $0
+    local.set $in1v
+    local.get $in0v
+    local.get $in1v
+    f32x4.add
+    local.set $resv
+    local.get $out
+    local.get $resv
+    v128.store $0
+    local.get $in0
+    i32.const 16
+    i32.add
+    local.set $in0
+    local.get $in1
+    i32.const 16
+    i32.add
+    local.set $in1
+    local.get $out
+    i32.const 16
+    i32.add
+    local.set $out
+    local.get $in0
+    v128.load $0
+    local.set $in0v
+    local.get $in1
+    v128.load $0
+    local.set $in1v
+    local.get $in0v
+    local.get $in1v
+    f32x4.add
+    local.set $resv
+    local.get $out
+    local.get $resv
+    v128.store $0
+    local.get $in0
+    i32.const 16
+    i32.add
+    local.set $in0
+    local.get $in1
+    i32.const 16
+    i32.add
+    local.set $in1
+    local.get $out
+    i32.const 16
+    i32.add
+    local.set $out
+    local.get $in0
+    v128.load $0
+    local.set $in0v
+    local.get $in1
+    v128.load $0
+    local.set $in1v
+    local.get $in0v
+    local.get $in1v
+    f32x4.add
+    local.set $resv
+    local.get $out
+    local.get $resv
+    v128.store $0
+    local.get $in0
+    i32.const 16
+    i32.add
+    local.set $in0
+    local.get $in1
+    i32.const 16
+    i32.add
+    local.set $in1
+    local.get $out
+    i32.const 16
+    i32.add
+    local.set $out
+    local.get $in0
+    v128.load $0
+    local.set $in0v
+    local.get $in1
+    v128.load $0
+    local.set $in1v
+    local.get $in0v
+    local.get $in1v
+    f32x4.add
+    local.set $resv
+    local.get $out
+    local.get $resv
+    v128.store $0
+    local.get $in0
+    i32.const 16
+    i32.add
+    local.set $in0
+    local.get $in1
+    i32.const 16
+    i32.add
+    local.set $in1
     local.get $out
     i32.const 16
     i32.add
@@ -21180,6 +21815,28 @@
    br $~lib/math/NativeMathf.sqrt|inlined.0
   end
   return
+ )
+ (func $assembly/graph/copy/copyInto (param $begin i32) (param $end i32) (param $inp i32) (param $out i32)
+  (local $size i32)
+  (local $offset i32)
+  local.get $end
+  local.get $begin
+  i32.sub
+  i32.const 2
+  i32.shl
+  local.set $size
+  local.get $begin
+  i32.const 2
+  i32.shl
+  local.set $offset
+  local.get $out
+  local.get $offset
+  i32.add
+  local.get $inp
+  local.get $offset
+  i32.add
+  local.get $size
+  memory.copy $0 $0
  )
  (func $assembly/index/preventTreeShaking (param $gen i32)
   (local $core i32)
