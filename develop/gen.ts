@@ -48,7 +48,7 @@ async function start() {
     floats,
     updated: 0
   })
-// trig:bt] [clip .25] 4* [slp 200] [inc .000122 trig:4 bt *] *
+  // trig:bt] [clip .25] 4* [slp 200] [inc .000122 trig:4 bt *] *
   fx(() => {
     const { code } = of(source)
     $()
@@ -63,6 +63,9 @@ async function start() {
         bar.addTrack(ctrl)
         runner.bars[0] = bar.ptr
         build.info.writeLiterals(build.payload.ownLiterals)
+        build.vol.L =
+          build.vol.R =
+          build.vol.LR = 1
 
         // backend.clock.time = 0
         backend.fill(0, 2048)
