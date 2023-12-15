@@ -554,11 +554,19 @@
  (export "gen_daverb_set__excPhase" (func $assembly/gen/daverb/Daverb#set:_excPhase))
  (export "gen_daverb_constructor" (func $assembly/gen/daverb/Daverb#constructor))
  (export "util_getObjectSize__gen_daverb_Daverb_" (func $assembly/util/getObjectSize<assembly/gen/daverb/Daverb>))
+ (export "gen_tanha_set_gain" (func $assembly/gen/tanha/Tanha#set:gain))
+ (export "gen_tanha_set__gainv" (func $assembly/gen/tanha/Tanha#set:_gainv))
+ (export "gen_tanha_set_in" (func $assembly/gen/tanha/Tanha#set:in))
+ (export "gen_tanha_constructor" (func $assembly/gen/tanha/Tanha#constructor))
+ (export "util_getObjectSize__gen_tanha_Tanha_" (func $assembly/util/getObjectSize<assembly/gen/tanha/Tanha>))
  (export "gen_tanh_set_gain" (func $assembly/gen/tanh/Tanh#set:gain))
- (export "gen_tanh_set__gainv" (func $assembly/gen/tanh/Tanh#set:_gainv))
  (export "gen_tanh_set_in" (func $assembly/gen/tanh/Tanh#set:in))
  (export "gen_tanh_constructor" (func $assembly/gen/tanh/Tanh#constructor))
  (export "util_getObjectSize__gen_tanh_Tanh_" (func $assembly/util/getObjectSize<assembly/gen/tanh/Tanh>))
+ (export "gen_atan_set_gain" (func $assembly/gen/atan/Atan#set:gain))
+ (export "gen_atan_set_in" (func $assembly/gen/atan/Atan#set:in))
+ (export "gen_atan_constructor" (func $assembly/gen/atan/Atan#constructor))
+ (export "util_getObjectSize__gen_atan_Atan_" (func $assembly/util/getObjectSize<assembly/gen/atan/Atan>))
  (export "gen_diode_set_cut" (func $assembly/gen/diode/Diode#set:cut))
  (export "gen_diode_set_hpf" (func $assembly/gen/diode/Diode#set:hpf))
  (export "gen_diode_set_sat" (func $assembly/gen/diode/Diode#set:sat))
@@ -760,8 +768,8 @@
  (export "gen_spk_get_cut" (func $assembly/gen/spk/Spk#get:cut))
  (export "gen_spk_get_q" (func $assembly/gen/spk/Spk#get:q))
  (export "gen_spk__update" (func $assembly/gen/spk/Spk#_update))
- (export "gen_tanh_get_gain" (func $assembly/gen/tanh/Tanh#get:gain))
- (export "gen_tanh__update" (func $assembly/gen/tanh/Tanh#_update))
+ (export "gen_tanha_get_gain" (func $assembly/gen/tanha/Tanha#get:gain))
+ (export "gen_tanha__update" (func $assembly/gen/tanha/Tanha#_update))
  (export "gen_tap_get_ms" (func $assembly/gen/tap/Tap#get:ms))
  (export "gen_tap_get__stepf" (func $assembly/gen/tap/Tap#get:_stepf))
  (export "gen_tap_get__targetf" (func $assembly/gen/tap/Tap#get:_targetf))
@@ -787,6 +795,9 @@
  (export "gen_aosc__update" (func $assembly/gen/aosc/AOsc#_update))
  (export "gen_delay_get__floats" (func $assembly/gen/delay/Delay#get:_floats))
  (export "gen_delay__reset" (func $assembly/gen/delay/Delay#_reset))
+ (export "gen_atan_get_in" (func $assembly/gen/atan/Atan#get:in))
+ (export "gen_atan_get_gain" (func $assembly/gen/atan/Atan#get:gain))
+ (export "gen_atan__audio" (func $assembly/gen/atan/Atan#_audio))
  (export "gen_clamp_get_min" (func $assembly/gen/clamp/Clamp#get:min))
  (export "gen_clamp_get_max" (func $assembly/gen/clamp/Clamp#get:max))
  (export "gen_clamp_get_in" (func $assembly/gen/clamp/Clamp#get:in))
@@ -909,9 +920,12 @@
  (export "gen_slp__audio" (func $assembly/gen/slp/Slp#_audio))
  (export "gen_sno__audio" (func $assembly/gen/sno/Sno#_audio))
  (export "gen_spk__audio" (func $assembly/gen/spk/Spk#_audio))
- (export "gen_tanh_get__gainv" (func $assembly/gen/tanh/Tanh#get:_gainv))
  (export "gen_tanh_get_in" (func $assembly/gen/tanh/Tanh#get:in))
+ (export "gen_tanh_get_gain" (func $assembly/gen/tanh/Tanh#get:gain))
  (export "gen_tanh__audio" (func $assembly/gen/tanh/Tanh#_audio))
+ (export "gen_tanha_get__gainv" (func $assembly/gen/tanha/Tanha#get:_gainv))
+ (export "gen_tanha_get_in" (func $assembly/gen/tanha/Tanha#get:in))
+ (export "gen_tanha__audio" (func $assembly/gen/tanha/Tanha#_audio))
  (export "gen_tap_get_in" (func $assembly/gen/tap/Tap#get:in))
  (export "gen_tap_get__mask" (func $assembly/gen/tap/Tap#get:_mask))
  (export "gen_tap_get__index" (func $assembly/gen/tap/Tap#get:_index))
@@ -14484,22 +14498,22 @@
   i32.const 184
   return
  )
- (func $assembly/gen/tanh/Tanh#set:gain (param $this i32) (param $gain f32)
+ (func $assembly/gen/tanha/Tanha#set:gain (param $this i32) (param $gain f32)
   local.get $this
   local.get $gain
   f32.store $0
  )
- (func $assembly/gen/tanh/Tanh#set:_gainv (param $this i32) (param $_gainv v128)
+ (func $assembly/gen/tanha/Tanha#set:_gainv (param $this i32) (param $_gainv v128)
   local.get $this
   local.get $_gainv
   v128.store $0 offset=16
  )
- (func $assembly/gen/tanh/Tanh#set:in (param $this i32) (param $in i32)
+ (func $assembly/gen/tanha/Tanha#set:in (param $this i32) (param $in i32)
   local.get $this
   local.get $in
   i32.store $0 offset=32
  )
- (func $assembly/gen/tanh/Tanh#constructor (param $this i32) (param $_engine i32) (result i32)
+ (func $assembly/gen/tanha/Tanha#constructor (param $this i32) (param $_engine i32) (result i32)
   local.get $this
   i32.eqz
   if
@@ -14514,18 +14528,88 @@
   local.set $this
   local.get $this
   f32.const 1
-  call $assembly/gen/tanh/Tanh#set:gain
+  call $assembly/gen/tanha/Tanha#set:gain
   local.get $this
   f32.const 1
   f32x4.splat
-  call $assembly/gen/tanh/Tanh#set:_gainv
+  call $assembly/gen/tanha/Tanha#set:_gainv
+  local.get $this
+  i32.const 0
+  call $assembly/gen/tanha/Tanha#set:in
+  local.get $this
+ )
+ (func $assembly/util/getObjectSize<assembly/gen/tanha/Tanha> (result i32)
+  i32.const 36
+  return
+ )
+ (func $assembly/gen/tanh/Tanh#set:gain (param $this i32) (param $gain f32)
+  local.get $this
+  local.get $gain
+  f32.store $0
+ )
+ (func $assembly/gen/tanh/Tanh#set:in (param $this i32) (param $in i32)
+  local.get $this
+  local.get $in
+  i32.store $0 offset=8
+ )
+ (func $assembly/gen/tanh/Tanh#constructor (param $this i32) (param $_engine i32) (result i32)
+  local.get $this
+  i32.eqz
+  if
+   i32.const 12
+   i32.const 60
+   call $~lib/rt/stub/__new
+   local.set $this
+  end
+  local.get $this
+  local.get $_engine
+  call $assembly/gen/gen/Gen#constructor
+  local.set $this
+  local.get $this
+  f32.const 1
+  call $assembly/gen/tanh/Tanh#set:gain
   local.get $this
   i32.const 0
   call $assembly/gen/tanh/Tanh#set:in
   local.get $this
  )
  (func $assembly/util/getObjectSize<assembly/gen/tanh/Tanh> (result i32)
-  i32.const 36
+  i32.const 12
+  return
+ )
+ (func $assembly/gen/atan/Atan#set:gain (param $this i32) (param $gain f32)
+  local.get $this
+  local.get $gain
+  f32.store $0
+ )
+ (func $assembly/gen/atan/Atan#set:in (param $this i32) (param $in i32)
+  local.get $this
+  local.get $in
+  i32.store $0 offset=8
+ )
+ (func $assembly/gen/atan/Atan#constructor (param $this i32) (param $_engine i32) (result i32)
+  local.get $this
+  i32.eqz
+  if
+   i32.const 12
+   i32.const 61
+   call $~lib/rt/stub/__new
+   local.set $this
+  end
+  local.get $this
+  local.get $_engine
+  call $assembly/gen/gen/Gen#constructor
+  local.set $this
+  local.get $this
+  f32.const 1
+  call $assembly/gen/atan/Atan#set:gain
+  local.get $this
+  i32.const 0
+  call $assembly/gen/atan/Atan#set:in
+  local.get $this
+ )
+ (func $assembly/util/getObjectSize<assembly/gen/atan/Atan> (result i32)
+  i32.const 12
   return
  )
  (func $assembly/gen/diode/Diode#set:cut (param $this i32) (param $cut f32)
@@ -14643,7 +14727,7 @@
   i32.eqz
   if
    i32.const 96
-   i32.const 60
+   i32.const 62
    call $~lib/rt/stub/__new
    local.set $this
   end
@@ -14733,7 +14817,7 @@
   i32.eqz
   if
    i32.const 12
-   i32.const 61
+   i32.const 63
    call $~lib/rt/stub/__new
    local.set $this
   end
@@ -14770,7 +14854,7 @@
   i32.eqz
   if
    i32.const 20
-   i32.const 62
+   i32.const 64
    call $~lib/rt/stub/__new
    local.set $this
   end
@@ -14808,7 +14892,7 @@
   i32.eqz
   if
    i32.const 16
-   i32.const 63
+   i32.const 65
    call $~lib/rt/stub/__new
    local.set $this
   end
@@ -14848,7 +14932,7 @@
   i32.eqz
   if
    i32.const 20
-   i32.const 64
+   i32.const 66
    call $~lib/rt/stub/__new
    local.set $this
   end
@@ -14886,7 +14970,7 @@
   i32.eqz
   if
    i32.const 16
-   i32.const 65
+   i32.const 67
    call $~lib/rt/stub/__new
    local.set $this
   end
@@ -14951,7 +15035,7 @@
   i32.eqz
   if
    i32.const 40
-   i32.const 66
+   i32.const 68
    call $~lib/rt/stub/__new
    local.set $this
   end
@@ -15016,7 +15100,7 @@
   i32.eqz
   if
    i32.const 24
-   i32.const 67
+   i32.const 69
    call $~lib/rt/stub/__new
    local.set $this
   end
@@ -15096,7 +15180,7 @@
   i32.eqz
   if
    i32.const 52
-   i32.const 69
+   i32.const 71
    call $~lib/rt/stub/__new
    local.set $this
   end
@@ -15147,7 +15231,7 @@
   i32.eqz
   if
    i32.const 56
-   i32.const 68
+   i32.const 70
    call $~lib/rt/stub/__new
    local.set $this
   end
@@ -15178,7 +15262,7 @@
   i32.eqz
   if
    i32.const 56
-   i32.const 70
+   i32.const 72
    call $~lib/rt/stub/__new
    local.set $this
   end
@@ -21912,8 +21996,12 @@
   (local $mhpSize i32)
   (local $daverb i32)
   (local $daverbSize i32)
+  (local $tanha i32)
+  (local $tanhaSize i32)
   (local $tanh i32)
   (local $tanhSize i32)
+  (local $atan i32)
+  (local $atanSize i32)
   (local $diode i32)
   (local $diodeSize i32)
   (local $dclip i32)
@@ -22216,10 +22304,22 @@
   local.set $daverbSize
   i32.const 0
   local.get $engine
+  call $assembly/gen/tanha/Tanha#constructor
+  local.set $tanha
+  call $assembly/util/getObjectSize<assembly/gen/tanha/Tanha>
+  local.set $tanhaSize
+  i32.const 0
+  local.get $engine
   call $assembly/gen/tanh/Tanh#constructor
   local.set $tanh
   call $assembly/util/getObjectSize<assembly/gen/tanh/Tanh>
   local.set $tanhSize
+  i32.const 0
+  local.get $engine
+  call $assembly/gen/atan/Atan#constructor
+  local.set $atan
+  call $assembly/util/getObjectSize<assembly/gen/atan/Atan>
+  local.set $atanSize
   i32.const 0
   local.get $engine
   call $assembly/gen/diode/Diode#constructor
@@ -28365,16 +28465,16 @@
    call $assembly/gen/svf/Svf#set:_a3
   end
  )
- (func $assembly/gen/tanh/Tanh#get:gain (param $this i32) (result f32)
+ (func $assembly/gen/tanha/Tanha#get:gain (param $this i32) (result f32)
   local.get $this
   f32.load $0
  )
- (func $assembly/gen/tanh/Tanh#_update (param $this i32)
+ (func $assembly/gen/tanha/Tanha#_update (param $this i32)
   local.get $this
   local.get $this
-  call $assembly/gen/tanh/Tanh#get:gain
+  call $assembly/gen/tanha/Tanha#get:gain
   f32x4.splat
-  call $assembly/gen/tanh/Tanh#set:_gainv
+  call $assembly/gen/tanha/Tanha#set:_gainv
  )
  (func $assembly/gen/tap/Tap#get:ms (param $this i32) (result f32)
   local.get $this
@@ -28661,6 +28761,599 @@
   global.get $assembly/core/constants/DELAY_MAX_SIZE
   call $~lib/staticarray/StaticArray<f32>#fill
   drop
+ )
+ (func $assembly/gen/atan/Atan#get:in (param $this i32) (result i32)
+  local.get $this
+  i32.load $0 offset=8
+ )
+ (func $assembly/gen/atan/Atan#get:gain (param $this i32) (result f32)
+  local.get $this
+  f32.load $0
+ )
+ (func $~lib/math/NativeMathf.atan (param $x f32) (result f32)
+  (local $ix i32)
+  (local $sx f32)
+  (local $z f32)
+  (local $id i32)
+  (local $w f32)
+  (local $s1 f32)
+  (local $s2 f32)
+  (local $s3 f32)
+  (local $9 i32)
+  local.get $x
+  i32.reinterpret_f32
+  local.set $ix
+  local.get $x
+  local.set $sx
+  local.get $ix
+  i32.const 2147483647
+  i32.and
+  local.set $ix
+  local.get $ix
+  i32.const 1283457024
+  i32.ge_u
+  if
+   local.get $x
+   local.get $x
+   f32.ne
+   if
+    local.get $x
+    return
+   end
+   f32.const 1.570796251296997
+   f32.const 7.52316384526264e-37
+   f32.add
+   local.set $z
+   local.get $z
+   local.get $sx
+   f32.copysign
+   return
+  end
+  local.get $ix
+  i32.const 1054867456
+  i32.lt_u
+  if
+   local.get $ix
+   i32.const 964689920
+   i32.lt_u
+   if
+    local.get $x
+    return
+   end
+   i32.const -1
+   local.set $id
+  else
+   local.get $x
+   f32.abs
+   local.set $x
+   local.get $ix
+   i32.const 1066926080
+   i32.lt_u
+   if
+    local.get $ix
+    i32.const 1060110336
+    i32.lt_u
+    if
+     i32.const 0
+     local.set $id
+     f32.const 2
+     local.get $x
+     f32.mul
+     f32.const 1
+     f32.sub
+     f32.const 2
+     local.get $x
+     f32.add
+     f32.div
+     local.set $x
+    else
+     i32.const 1
+     local.set $id
+     local.get $x
+     f32.const 1
+     f32.sub
+     local.get $x
+     f32.const 1
+     f32.add
+     f32.div
+     local.set $x
+    end
+   else
+    local.get $ix
+    i32.const 1075576832
+    i32.lt_u
+    if
+     i32.const 2
+     local.set $id
+     local.get $x
+     f32.const 1.5
+     f32.sub
+     f32.const 1
+     f32.const 1.5
+     local.get $x
+     f32.mul
+     f32.add
+     f32.div
+     local.set $x
+    else
+     i32.const 3
+     local.set $id
+     f32.const -1
+     local.get $x
+     f32.div
+     local.set $x
+    end
+   end
+  end
+  local.get $x
+  local.get $x
+  f32.mul
+  local.set $z
+  local.get $z
+  local.get $z
+  f32.mul
+  local.set $w
+  local.get $z
+  f32.const 0.333333283662796
+  local.get $w
+  f32.const 0.14253635704517365
+  local.get $w
+  f32.const 0.06168760731816292
+  f32.mul
+  f32.add
+  f32.mul
+  f32.add
+  f32.mul
+  local.set $s1
+  local.get $w
+  f32.const -0.19999158382415771
+  local.get $w
+  f32.const -0.106480173766613
+  f32.mul
+  f32.add
+  f32.mul
+  local.set $s2
+  local.get $x
+  local.get $s1
+  local.get $s2
+  f32.add
+  f32.mul
+  local.set $s3
+  local.get $id
+  i32.const 0
+  i32.lt_s
+  if
+   local.get $x
+   local.get $s3
+   f32.sub
+   return
+  end
+  block $break|0
+   block $case4|0
+    block $case3|0
+     block $case2|0
+      block $case1|0
+       block $case0|0
+        local.get $id
+        local.set $9
+        local.get $9
+        i32.const 0
+        i32.eq
+        br_if $case0|0
+        local.get $9
+        i32.const 1
+        i32.eq
+        br_if $case1|0
+        local.get $9
+        i32.const 2
+        i32.eq
+        br_if $case2|0
+        local.get $9
+        i32.const 3
+        i32.eq
+        br_if $case3|0
+        br $case4|0
+       end
+       f32.const 0.46364760398864746
+       local.get $s3
+       f32.const 5.01215824399992e-09
+       f32.sub
+       local.get $x
+       f32.sub
+       f32.sub
+       local.set $z
+       br $break|0
+      end
+      f32.const 0.7853981256484985
+      local.get $s3
+      f32.const 3.774894707930798e-08
+      f32.sub
+      local.get $x
+      f32.sub
+      f32.sub
+      local.set $z
+      br $break|0
+     end
+     f32.const 0.9827936887741089
+     local.get $s3
+     f32.const 3.447321716976148e-08
+     f32.sub
+     local.get $x
+     f32.sub
+     f32.sub
+     local.set $z
+     br $break|0
+    end
+    f32.const 1.570796251296997
+    local.get $s3
+    f32.const 7.549789415861596e-08
+    f32.sub
+    local.get $x
+    f32.sub
+    f32.sub
+    local.set $z
+    br $break|0
+   end
+   unreachable
+  end
+  local.get $z
+  local.get $sx
+  f32.copysign
+  return
+ )
+ (func $assembly/gen/atan/Atan#_audio (param $this i32) (param $begin i32) (param $end i32) (param $out i32)
+  (local $length i32)
+  (local $sample f32)
+  (local $inp i32)
+  (local $i i32)
+  (local $offset i32)
+  (local $gain f32)
+  local.get $end
+  local.get $begin
+  i32.sub
+  local.set $length
+  f32.const 0
+  local.set $sample
+  local.get $this
+  call $assembly/gen/atan/Atan#get:in
+  local.set $inp
+  local.get $begin
+  local.set $i
+  local.get $i
+  local.get $length
+  i32.add
+  local.set $end
+  local.get $begin
+  i32.const 2
+  i32.shl
+  local.set $offset
+  local.get $inp
+  local.get $offset
+  i32.add
+  local.set $inp
+  local.get $out
+  local.get $offset
+  i32.add
+  local.set $out
+  local.get $this
+  call $assembly/gen/atan/Atan#get:gain
+  local.set $gain
+  loop $for-loop|0
+   local.get $i
+   local.get $end
+   i32.lt_u
+   if
+    local.get $inp
+    f32.load $0
+    local.set $sample
+    local.get $sample
+    local.get $gain
+    f32.mul
+    call $~lib/math/NativeMathf.atan
+    local.set $sample
+    local.get $out
+    local.get $sample
+    f32.store $0
+    local.get $inp
+    i32.const 4
+    i32.add
+    local.set $inp
+    local.get $out
+    i32.const 4
+    i32.add
+    local.set $out
+    local.get $inp
+    f32.load $0
+    local.set $sample
+    local.get $sample
+    local.get $gain
+    f32.mul
+    call $~lib/math/NativeMathf.atan
+    local.set $sample
+    local.get $out
+    local.get $sample
+    f32.store $0
+    local.get $inp
+    i32.const 4
+    i32.add
+    local.set $inp
+    local.get $out
+    i32.const 4
+    i32.add
+    local.set $out
+    local.get $inp
+    f32.load $0
+    local.set $sample
+    local.get $sample
+    local.get $gain
+    f32.mul
+    call $~lib/math/NativeMathf.atan
+    local.set $sample
+    local.get $out
+    local.get $sample
+    f32.store $0
+    local.get $inp
+    i32.const 4
+    i32.add
+    local.set $inp
+    local.get $out
+    i32.const 4
+    i32.add
+    local.set $out
+    local.get $inp
+    f32.load $0
+    local.set $sample
+    local.get $sample
+    local.get $gain
+    f32.mul
+    call $~lib/math/NativeMathf.atan
+    local.set $sample
+    local.get $out
+    local.get $sample
+    f32.store $0
+    local.get $inp
+    i32.const 4
+    i32.add
+    local.set $inp
+    local.get $out
+    i32.const 4
+    i32.add
+    local.set $out
+    local.get $inp
+    f32.load $0
+    local.set $sample
+    local.get $sample
+    local.get $gain
+    f32.mul
+    call $~lib/math/NativeMathf.atan
+    local.set $sample
+    local.get $out
+    local.get $sample
+    f32.store $0
+    local.get $inp
+    i32.const 4
+    i32.add
+    local.set $inp
+    local.get $out
+    i32.const 4
+    i32.add
+    local.set $out
+    local.get $inp
+    f32.load $0
+    local.set $sample
+    local.get $sample
+    local.get $gain
+    f32.mul
+    call $~lib/math/NativeMathf.atan
+    local.set $sample
+    local.get $out
+    local.get $sample
+    f32.store $0
+    local.get $inp
+    i32.const 4
+    i32.add
+    local.set $inp
+    local.get $out
+    i32.const 4
+    i32.add
+    local.set $out
+    local.get $inp
+    f32.load $0
+    local.set $sample
+    local.get $sample
+    local.get $gain
+    f32.mul
+    call $~lib/math/NativeMathf.atan
+    local.set $sample
+    local.get $out
+    local.get $sample
+    f32.store $0
+    local.get $inp
+    i32.const 4
+    i32.add
+    local.set $inp
+    local.get $out
+    i32.const 4
+    i32.add
+    local.set $out
+    local.get $inp
+    f32.load $0
+    local.set $sample
+    local.get $sample
+    local.get $gain
+    f32.mul
+    call $~lib/math/NativeMathf.atan
+    local.set $sample
+    local.get $out
+    local.get $sample
+    f32.store $0
+    local.get $inp
+    i32.const 4
+    i32.add
+    local.set $inp
+    local.get $out
+    i32.const 4
+    i32.add
+    local.set $out
+    local.get $inp
+    f32.load $0
+    local.set $sample
+    local.get $sample
+    local.get $gain
+    f32.mul
+    call $~lib/math/NativeMathf.atan
+    local.set $sample
+    local.get $out
+    local.get $sample
+    f32.store $0
+    local.get $inp
+    i32.const 4
+    i32.add
+    local.set $inp
+    local.get $out
+    i32.const 4
+    i32.add
+    local.set $out
+    local.get $inp
+    f32.load $0
+    local.set $sample
+    local.get $sample
+    local.get $gain
+    f32.mul
+    call $~lib/math/NativeMathf.atan
+    local.set $sample
+    local.get $out
+    local.get $sample
+    f32.store $0
+    local.get $inp
+    i32.const 4
+    i32.add
+    local.set $inp
+    local.get $out
+    i32.const 4
+    i32.add
+    local.set $out
+    local.get $inp
+    f32.load $0
+    local.set $sample
+    local.get $sample
+    local.get $gain
+    f32.mul
+    call $~lib/math/NativeMathf.atan
+    local.set $sample
+    local.get $out
+    local.get $sample
+    f32.store $0
+    local.get $inp
+    i32.const 4
+    i32.add
+    local.set $inp
+    local.get $out
+    i32.const 4
+    i32.add
+    local.set $out
+    local.get $inp
+    f32.load $0
+    local.set $sample
+    local.get $sample
+    local.get $gain
+    f32.mul
+    call $~lib/math/NativeMathf.atan
+    local.set $sample
+    local.get $out
+    local.get $sample
+    f32.store $0
+    local.get $inp
+    i32.const 4
+    i32.add
+    local.set $inp
+    local.get $out
+    i32.const 4
+    i32.add
+    local.set $out
+    local.get $inp
+    f32.load $0
+    local.set $sample
+    local.get $sample
+    local.get $gain
+    f32.mul
+    call $~lib/math/NativeMathf.atan
+    local.set $sample
+    local.get $out
+    local.get $sample
+    f32.store $0
+    local.get $inp
+    i32.const 4
+    i32.add
+    local.set $inp
+    local.get $out
+    i32.const 4
+    i32.add
+    local.set $out
+    local.get $inp
+    f32.load $0
+    local.set $sample
+    local.get $sample
+    local.get $gain
+    f32.mul
+    call $~lib/math/NativeMathf.atan
+    local.set $sample
+    local.get $out
+    local.get $sample
+    f32.store $0
+    local.get $inp
+    i32.const 4
+    i32.add
+    local.set $inp
+    local.get $out
+    i32.const 4
+    i32.add
+    local.set $out
+    local.get $inp
+    f32.load $0
+    local.set $sample
+    local.get $sample
+    local.get $gain
+    f32.mul
+    call $~lib/math/NativeMathf.atan
+    local.set $sample
+    local.get $out
+    local.get $sample
+    f32.store $0
+    local.get $inp
+    i32.const 4
+    i32.add
+    local.set $inp
+    local.get $out
+    i32.const 4
+    i32.add
+    local.set $out
+    local.get $inp
+    f32.load $0
+    local.set $sample
+    local.get $sample
+    local.get $gain
+    f32.mul
+    call $~lib/math/NativeMathf.atan
+    local.set $sample
+    local.get $out
+    local.get $sample
+    f32.store $0
+    local.get $inp
+    i32.const 4
+    i32.add
+    local.set $inp
+    local.get $out
+    i32.const 4
+    i32.add
+    local.set $out
+    local.get $i
+    i32.const 16
+    i32.add
+    local.set $i
+    br $for-loop|0
+   end
+  end
  )
  (func $assembly/gen/clamp/Clamp#get:min (param $this i32) (result f32)
   local.get $this
@@ -59553,15 +60246,758 @@
    end
   end
  )
- (func $assembly/gen/tanh/Tanh#get:_gainv (param $this i32) (result v128)
+ (func $assembly/gen/tanh/Tanh#get:in (param $this i32) (result i32)
+  local.get $this
+  i32.load $0 offset=8
+ )
+ (func $assembly/gen/tanh/Tanh#get:gain (param $this i32) (result f32)
+  local.get $this
+  f32.load $0
+ )
+ (func $~lib/math/NativeMathf.expm1 (param $x f32) (result f32)
+  (local $u i32)
+  (local $hx i32)
+  (local $sign i32)
+  (local $c f32)
+  (local $t f32)
+  (local $k i32)
+  (local $hi f32)
+  (local $lo f32)
+  (local $hfx f32)
+  (local $hxs f32)
+  (local $r1 f32)
+  (local $e f32)
+  (local $twopk f32)
+  (local $y f32)
+  local.get $x
+  i32.reinterpret_f32
+  local.set $u
+  local.get $u
+  i32.const 2147483647
+  i32.and
+  local.set $hx
+  local.get $u
+  i32.const 31
+  i32.shr_u
+  local.set $sign
+  local.get $hx
+  i32.const 1100331076
+  i32.ge_u
+  if
+   local.get $hx
+   i32.const 2139095040
+   i32.gt_u
+   if
+    local.get $x
+    return
+   end
+   local.get $sign
+   if
+    f32.const -1
+    return
+   end
+   local.get $hx
+   i32.const 1118925335
+   i32.gt_u
+   if
+    local.get $x
+    f32.const 1701411834604692317316873e14
+    f32.mul
+    local.set $x
+    local.get $x
+    return
+   end
+  end
+  f32.const 0
+  local.set $c
+  local.get $hx
+  i32.const 1051816472
+  i32.gt_u
+  if
+   i32.const 1
+   local.get $sign
+   i32.const 1
+   i32.shl
+   i32.sub
+   f32.const 1.4426950216293335
+   local.get $x
+   f32.mul
+   f32.const 0.5
+   local.get $x
+   f32.copysign
+   f32.add
+   i32.trunc_sat_f32_s
+   local.get $hx
+   i32.const 1065686418
+   i32.lt_u
+   select
+   local.set $k
+   local.get $k
+   f32.convert_i32_s
+   local.set $t
+   local.get $x
+   local.get $t
+   f32.const 0.6931381225585938
+   f32.mul
+   f32.sub
+   local.set $hi
+   local.get $t
+   f32.const 9.05800061445916e-06
+   f32.mul
+   local.set $lo
+   local.get $hi
+   local.get $lo
+   f32.sub
+   local.set $x
+   local.get $hi
+   local.get $x
+   f32.sub
+   local.get $lo
+   f32.sub
+   local.set $c
+  else
+   local.get $hx
+   i32.const 855638016
+   i32.lt_u
+   if
+    local.get $x
+    return
+   else
+    i32.const 0
+    local.set $k
+   end
+  end
+  f32.const 0.5
+  local.get $x
+  f32.mul
+  local.set $hfx
+  local.get $x
+  local.get $hfx
+  f32.mul
+  local.set $hxs
+  f32.const 1
+  local.get $hxs
+  f32.const -0.03333321213722229
+  local.get $hxs
+  f32.const 1.5807170420885086e-03
+  f32.mul
+  f32.add
+  f32.mul
+  f32.add
+  local.set $r1
+  f32.const 3
+  local.get $r1
+  local.get $hfx
+  f32.mul
+  f32.sub
+  local.set $t
+  local.get $hxs
+  local.get $r1
+  local.get $t
+  f32.sub
+  f32.const 6
+  local.get $x
+  local.get $t
+  f32.mul
+  f32.sub
+  f32.div
+  f32.mul
+  local.set $e
+  local.get $k
+  i32.const 0
+  i32.eq
+  if
+   local.get $x
+   local.get $x
+   local.get $e
+   f32.mul
+   local.get $hxs
+   f32.sub
+   f32.sub
+   return
+  end
+  local.get $x
+  local.get $e
+  local.get $c
+  f32.sub
+  f32.mul
+  local.get $c
+  f32.sub
+  local.set $e
+  local.get $e
+  local.get $hxs
+  f32.sub
+  local.set $e
+  local.get $k
+  i32.const -1
+  i32.eq
+  if
+   f32.const 0.5
+   local.get $x
+   local.get $e
+   f32.sub
+   f32.mul
+   f32.const 0.5
+   f32.sub
+   return
+  end
+  local.get $k
+  i32.const 1
+  i32.eq
+  if
+   local.get $x
+   f32.const -0.25
+   f32.lt
+   if
+    f32.const -2
+    local.get $e
+    local.get $x
+    f32.const 0.5
+    f32.add
+    f32.sub
+    f32.mul
+    return
+   end
+   f32.const 1
+   f32.const 2
+   local.get $x
+   local.get $e
+   f32.sub
+   f32.mul
+   f32.add
+   return
+  end
+  i32.const 127
+  local.get $k
+  i32.add
+  i32.const 23
+  i32.shl
+  local.set $u
+  local.get $u
+  f32.reinterpret_i32
+  local.set $twopk
+  local.get $k
+  i32.const 0
+  i32.lt_s
+  if (result i32)
+   i32.const 1
+  else
+   local.get $k
+   i32.const 56
+   i32.gt_s
+  end
+  if
+   local.get $x
+   local.get $e
+   f32.sub
+   f32.const 1
+   f32.add
+   local.set $y
+   local.get $k
+   i32.const 128
+   i32.eq
+   if
+    local.get $y
+    f32.const 2
+    f32.mul
+    f32.const 1701411834604692317316873e14
+    f32.mul
+    local.set $y
+   else
+    local.get $y
+    local.get $twopk
+    f32.mul
+    local.set $y
+   end
+   local.get $y
+   f32.const 1
+   f32.sub
+   return
+  end
+  i32.const 127
+  local.get $k
+  i32.sub
+  i32.const 23
+  i32.shl
+  local.set $u
+  local.get $u
+  f32.reinterpret_i32
+  local.set $y
+  local.get $k
+  i32.const 20
+  i32.lt_s
+  if
+   f32.const 1
+   local.get $y
+   f32.sub
+   local.get $e
+   f32.sub
+   local.set $y
+  else
+   f32.const 1
+   local.get $e
+   local.get $y
+   f32.add
+   f32.sub
+   local.set $y
+  end
+  local.get $x
+  local.get $y
+  f32.add
+  local.get $twopk
+  f32.mul
+  return
+ )
+ (func $~lib/math/NativeMathf.tanh (param $x f32) (result f32)
+  (local $u i32)
+  (local $y f32)
+  (local $t f32)
+  local.get $x
+  i32.reinterpret_f32
+  local.set $u
+  local.get $u
+  i32.const 2147483647
+  i32.and
+  local.set $u
+  local.get $u
+  f32.reinterpret_i32
+  local.set $y
+  local.get $u
+  i32.const 1057791828
+  i32.gt_u
+  if
+   local.get $u
+   i32.const 1092616192
+   i32.gt_u
+   if
+    f32.const 1
+    f32.const 0
+    local.get $y
+    f32.div
+    f32.add
+    local.set $t
+   else
+    f32.const 2
+    local.get $y
+    f32.mul
+    call $~lib/math/NativeMathf.expm1
+    local.set $t
+    f32.const 1
+    f32.const 2
+    local.get $t
+    f32.const 2
+    f32.add
+    f32.div
+    f32.sub
+    local.set $t
+   end
+  else
+   local.get $u
+   i32.const 1048757624
+   i32.gt_u
+   if
+    f32.const 2
+    local.get $y
+    f32.mul
+    call $~lib/math/NativeMathf.expm1
+    local.set $t
+    local.get $t
+    local.get $t
+    f32.const 2
+    f32.add
+    f32.div
+    local.set $t
+   else
+    local.get $u
+    i32.const 8388608
+    i32.ge_u
+    if
+     f32.const -2
+     local.get $y
+     f32.mul
+     call $~lib/math/NativeMathf.expm1
+     local.set $t
+     local.get $t
+     f32.neg
+     local.get $t
+     f32.const 2
+     f32.add
+     f32.div
+     local.set $t
+    else
+     local.get $y
+     local.set $t
+    end
+   end
+  end
+  local.get $t
+  local.get $x
+  f32.copysign
+  return
+ )
+ (func $assembly/gen/tanh/Tanh#_audio (param $this i32) (param $begin i32) (param $end i32) (param $out i32)
+  (local $length i32)
+  (local $sample f32)
+  (local $inp i32)
+  (local $i i32)
+  (local $offset i32)
+  (local $gain f32)
+  local.get $end
+  local.get $begin
+  i32.sub
+  local.set $length
+  f32.const 0
+  local.set $sample
+  local.get $this
+  call $assembly/gen/tanh/Tanh#get:in
+  local.set $inp
+  local.get $begin
+  local.set $i
+  local.get $i
+  local.get $length
+  i32.add
+  local.set $end
+  local.get $begin
+  i32.const 2
+  i32.shl
+  local.set $offset
+  local.get $inp
+  local.get $offset
+  i32.add
+  local.set $inp
+  local.get $out
+  local.get $offset
+  i32.add
+  local.set $out
+  local.get $this
+  call $assembly/gen/tanh/Tanh#get:gain
+  local.set $gain
+  loop $for-loop|0
+   local.get $i
+   local.get $end
+   i32.lt_u
+   if
+    local.get $inp
+    f32.load $0
+    local.set $sample
+    local.get $sample
+    local.get $gain
+    f32.mul
+    call $~lib/math/NativeMathf.tanh
+    local.set $sample
+    local.get $out
+    local.get $sample
+    f32.store $0
+    local.get $inp
+    i32.const 4
+    i32.add
+    local.set $inp
+    local.get $out
+    i32.const 4
+    i32.add
+    local.set $out
+    local.get $inp
+    f32.load $0
+    local.set $sample
+    local.get $sample
+    local.get $gain
+    f32.mul
+    call $~lib/math/NativeMathf.tanh
+    local.set $sample
+    local.get $out
+    local.get $sample
+    f32.store $0
+    local.get $inp
+    i32.const 4
+    i32.add
+    local.set $inp
+    local.get $out
+    i32.const 4
+    i32.add
+    local.set $out
+    local.get $inp
+    f32.load $0
+    local.set $sample
+    local.get $sample
+    local.get $gain
+    f32.mul
+    call $~lib/math/NativeMathf.tanh
+    local.set $sample
+    local.get $out
+    local.get $sample
+    f32.store $0
+    local.get $inp
+    i32.const 4
+    i32.add
+    local.set $inp
+    local.get $out
+    i32.const 4
+    i32.add
+    local.set $out
+    local.get $inp
+    f32.load $0
+    local.set $sample
+    local.get $sample
+    local.get $gain
+    f32.mul
+    call $~lib/math/NativeMathf.tanh
+    local.set $sample
+    local.get $out
+    local.get $sample
+    f32.store $0
+    local.get $inp
+    i32.const 4
+    i32.add
+    local.set $inp
+    local.get $out
+    i32.const 4
+    i32.add
+    local.set $out
+    local.get $inp
+    f32.load $0
+    local.set $sample
+    local.get $sample
+    local.get $gain
+    f32.mul
+    call $~lib/math/NativeMathf.tanh
+    local.set $sample
+    local.get $out
+    local.get $sample
+    f32.store $0
+    local.get $inp
+    i32.const 4
+    i32.add
+    local.set $inp
+    local.get $out
+    i32.const 4
+    i32.add
+    local.set $out
+    local.get $inp
+    f32.load $0
+    local.set $sample
+    local.get $sample
+    local.get $gain
+    f32.mul
+    call $~lib/math/NativeMathf.tanh
+    local.set $sample
+    local.get $out
+    local.get $sample
+    f32.store $0
+    local.get $inp
+    i32.const 4
+    i32.add
+    local.set $inp
+    local.get $out
+    i32.const 4
+    i32.add
+    local.set $out
+    local.get $inp
+    f32.load $0
+    local.set $sample
+    local.get $sample
+    local.get $gain
+    f32.mul
+    call $~lib/math/NativeMathf.tanh
+    local.set $sample
+    local.get $out
+    local.get $sample
+    f32.store $0
+    local.get $inp
+    i32.const 4
+    i32.add
+    local.set $inp
+    local.get $out
+    i32.const 4
+    i32.add
+    local.set $out
+    local.get $inp
+    f32.load $0
+    local.set $sample
+    local.get $sample
+    local.get $gain
+    f32.mul
+    call $~lib/math/NativeMathf.tanh
+    local.set $sample
+    local.get $out
+    local.get $sample
+    f32.store $0
+    local.get $inp
+    i32.const 4
+    i32.add
+    local.set $inp
+    local.get $out
+    i32.const 4
+    i32.add
+    local.set $out
+    local.get $inp
+    f32.load $0
+    local.set $sample
+    local.get $sample
+    local.get $gain
+    f32.mul
+    call $~lib/math/NativeMathf.tanh
+    local.set $sample
+    local.get $out
+    local.get $sample
+    f32.store $0
+    local.get $inp
+    i32.const 4
+    i32.add
+    local.set $inp
+    local.get $out
+    i32.const 4
+    i32.add
+    local.set $out
+    local.get $inp
+    f32.load $0
+    local.set $sample
+    local.get $sample
+    local.get $gain
+    f32.mul
+    call $~lib/math/NativeMathf.tanh
+    local.set $sample
+    local.get $out
+    local.get $sample
+    f32.store $0
+    local.get $inp
+    i32.const 4
+    i32.add
+    local.set $inp
+    local.get $out
+    i32.const 4
+    i32.add
+    local.set $out
+    local.get $inp
+    f32.load $0
+    local.set $sample
+    local.get $sample
+    local.get $gain
+    f32.mul
+    call $~lib/math/NativeMathf.tanh
+    local.set $sample
+    local.get $out
+    local.get $sample
+    f32.store $0
+    local.get $inp
+    i32.const 4
+    i32.add
+    local.set $inp
+    local.get $out
+    i32.const 4
+    i32.add
+    local.set $out
+    local.get $inp
+    f32.load $0
+    local.set $sample
+    local.get $sample
+    local.get $gain
+    f32.mul
+    call $~lib/math/NativeMathf.tanh
+    local.set $sample
+    local.get $out
+    local.get $sample
+    f32.store $0
+    local.get $inp
+    i32.const 4
+    i32.add
+    local.set $inp
+    local.get $out
+    i32.const 4
+    i32.add
+    local.set $out
+    local.get $inp
+    f32.load $0
+    local.set $sample
+    local.get $sample
+    local.get $gain
+    f32.mul
+    call $~lib/math/NativeMathf.tanh
+    local.set $sample
+    local.get $out
+    local.get $sample
+    f32.store $0
+    local.get $inp
+    i32.const 4
+    i32.add
+    local.set $inp
+    local.get $out
+    i32.const 4
+    i32.add
+    local.set $out
+    local.get $inp
+    f32.load $0
+    local.set $sample
+    local.get $sample
+    local.get $gain
+    f32.mul
+    call $~lib/math/NativeMathf.tanh
+    local.set $sample
+    local.get $out
+    local.get $sample
+    f32.store $0
+    local.get $inp
+    i32.const 4
+    i32.add
+    local.set $inp
+    local.get $out
+    i32.const 4
+    i32.add
+    local.set $out
+    local.get $inp
+    f32.load $0
+    local.set $sample
+    local.get $sample
+    local.get $gain
+    f32.mul
+    call $~lib/math/NativeMathf.tanh
+    local.set $sample
+    local.get $out
+    local.get $sample
+    f32.store $0
+    local.get $inp
+    i32.const 4
+    i32.add
+    local.set $inp
+    local.get $out
+    i32.const 4
+    i32.add
+    local.set $out
+    local.get $inp
+    f32.load $0
+    local.set $sample
+    local.get $sample
+    local.get $gain
+    f32.mul
+    call $~lib/math/NativeMathf.tanh
+    local.set $sample
+    local.get $out
+    local.get $sample
+    f32.store $0
+    local.get $inp
+    i32.const 4
+    i32.add
+    local.set $inp
+    local.get $out
+    i32.const 4
+    i32.add
+    local.set $out
+    local.get $i
+    i32.const 16
+    i32.add
+    local.set $i
+    br $for-loop|0
+   end
+  end
+ )
+ (func $assembly/gen/tanha/Tanha#get:_gainv (param $this i32) (result v128)
   local.get $this
   v128.load $0 offset=16
  )
- (func $assembly/gen/tanh/Tanh#get:in (param $this i32) (result i32)
+ (func $assembly/gen/tanha/Tanha#get:in (param $this i32) (result i32)
   local.get $this
   i32.load $0 offset=32
  )
- (func $assembly/gen/tanh/Tanh#_audio (param $this i32) (param $begin i32) (param $end i32) (param $out i32)
+ (func $assembly/gen/tanha/Tanha#_audio (param $this i32) (param $begin i32) (param $end i32) (param $out i32)
   (local $gainv v128)
   (local $in0 i32)
   (local $x v128)
@@ -59570,10 +61006,10 @@
   (local $offset i32)
   (local $x2 v128)
   local.get $this
-  call $assembly/gen/tanh/Tanh#get:_gainv
+  call $assembly/gen/tanha/Tanha#get:_gainv
   local.set $gainv
   local.get $this
-  call $assembly/gen/tanh/Tanh#get:in
+  call $assembly/gen/tanha/Tanha#get:in
   local.set $in0
   local.get $begin
   local.set $i
@@ -65263,7 +66699,7 @@
                                i32.eq
                                br_if $case7
                                local.get $1
-                               i32.const 66
+                               i32.const 68
                                i32.eq
                                br_if $case8
                                local.get $1
@@ -65275,11 +66711,11 @@
                                i32.eq
                                br_if $case10
                                local.get $1
-                               i32.const 60
+                               i32.const 62
                                i32.eq
                                br_if $case11
                                local.get $1
-                               i32.const 67
+                               i32.const 69
                                i32.eq
                                br_if $case12
                                local.get $1
@@ -65363,15 +66799,15 @@
                                i32.eq
                                br_if $case25
                                local.get $1
-                               i32.const 69
-                               i32.eq
-                               br_if $case26
-                               local.get $1
-                               i32.const 68
+                               i32.const 71
                                i32.eq
                                br_if $case26
                                local.get $1
                                i32.const 70
+                               i32.eq
+                               br_if $case26
+                               local.get $1
+                               i32.const 72
                                i32.eq
                                br_if $case26
                                local.get $1
@@ -65489,7 +66925,7 @@
         return
        end
        local.get $0
-       call $assembly/gen/tanh/Tanh#_update
+       call $assembly/gen/tanha/Tanha#_update
        return
       end
       local.get $0
@@ -65536,360 +66972,384 @@
  (func $assembly/gen/gen/Gen#_audio@override (param $0 i32) (param $1 i32) (param $2 i32) (param $3 i32)
   (local $4 i32)
   block $default
-   block $case25
-    block $case24
-     block $case23
-      block $case22
-       block $case21
-        block $case20
-         block $case19
-          block $case18
-           block $case17
-            block $case16
-             block $case15
-              block $case14
-               block $case13
-                block $case12
-                 block $case11
-                  block $case10
-                   block $case9
-                    block $case8
-                     block $case7
-                      block $case6
-                       block $case5
-                        block $case4
-                         block $case3
-                          block $case2
-                           block $case1
-                            block $case0
+   block $case27
+    block $case26
+     block $case25
+      block $case24
+       block $case23
+        block $case22
+         block $case21
+          block $case20
+           block $case19
+            block $case18
+             block $case17
+              block $case16
+               block $case15
+                block $case14
+                 block $case13
+                  block $case12
+                   block $case11
+                    block $case10
+                     block $case9
+                      block $case8
+                       block $case7
+                        block $case6
+                         block $case5
+                          block $case4
+                           block $case3
+                            block $case2
+                             block $case1
+                              block $case0
+                               local.get $0
+                               i32.const 8
+                               i32.sub
+                               i32.load $0
+                               local.set $4
+                               local.get $4
+                               i32.const 61
+                               i32.eq
+                               br_if $case0
+                               local.get $4
+                               i32.const 66
+                               i32.eq
+                               br_if $case1
+                               local.get $4
+                               i32.const 67
+                               i32.eq
+                               br_if $case2
+                               local.get $4
+                               i32.const 68
+                               i32.eq
+                               br_if $case3
+                               local.get $4
+                               i32.const 58
+                               i32.eq
+                               br_if $case4
+                               local.get $4
+                               i32.const 32
+                               i32.eq
+                               br_if $case5
+                               local.get $4
+                               i32.const 63
+                               i32.eq
+                               br_if $case6
+                               local.get $4
+                               i32.const 65
+                               i32.eq
+                               br_if $case7
+                               local.get $4
+                               i32.const 64
+                               i32.eq
+                               br_if $case8
+                               local.get $4
+                               i32.const 33
+                               i32.eq
+                               br_if $case9
+                               local.get $4
+                               i32.const 62
+                               i32.eq
+                               br_if $case10
+                               local.get $4
+                               i32.const 69
+                               i32.eq
+                               br_if $case11
+                               local.get $4
+                               i32.const 35
+                               i32.eq
+                               br_if $case12
+                               local.get $4
+                               i32.const 57
+                               i32.eq
+                               br_if $case13
+                               local.get $4
+                               i32.const 55
+                               i32.eq
+                               br_if $case14
+                               local.get $4
+                               i32.const 52
+                               i32.eq
+                               br_if $case15
+                               local.get $4
+                               i32.const 51
+                               i32.eq
+                               br_if $case16
+                               local.get $4
+                               i32.const 50
+                               i32.eq
+                               br_if $case17
+                               local.get $4
+                               i32.const 48
+                               i32.eq
+                               br_if $case18
+                               local.get $4
+                               i32.const 53
+                               i32.eq
+                               br_if $case19
+                               local.get $4
+                               i32.const 54
+                               i32.eq
+                               br_if $case20
+                               local.get $4
+                               i32.const 60
+                               i32.eq
+                               br_if $case21
+                               local.get $4
+                               i32.const 59
+                               i32.eq
+                               br_if $case22
+                               local.get $4
+                               i32.const 34
+                               i32.eq
+                               br_if $case23
+                               local.get $4
+                               i32.const 22
+                               i32.eq
+                               br_if $case24
+                               local.get $4
+                               i32.const 38
+                               i32.eq
+                               br_if $case25
+                               local.get $4
+                               i32.const 37
+                               i32.eq
+                               br_if $case25
+                               local.get $4
+                               i32.const 41
+                               i32.eq
+                               br_if $case25
+                               local.get $4
+                               i32.const 42
+                               i32.eq
+                               br_if $case25
+                               local.get $4
+                               i32.const 43
+                               i32.eq
+                               br_if $case25
+                               local.get $4
+                               i32.const 44
+                               i32.eq
+                               br_if $case25
+                               local.get $4
+                               i32.const 45
+                               i32.eq
+                               br_if $case25
+                               local.get $4
+                               i32.const 46
+                               i32.eq
+                               br_if $case25
+                               local.get $4
+                               i32.const 47
+                               i32.eq
+                               br_if $case25
+                               local.get $4
+                               i32.const 24
+                               i32.eq
+                               br_if $case26
+                               local.get $4
+                               i32.const 23
+                               i32.eq
+                               br_if $case26
+                               local.get $4
+                               i32.const 25
+                               i32.eq
+                               br_if $case26
+                               local.get $4
+                               i32.const 27
+                               i32.eq
+                               br_if $case26
+                               local.get $4
+                               i32.const 26
+                               i32.eq
+                               br_if $case26
+                               local.get $4
+                               i32.const 28
+                               i32.eq
+                               br_if $case26
+                               local.get $4
+                               i32.const 29
+                               i32.eq
+                               br_if $case26
+                               local.get $4
+                               i32.const 30
+                               i32.eq
+                               br_if $case26
+                               local.get $4
+                               i32.const 31
+                               i32.eq
+                               br_if $case26
+                               local.get $4
+                               i32.const 71
+                               i32.eq
+                               br_if $case27
+                               local.get $4
+                               i32.const 70
+                               i32.eq
+                               br_if $case27
+                               local.get $4
+                               i32.const 72
+                               i32.eq
+                               br_if $case27
+                               br $default
+                              end
+                              local.get $0
+                              local.get $1
+                              local.get $2
+                              local.get $3
+                              call $assembly/gen/atan/Atan#_audio
+                              return
+                             end
                              local.get $0
-                             i32.const 8
-                             i32.sub
-                             i32.load $0
-                             local.set $4
-                             local.get $4
-                             i32.const 64
-                             i32.eq
-                             br_if $case0
-                             local.get $4
-                             i32.const 65
-                             i32.eq
-                             br_if $case1
-                             local.get $4
-                             i32.const 66
-                             i32.eq
-                             br_if $case2
-                             local.get $4
-                             i32.const 58
-                             i32.eq
-                             br_if $case3
-                             local.get $4
-                             i32.const 32
-                             i32.eq
-                             br_if $case4
-                             local.get $4
-                             i32.const 61
-                             i32.eq
-                             br_if $case5
-                             local.get $4
-                             i32.const 63
-                             i32.eq
-                             br_if $case6
-                             local.get $4
-                             i32.const 62
-                             i32.eq
-                             br_if $case7
-                             local.get $4
-                             i32.const 33
-                             i32.eq
-                             br_if $case8
-                             local.get $4
-                             i32.const 60
-                             i32.eq
-                             br_if $case9
-                             local.get $4
-                             i32.const 67
-                             i32.eq
-                             br_if $case10
-                             local.get $4
-                             i32.const 35
-                             i32.eq
-                             br_if $case11
-                             local.get $4
-                             i32.const 57
-                             i32.eq
-                             br_if $case12
-                             local.get $4
-                             i32.const 55
-                             i32.eq
-                             br_if $case13
-                             local.get $4
-                             i32.const 52
-                             i32.eq
-                             br_if $case14
-                             local.get $4
-                             i32.const 51
-                             i32.eq
-                             br_if $case15
-                             local.get $4
-                             i32.const 50
-                             i32.eq
-                             br_if $case16
-                             local.get $4
-                             i32.const 48
-                             i32.eq
-                             br_if $case17
-                             local.get $4
-                             i32.const 53
-                             i32.eq
-                             br_if $case18
-                             local.get $4
-                             i32.const 54
-                             i32.eq
-                             br_if $case19
-                             local.get $4
-                             i32.const 59
-                             i32.eq
-                             br_if $case20
-                             local.get $4
-                             i32.const 34
-                             i32.eq
-                             br_if $case21
-                             local.get $4
-                             i32.const 22
-                             i32.eq
-                             br_if $case22
-                             local.get $4
-                             i32.const 38
-                             i32.eq
-                             br_if $case23
-                             local.get $4
-                             i32.const 37
-                             i32.eq
-                             br_if $case23
-                             local.get $4
-                             i32.const 41
-                             i32.eq
-                             br_if $case23
-                             local.get $4
-                             i32.const 42
-                             i32.eq
-                             br_if $case23
-                             local.get $4
-                             i32.const 43
-                             i32.eq
-                             br_if $case23
-                             local.get $4
-                             i32.const 44
-                             i32.eq
-                             br_if $case23
-                             local.get $4
-                             i32.const 45
-                             i32.eq
-                             br_if $case23
-                             local.get $4
-                             i32.const 46
-                             i32.eq
-                             br_if $case23
-                             local.get $4
-                             i32.const 47
-                             i32.eq
-                             br_if $case23
-                             local.get $4
-                             i32.const 24
-                             i32.eq
-                             br_if $case24
-                             local.get $4
-                             i32.const 23
-                             i32.eq
-                             br_if $case24
-                             local.get $4
-                             i32.const 25
-                             i32.eq
-                             br_if $case24
-                             local.get $4
-                             i32.const 27
-                             i32.eq
-                             br_if $case24
-                             local.get $4
-                             i32.const 26
-                             i32.eq
-                             br_if $case24
-                             local.get $4
-                             i32.const 28
-                             i32.eq
-                             br_if $case24
-                             local.get $4
-                             i32.const 29
-                             i32.eq
-                             br_if $case24
-                             local.get $4
-                             i32.const 30
-                             i32.eq
-                             br_if $case24
-                             local.get $4
-                             i32.const 31
-                             i32.eq
-                             br_if $case24
-                             local.get $4
-                             i32.const 69
-                             i32.eq
-                             br_if $case25
-                             local.get $4
-                             i32.const 68
-                             i32.eq
-                             br_if $case25
-                             local.get $4
-                             i32.const 70
-                             i32.eq
-                             br_if $case25
-                             br $default
+                             local.get $1
+                             local.get $2
+                             local.get $3
+                             call $assembly/gen/clamp/Clamp#_audio
+                             return
                             end
                             local.get $0
                             local.get $1
                             local.get $2
                             local.get $3
-                            call $assembly/gen/clamp/Clamp#_audio
+                            call $assembly/gen/clip/Clip#_audio
                             return
                            end
                            local.get $0
                            local.get $1
                            local.get $2
                            local.get $3
-                           call $assembly/gen/clip/Clip#_audio
+                           call $assembly/gen/comp/Comp#_audio
                            return
                           end
                           local.get $0
                           local.get $1
                           local.get $2
                           local.get $3
-                          call $assembly/gen/comp/Comp#_audio
+                          call $assembly/gen/daverb/Daverb#_audio
                           return
                          end
                          local.get $0
                          local.get $1
                          local.get $2
                          local.get $3
-                         call $assembly/gen/daverb/Daverb#_audio
+                         call $assembly/gen/dc/Dc#_audio
                          return
                         end
                         local.get $0
                         local.get $1
                         local.get $2
                         local.get $3
-                        call $assembly/gen/dc/Dc#_audio
+                        call $assembly/gen/dclip/Dclip#_audio
                         return
                        end
                        local.get $0
                        local.get $1
                        local.get $2
                        local.get $3
-                       call $assembly/gen/dclip/Dclip#_audio
+                       call $assembly/gen/dclipexp/Dclipexp#_audio
                        return
                       end
                       local.get $0
                       local.get $1
                       local.get $2
                       local.get $3
-                      call $assembly/gen/dclipexp/Dclipexp#_audio
+                      call $assembly/gen/dcliplin/Dcliplin#_audio
                       return
                      end
                      local.get $0
                      local.get $1
                      local.get $2
                      local.get $3
-                     call $assembly/gen/dcliplin/Dcliplin#_audio
+                     call $assembly/gen/delay/Delay#_audio
                      return
                     end
                     local.get $0
                     local.get $1
                     local.get $2
                     local.get $3
-                    call $assembly/gen/delay/Delay#_audio
+                    call $assembly/gen/diode/Diode#_audio
                     return
                    end
                    local.get $0
                    local.get $1
                    local.get $2
                    local.get $3
-                   call $assembly/gen/diode/Diode#_audio
+                   call $assembly/gen/inc/Inc#_audio
                    return
                   end
                   local.get $0
                   local.get $1
                   local.get $2
                   local.get $3
-                  call $assembly/gen/inc/Inc#_audio
+                  call $assembly/gen/lp/Lp#_audio
                   return
                  end
                  local.get $0
                  local.get $1
                  local.get $2
                  local.get $3
-                 call $assembly/gen/lp/Lp#_audio
+                 call $assembly/gen/mhp/Mhp#_audio
                  return
                 end
                 local.get $0
                 local.get $1
                 local.get $2
                 local.get $3
-                call $assembly/gen/mhp/Mhp#_audio
+                call $assembly/gen/mlp/Mlp#_audio
                 return
                end
                local.get $0
                local.get $1
                local.get $2
                local.get $3
-               call $assembly/gen/mlp/Mlp#_audio
+               call $assembly/gen/sap/Sap#_audio
                return
               end
               local.get $0
               local.get $1
               local.get $2
               local.get $3
-              call $assembly/gen/sap/Sap#_audio
+              call $assembly/gen/sbp/Sbp#_audio
               return
              end
              local.get $0
              local.get $1
              local.get $2
              local.get $3
-             call $assembly/gen/sbp/Sbp#_audio
+             call $assembly/gen/shp/Shp#_audio
              return
             end
             local.get $0
             local.get $1
             local.get $2
             local.get $3
-            call $assembly/gen/shp/Shp#_audio
+            call $assembly/gen/slp/Slp#_audio
             return
            end
            local.get $0
            local.get $1
            local.get $2
            local.get $3
-           call $assembly/gen/slp/Slp#_audio
+           call $assembly/gen/sno/Sno#_audio
            return
           end
           local.get $0
           local.get $1
           local.get $2
           local.get $3
-          call $assembly/gen/sno/Sno#_audio
+          call $assembly/gen/spk/Spk#_audio
           return
          end
          local.get $0
          local.get $1
          local.get $2
          local.get $3
-         call $assembly/gen/spk/Spk#_audio
+         call $assembly/gen/tanh/Tanh#_audio
          return
         end
         local.get $0
         local.get $1
         local.get $2
         local.get $3
-        call $assembly/gen/tanh/Tanh#_audio
+        call $assembly/gen/tanha/Tanha#_audio
         return
        end
        local.get $0

@@ -1,7 +1,7 @@
 import { Gen } from './gen'
 import { logd, logf } from '../env'
 
-export class Tanh extends Gen {
+export class Atan extends Gen {
   gain: f32 = 1.0;
   in: u32 = 0
 
@@ -24,7 +24,7 @@ export class Tanh extends Gen {
       unroll(16, () => {
         sample = f32.load(inp)
 
-        sample =  Mathf.tanh(sample * gain) 
+        sample =  Mathf.atan(sample * gain) 
 
         f32.store(out, sample)
         inp += 4

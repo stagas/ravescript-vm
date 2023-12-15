@@ -1,6 +1,7 @@
 import { Core, Engine } from './core/engine'
 import { Bar, Ctrl, Runner, Signal } from './core/runner'
 import { logf } from './env'
+import { Atan } from './gen/atan'
 import { Bap } from './gen/bap'
 import { Bbp } from './gen/bbp'
 import { Bhp } from './gen/bhp'
@@ -40,6 +41,7 @@ import { Sno } from './gen/sno'
 import { Spk } from './gen/spk'
 import { Sqr } from './gen/sqr'
 import { Tanh } from './gen/tanh'
+import { Tanha } from './gen/tanha'
 import { Tap } from './gen/tap'
 import { Tri } from './gen/tri'
 import { Zero } from './gen/zero'
@@ -174,8 +176,14 @@ export function preventTreeShaking(gen: Gen): void {
   const daverb: Daverb = new Daverb(engine)
   const daverbSize: usize = util.getObjectSize<Daverb>()
 
+  const tanha: Tanha = new Tanha(engine)
+  const tanhaSize: usize = util.getObjectSize<Tanha>()
+  
   const tanh: Tanh = new Tanh(engine)
   const tanhSize: usize = util.getObjectSize<Tanh>()
+
+  const atan: Atan = new Atan(engine)
+  const atanSize: usize = util.getObjectSize<Atan>()
 
   const diode: Diode = new Diode(engine)
   const diodeSize: usize = util.getObjectSize<Diode>()
