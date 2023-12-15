@@ -23,6 +23,7 @@ import { Diode } from './gen/diode'
 import { Exp } from './gen/exp'
 import { Freesound } from './gen/freesound'
 import { Gen } from './gen/gen'
+import { Gendy } from './gen/gendy'
 import { Grain } from './gen/grain'
 import { Inc } from './gen/inc'
 import { Lp } from './gen/lp'
@@ -188,6 +189,9 @@ export function preventTreeShaking(gen: Gen): void {
 
   const grain: Grain = new Grain(engine)
   const grainSize: usize = util.getObjectSize<Grain>()
+
+  const gendy: Gendy = new Gendy(engine)
+  const gendySize: usize = util.getObjectSize<Gendy>()
 
   const diode: Diode = new Diode(engine)
   const diodeSize: usize = util.getObjectSize<Diode>()
