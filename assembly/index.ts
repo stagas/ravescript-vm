@@ -2,6 +2,7 @@ import { Core, Engine } from './core/engine'
 import { Bar, Ctrl, Runner, Signal } from './core/runner'
 import { logf } from './env'
 import { Atan } from './gen/atan'
+import { Adsr } from './gen/adsr'
 import { Bap } from './gen/bap'
 import { Bbp } from './gen/bbp'
 import { Bhp } from './gen/bhp'
@@ -27,6 +28,8 @@ import { Gendy } from './gen/gendy'
 import { Grain } from './gen/grain'
 import { Inc } from './gen/inc'
 import { Lp } from './gen/lp'
+import { Line } from './gen/line'
+import { Ar } from './gen/ar'
 import { Mhp } from './gen/mhp'
 import { Mlp } from './gen/mlp'
 import { Noise } from './gen/noise'
@@ -217,6 +220,15 @@ export function preventTreeShaking(gen: Gen): void {
   const inc: Inc = new Inc(engine)
   const incSize: usize = util.getObjectSize<Inc>()
   inc.trig = 0
+
+  const line: Line = new Line(engine)
+  const lineSize: usize = util.getObjectSize<Line>()
+  
+  const ar: Ar = new Ar(engine)
+  const arSize: usize = util.getObjectSize<Ar>()
+
+  const adsr: Adsr = new Adsr(engine)
+  const adsrSize: usize = util.getObjectSize<Adsr>()
 
   const freesound: Freesound = new Freesound(engine)
   const freesoundSize: usize = util.getObjectSize<Freesound>()
