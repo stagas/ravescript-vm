@@ -35,7 +35,6 @@ export class Adsr extends Gen {
     let a_stepf: f32 = 1.0 / a_time
     let d_stepf: f32 = (1.0 - sustain) / d_time
     let r_stepf: f32 = sustain / r_time
-    //logf(stepf)
     let msecSamples: f32 = this._msecSamples
     let msec: f32 = this._msec
     let msec_old: f32 = this._msec

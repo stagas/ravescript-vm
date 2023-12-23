@@ -11,6 +11,7 @@ import { Blp } from './gen/blp'
 import { Bls } from './gen/bls'
 import { Bno } from './gen/bno'
 import { Bpk } from './gen/bpk'
+import { Brown } from './gen/brown'
 import { Clamp } from './gen/clamp'
 import { Clip } from './gen/clip'
 import { Comp } from './gen/comp'
@@ -229,6 +230,9 @@ export function preventTreeShaking(gen: Gen): void {
 
   const adsr: Adsr = new Adsr(engine)
   const adsrSize: usize = util.getObjectSize<Adsr>()
+
+  const brown: Brown = new Brown(engine)
+  const brownSize: usize =  util.getObjectSize<Brown>()
 
   const freesound: Freesound = new Freesound(engine)
   const freesoundSize: usize = util.getObjectSize<Freesound>()
